@@ -8,11 +8,12 @@
   </div>
   <div class="cards flex flex-row justify-between items-center w-full gap-10 mt-10">
     <div class="card w-1/2 flex flex-col items-end">
-      <div class="header flex flex-col justify-between w-full h-85 bg-[url('/public/paraempresas.jpg')] bg-cover bg-center rounded-2xl p-8">
+      <div class="header relative flex flex-col justify-between w-full h-85 bg-[url('/public/paraempresas.jpg')] bg-cover bg-center rounded-2xl p-8">
+        <div class="absolute inset-0 pointer-events-none z-1" style="background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.5) 100%)"></div>
         <div class="cardtitle">
-          <h3 class="text-white text-2xl font-semibold">Para empresas</h3>
+          <h3 class="text-white text-2xl font-semibold relative z-2">Para empresas</h3>
         </div>
-        <div class="next-btn">
+        <div class="next-btn relative z-2">
           <a href="" class="">
             <div class="text">
               <span class="main-text font-semibold">Contrata</span>
@@ -22,7 +23,7 @@
           </a>
         </div>
       </div>
-      <div class="content relative flex flex-col gap-10 bg-white rounded-l-2xl rounded-bl-2xl rounded-br-2xl p-8 shadow-xl w-100 h-200 -top-30">
+      <div class="content relative z-2 flex flex-col gap-10 bg-white rounded-l-2xl rounded-bl-2xl rounded-br-2xl p-8 shadow-xl w-120 -top-30">
         <div class="key-content border-b border-gray-300">
           <div class="title bg-bg-secondary p-2 rounded-xl flex flex-row gap-2 items-center">
             <div class="icon"><img src="/public/iconos/Check.svg" class="size-8" alt="" /></div>
@@ -46,36 +47,43 @@
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="header">
+    <div class="card w-1/2 flex flex-col items-start">
+      <div class="header relative flex flex-col justify-between items-end w-full h-85 bg-[url('/public/paraexpertos.jpg')] bg-cover bg-center rounded-2xl p-8">
+        <div class="absolute inset-0 pointer-events-none z-1" style="background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.5) 100%)"></div>
         <div class="cardtitle">
-          <h3>Para empresas</h3>
+          <h3 class="text-white text-2xl font-semibold relative z-2">Para expertos</h3>
         </div>
-        <div class="button">
-          <a href="">Contrata expertos <span>-></span></a>
+        <div class="next-btn w-70 relative z-2">
+          <a href="" class="">
+            <div class="text">
+              <span class="main-text font-semibold">Ingresar</span>
+              <span class="secondary-text font-light">como experto</span>
+            </div>
+            <div class="arrow"><img src="/public/iconos/Arrow3.svg" alt="" /></div>
+          </a>
         </div>
       </div>
-      <div class="content">
+      <div class="content relative z-2 flex flex-col gap-10 bg-white rounded-r-2xl rounded-b-2xl rounded-br-2xl p-8 shadow-xl w-115 -top-30">
         <div class="key-content border-b border-gray-300">
-          <div class="title">
-            <div class="icon"></div>
-            <p>Encuentra talento validado en minutos</p>
+          <div class="title bg-bg-secondary p-2 rounded-xl flex flex-row gap-2 items-center">
+            <div class="icon"><img src="/public/iconos/Check.svg" class="size-8" alt="" /></div>
+            <p class="font-semibold text-primary">Encuentra talento validado en minutos</p>
           </div>
-          <div class="text">Trivo te conecta con expertos calificados y evaluados por la comunidad. Ahorra tiempo y contrata con confianza.</div>
+          <div class="text py-5 text-justify font-light">Trivo te conecta con expertos calificados y evaluados por la comunidad. Ahorra tiempo y contrata con confianza.</div>
         </div>
         <div class="key-content border-b border-gray-300">
-          <div class="title">
-            <div class="icon"></div>
-            <p>Contrataciones flexibles</p>
+          <div class="title bg-bg-secondary p-2 rounded-xl flex flex-row gap-2 items-center">
+            <div class="icon"><img src="/public/iconos/Check.svg" class="size-8" alt="" /></div>
+            <p class="font-semibold text-primary">Contrataciones flexibles</p>
           </div>
-          <div class="text">Publica ofertas para proyectos temporales o posiciones fijas. Gestiona todo el proceso desde un solo lugar.</div>
+          <div class="text py-5 text-justify font-light">Publica ofertas para proyectos temporales o posiciones fijas. Gestiona todo el proceso desde un solo lugar..</div>
         </div>
         <div class="key-content border-b border-gray-300">
-          <div class="title">
-            <div class="icon"></div>
-            <p>Optimiza tu presupuesto sin sacrificar calidad</p>
+          <div class="title bg-bg-secondary p-2 rounded-xl flex flex-row gap-2 items-center">
+            <div class="icon"><img src="/public/iconos/Check.svg" class="size-8" alt="" /></div>
+            <p class="font-semibold text-primary">Optimiza tu presupuesto sin sacrificar calidad</p>
           </div>
-          <div class="text">Evita costos de intermediarios. Accede a tarifas claras y ajustadas a tu necesidad, desde talentos locales hasta internacionales.</div>
+          <div class="text py-5 text-justify font-light">Evita costos de intermediarios. Accede a tarifas claras y ajustadas a tu necesidad, desde talentos locales hasta internacionales.</div>
         </div>
       </div>
     </div>
