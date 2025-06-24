@@ -42,4 +42,29 @@
     @apply bg-bg-secondary text-primary border-primary border rounded-lg;
     transition: all 0.3s ease-in-out;
   }
+
+  .next-btn {
+    @apply w-60;
+  }
+  .next-btn > a {
+    @apply bg-primary text-white rounded-2xl flex flex-row justify-between items-center;
+  }
+
+  .next-btn > a > .text {
+    @apply py-4 pl-4;
+  }
+  .next-btn > a > .main-text {
+    @apply font-semibold;
+  }
+  .next-btn > a > .secondary-text {
+    @apply font-light;
+  }
+
+  .next-btn > a > .arrow {
+    @apply bg-[#452D70] h-full py-3 px-4 rounded-r-2xl rounded-br-2xl;
+  }
+
+  .next-btn > a > .arrow > img {
+    @apply size-8;
+  }
 }
