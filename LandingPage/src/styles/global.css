@@ -24,10 +24,22 @@
 
 @layer components {
   .primary-btn {
-    @apply text-xl font-semibold bg-primary text-white rounded-lg px-6 py-2;
+    @apply text-lg font-semibold bg-primary border border-white text-white rounded-lg px-6 py-2;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .primary-btn:hover {
+    @apply bg-bg-secondary text-primary border-primary border rounded-lg;
+    transition: all 0.3s ease-in-out;
   }
 
   .secondary-btn {
-    @apply text-xl font-semibold border border-primary text-primary rounded-lg px-6 py-2;
+    @apply text-lg font-semibold border border-primary text-primary rounded-lg px-6 py-2;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .secondary-btn:hover {
+    @apply bg-bg-secondary text-primary border-primary border rounded-lg;
+    transition: all 0.3s ease-in-out;
   }
 }
