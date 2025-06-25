@@ -1,2 +1,89 @@
 ---
+import Instagram from "public/iconos/Instagram.astro";
+import Facebook from "public/iconos/Facebook.astro";
+import Email from "public/iconos/Email.astro";
 ---
+
+<div class="footer-container flex flex-col justify-between items-center relative px-32 pt-22 py-4 bg-[radial-gradient(59.02%_59.02%_at_50%_40.98%,_#7C3AED_0%,_#472187_100%)] h-142 overflow-hidden">
+  <div class="logo-bg absolute -left-10 -top-10">
+    <img src="/logos/isotipo_w.png" alt="isotipo trivo white" class="w-60 opacity-20" />
+  </div>
+  <div class="main-row flex flex-row justify-start items-start w-full">
+    <div class="app-info flex flex-col gap-4 w-1/3">
+      <div class="logo">
+        <img src="public/logos/logotipo_w.png" alt="Logotipo Trivo Blanco" class="h-14 w-34" />
+      </div>
+      <div class="text">
+        <p class="text-white font-regular">Donde el talento se encuentra <br /> con la oportunidad.</p>
+      </div>
+      <div class="icons flex flex-row gap-8 justify-start items-center">
+        <a href="">
+          <Instagram class="size-6 fill-white" />
+        </a>
+        <a href="">
+          <Facebook class="size-6 stroke-white fill-white" />
+        </a>
+        <a href="">
+          <Email class="size-6 stroke-white fill-white" />
+        </a>
+      </div>
+    </div>
+    <div class="navbar w-1/3">
+      <nav class="flex flex-col flex-start justify-start gap-4">
+        <div class="title px-3">
+          <h3 class="text-white text-lg font-semibold">Menú de Navegación</h3>
+        </div>
+        <ul class="flex flex-col gap-8">
+          <li>
+            <a href="/" class="text-lg text-white hover:bg-bg-secondary p-3 rounded-xl hover:text-primary transition ease-in-out duration-300 hover:transition hover:ease-in-out hover:duration-300"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="/about"
+              class="text-lg text-white hover:bg-bg-secondary p-3 rounded-xl hover:text-primary transition ease-in-out duration-300 hover:transition hover:ease-in-out hover:duration-300"
+              >Acerca de nosotros</a
+            >
+          </li>
+          <li>
+            <a
+              href="/services"
+              class="text-lg text-white hover:bg-bg-secondary p-3 rounded-xl hover:text-primary transition ease-in-out duration-300 hover:transition hover:ease-in-out hover:duration-300"
+              >Como empezar</a
+            >
+          </li>
+          <li>
+            <a
+              href="/services"
+              class="text-lg text-white hover:bg-bg-secondary p-3 rounded-xl hover:text-primary transition ease-in-out duration-300 hover:transition hover:ease-in-out hover:duration-300"
+              >Iniciar sesión</a
+            >
+          </li>
+          <li>
+            <a
+              href="/services"
+              class="text-lg text-white hover:bg-bg-secondary p-3 rounded-xl hover:text-primary transition ease-in-out duration-300 hover:transition hover:ease-in-out hover:duration-300"
+              >Registrarse</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="contact w-1/3 flex flex-col gap-4 justify-start items-start">
+      <div class="title">
+        <h3 class="text-white text-lg font-semibold">Contacto</h3>
+      </div>
+      <div class="info flex flex-col gap-4">
+        <p class="text-white font-light">contacto@trivo.com</p>
+        <p class="text-white font-light">+1 (809) 524 9999</p>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">
+    <p class="text-white text-sm font-light">Copyright © 2025 Trivo. Todos los derechos reservados.</p>
+  </div>
+  <div class="logo-bg absolute -right-10 -bottom-10">
+    <img src="/logos/isotipo_w.png" alt="isotipo trivo white" class="w-60 opacity-20" />
+  </div>
+</div>
