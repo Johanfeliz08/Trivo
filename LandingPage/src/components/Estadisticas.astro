@@ -1,0 +1,29 @@
+---
+import Contract from "public/iconos/Contract.astro";
+import Time from "public/iconos/Time.astro";
+import Users from "public/iconos/Users.astro";
+---
+
+<div class="estadisticas-container flex flex-row justify-center items-center w-full px-32 py-64 gap-18">
+  <div class="card bg-white shadow-xl p-8 flex flex-row justify-center items-center gap-4 rounded-2xl">
+    <div class="icon bg-bg-secondary rounded-full p-6"><Contract class="size-8 fill-primary" /></div>
+    <div class="data">
+      <div class="title font-bold text-primary text-2xl">+300</div>
+      <div class="description font-regular">Contratos realizados</div>
+    </div>
+  </div>
+  <div class="card bg-white shadow-xl p-8 flex flex-row justify-center items-center gap-4 rounded-2xl">
+    <div class="icon bg-bg-secondary rounded-full p-6"><Users class="size-8 fill-primary" /></div>
+    <div class="data">
+      <div class="title font-bold text-primary text-2xl">+1000</div>
+      <div class="description font-regular">Usuarios Registrados</div>
+    </div>
+  </div>
+  <div class="card bg-white shadow-xl p-8 flex flex-row justify-center items-center gap-4 rounded-2xl">
+    <div class="icon bg-bg-secondary rounded-full p-6"><Time class="size-8 fill-primary" /></div>
+    <div class="data">
+      <div class="title font-bold text-primary text-2xl">2 dias</div>
+      <div class="description font-regular">Tiempo de contratacion</div>
+    </div>
+  </div>
+</div>
