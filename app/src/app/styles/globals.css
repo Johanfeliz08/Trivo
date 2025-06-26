@@ -95,14 +95,104 @@
     @apply bg-bg-secondary text-primary border-l border-t border-b border-primary rounded-2xl;
     transition: all 0.3s ease-in-out;
   }
-}
-/* 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+
+  .goback-btn {
+    @apply w-60;
   }
-} */
+  .goback-btn > button {
+    @apply bg-bg-secondary text-primary border-r border-t border-b border-primary rounded-2xl flex flex-row justify-between items-center;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .goback-btn > button > .text {
+    @apply py-4 pl-4;
+  }
+  .goback-btn > button > .main-text {
+    @apply font-semibold;
+  }
+  .goback-btn > button > .secondary-text {
+    @apply font-light;
+  }
+
+  .goback-btn > button > .arrow {
+    @apply bg-[#452D70] h-full py-3 px-4 rounded-l-2xl rounded-bl-2xl;
+  }
+
+  .goback-btn > button > .arrow > svg {
+    @apply size-8;
+  }
+
+  .goback-btn:hover > button > .arrow > svg {
+    animation: bounce-x infinite 1s ease-in-out;
+  }
+
+  @keyframes bounce-x {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  /* Reclutador form */
+  #reclutadorForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    grid-template-areas:
+      "nombreEmpresa nombreEmpresa"
+      "nombre apellido"
+      "email ubicacion"
+      "biografia biografia"
+      "contraseña confirmarContraseña";
+  }
+
+  #reclutadorForm > .nombreEmpresa {
+    grid-area: nombreEmpresa;
+  }
+  #reclutadorForm > .nombre {
+    grid-area: nombre;
+  }
+
+  #reclutadorForm > .apellido {
+    grid-area: apellido;
+  }
+  #reclutadorForm > .email {
+    grid-area: email;
+  }
+  #reclutadorForm > .ubicacion {
+    grid-area: ubicacion;
+  }
+  #reclutadorForm > .biografia {
+    grid-area: biografia;
+  }
+  #reclutadorForm > .contraseña {
+    grid-area: contraseña;
+  }
+  #reclutadorForm > .confirmarContraseña {
+    grid-area: confirmarContraseña;
+  }
+
+  /* Experto form */
+  #expertoForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    grid-template-areas:
+      "nombre apellido"
+      "email ubicacion"
+      "biografia biografia"
+      "contraseña confirmarContraseña";
+  }
+}
 
 body {
   background: var(--color-bg-primary);
