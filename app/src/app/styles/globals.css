@@ -63,6 +63,39 @@
     @apply list-none;
   }
 }
+
+@layer components {
+  .next-btn {
+    @apply w-60;
+  }
+  .next-btn > button {
+    @apply bg-primary text-white border-l border-t border-b border-transparent rounded-2xl flex flex-row justify-between items-center;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .next-btn > button > .text {
+    @apply py-4 pl-4;
+  }
+  .next-btn > button > .main-text {
+    @apply font-semibold;
+  }
+  .next-btn > button > .secondary-text {
+    @apply font-light;
+  }
+
+  .next-btn > button > .arrow {
+    @apply bg-[#452D70] h-full py-3 px-4 rounded-r-2xl rounded-br-2xl;
+  }
+
+  .next-btn > button > .arrow > img {
+    @apply size-8;
+  }
+
+  .next-btn:hover > button {
+    @apply bg-bg-secondary text-primary border-l border-t border-b border-primary rounded-2xl;
+    transition: all 0.3s ease-in-out;
+  }
+}
 /* 
 @media (prefers-color-scheme: dark) {
   :root {
