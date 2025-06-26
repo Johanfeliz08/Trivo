@@ -1,0 +1,34 @@
+[
+  {
+    "interesId": "18f24c94-2ca6-4d86-bd2a-259d90eb58fd",
+    "nombre": "Interes0",
+    "fechaRegistro": "2025-06-26T00:16:25.105168",
+    "fechaActualizacion": "2025-06-26T00:16:25.105173",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff22",
+    "creadoPor": "feddfad9-06ec-4c46-bec5-31ffba15f08b"
+  },
+  {
+    "interesId": "0ac20692-391f-4a60-947f-2fb190ae8127",
+    "nombre": "Interes1",
+    "fechaRegistro": "2025-06-26T00:16:25.105210",
+    "fechaActualizacion": "2025-06-26T00:16:25.105212",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f400",
+    "creadoPor": "3f9dcd10-6e59-40f7-9251-469d02cc156a"
+  },
+  {
+    "interesId": "98d6280d-a754-40e0-8c56-920aad136e32",
+    "nombre": "Interes2",
+    "fechaRegistro": "2025-06-26T00:16:25.105220",
+    "fechaActualizacion": "2025-06-26T00:16:25.105222",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff22",
+    "creadoPor": "188312f7-9bda-42dd-8129-1a628a557c13"
+  },
+  {
+    "interesId": "a9b91233-d902-4a03-aa1b-022bd4f62892",
+    "nombre": "Interes3",
+    "fechaRegistro": "2025-06-26T00:16:25.105229",
+    "fechaActualizacion": "2025-06-26T00:16:25.105232",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f400",
+    "creadoPor": "f33a8bb1-213f-4549-a126-ff01f13083fd"
+  }
+]
