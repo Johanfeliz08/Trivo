@@ -192,6 +192,32 @@
       "biografia biografia"
       "contraseña confirmarContraseña";
   }
+
+  #expertoForm > .nombreEmpresa {
+    grid-area: nombreEmpresa;
+  }
+  #expertoForm > .nombre {
+    grid-area: nombre;
+  }
+
+  #expertoForm > .apellido {
+    grid-area: apellido;
+  }
+  #expertoForm > .email {
+    grid-area: email;
+  }
+  #expertoForm > .ubicacion {
+    grid-area: ubicacion;
+  }
+  #expertoForm > .biografia {
+    grid-area: biografia;
+  }
+  #expertoForm > .contraseña {
+    grid-area: contraseña;
+  }
+  #expertoForm > .confirmarContraseña {
+    grid-area: confirmarContraseña;
+  }
 }
 
 body {
