@@ -30,5 +30,142 @@
     "fechaActualizacion": "2025-06-26T00:16:25.105232",
     "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f400",
     "creadoPor": "f33a8bb1-213f-4549-a126-ff01f13083fd"
+  },
+
+  {
+    "interesId": "fa970031-18f0-40f0-8b3c-8e0e154a5d01",
+    "nombre": "Interfaz de usuario",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f300",
+    "creadoPor": "5dc08410-6f28-4bde-89ea-0c1a19f331f1"
+  },
+  {
+    "interesId": "de485b79-e005-42e2-b0e3-84a9a6c7d2f4",
+    "nombre": "Prototipado",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f300",
+    "creadoPor": "bd6f2d83-7256-4f7e-8d26-6e28a82686e6"
+  },
+  {
+    "interesId": "7b70b35f-8f40-452f-b369-059e42e14b62",
+    "nombre": "Desarrollo web",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff29",
+    "creadoPor": "fc91b38e-d701-4cf1-b87d-25e70a8e8827"
+  },
+  {
+    "interesId": "f2a42bd8-77d0-429a-ae9c-61a59d4e9aa5",
+    "nombre": "Aplicaciones móviles",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff29",
+    "creadoPor": "40b3a6ac-d0a0-4d6c-b9e9-1df68ef7a849"
+  },
+  {
+    "interesId": "91e6a90f-3db2-4623-b0d9-2cd9b03fc719",
+    "nombre": "Branding",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f300",
+    "creadoPor": "1a824b8f-8d8a-43d3-8dd1-5a91584fbbef"
+  },
+  {
+    "interesId": "e3cfec8e-b05e-4ec4-a89e-c91c5fa74bc4",
+    "nombre": "SEO",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff22",
+    "creadoPor": "8c650ad4-c195-495e-90c6-29063a9d69d4"
+  },
+  {
+    "interesId": "71cdb7fd-9af4-4d48-b9a0-6f899b43b510",
+    "nombre": "Email Marketing",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff22",
+    "creadoPor": "22502c0f-3aa7-4961-a1e0-ec4820f7d421"
+  },
+  {
+    "interesId": "10a2c445-4a31-43cb-9a91-78ce47fa5f2a",
+    "nombre": "Liderazgo empresarial",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f400",
+    "creadoPor": "e12c680c-3cf5-4e11-89a5-001f93c118e5"
+  },
+  {
+    "interesId": "ac844aae-9f45-4b58-9305-b73a64aa1fd2",
+    "nombre": "Modelado de datos",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f402",
+    "creadoPor": "16deae62-ec79-43ef-a0cb-365e0247d1bb"
+  },
+  {
+    "interesId": "cf201c4c-b5c6-4cbe-8c5f-9c22a6cb8f3c",
+    "nombre": "Educación online",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff23",
+    "creadoPor": "e0c9483b-6b5d-4c09-bcd4-0d3a7a7138fd"
+  },
+  {
+    "interesId": "e28cefc6-03b4-4c20-a6e3-2c4914c652e9",
+    "nombre": "Contabilidad financiera",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f401",
+    "creadoPor": "a1ff7aa4-909e-4c48-9296-b159a46db943"
+  },
+  {
+    "interesId": "78e6f938-c1f7-4dcb-b6dc-92cbeff07c5f",
+    "nombre": "Automatización de procesos",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff29",
+    "creadoPor": "7d65a031-8947-4e3a-bbb5-1875bbecb718"
+  },
+  {
+    "interesId": "ca911dd5-43f3-42cf-8b73-174bf3e95bc6",
+    "nombre": "Microservicios",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff29",
+    "creadoPor": "78b5dc41-f697-45d2-bdec-d2d8830ef073"
+  },
+  {
+    "interesId": "4b05c586-1614-4557-b6f3-57fc4bc9c32d",
+    "nombre": "E-commerce",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f400",
+    "creadoPor": "f322b6bb-9a52-45b0-a505-83fce1aebbb1"
+  },
+  {
+    "interesId": "07c22f7e-88bb-4fc4-b712-9cb57f53c943",
+    "nombre": "Diseño de interfaces",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f300",
+    "creadoPor": "ff6e95ff-437e-4ad2-a087-40882a3eb4a3"
+  },
+  {
+    "interesId": "364a75ff-96f3-4b2d-a7bb-1be00bd9e7d2",
+    "nombre": "UI Testing",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff29",
+    "creadoPor": "0ee99f7b-024b-4134-9fae-491b4015db9e"
+  },
+  {
+    "interesId": "1fe6e197-8775-4c1c-80d3-7c46f6a9fc90",
+    "nombre": "SaaS",
+    "fechaRegistro": "2025-06-27T05:25:00.000Z",
+    "fechaActualizacion": "2025-06-27T05:25:00.000Z",
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f400",
+    "creadoPor": "b27087fa-6815-4dc4-8182-6a1294ff7b66"
   }
 ]

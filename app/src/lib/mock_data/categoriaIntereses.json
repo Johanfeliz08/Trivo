@@ -26,5 +26,73 @@
   {
     "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f401",
     "nombre": "Finanzas y Contabilidad"
+  },
+  {
+    "categoriaId": "14df69b4-fb4b-4f7c-bd83-6f8c3c6e1d01",
+    "nombre": "Inteligencia Artificial"
+  },
+  {
+    "categoriaId": "d0b4eafb-76f7-43d1-8ebf-bc3e85cc8022",
+    "nombre": "Ciberseguridad"
+  },
+  {
+    "categoriaId": "3e7412ce-e82b-4b35-9122-b0ab0ff70634",
+    "nombre": "Gestión de Proyectos"
+  },
+  {
+    "categoriaId": "f92cbf1d-2c89-4e30-b2cf-f97357fa5f56",
+    "nombre": "Soporte Técnico"
+  },
+  {
+    "categoriaId": "a4d6ea63-e318-4dc4-89cb-ff1f567e7a23",
+    "nombre": "Blockchain y Criptomonedas"
+  },
+  {
+    "categoriaId": "b04cb14e-b0fd-4200-a267-7aa755f61f22",
+    "nombre": "Internet de las Cosas (IoT)"
+  },
+  {
+    "categoriaId": "94970260-49c4-49cf-b4b6-83aef3d3d112",
+    "nombre": "Realidad Aumentada y Virtual"
+  },
+  {
+    "categoriaId": "0b2d9853-1b60-4c66-bbc7-48c2eaf408b4",
+    "nombre": "Desarrollo Web"
+  },
+  {
+    "categoriaId": "2efca64f-3657-466a-b117-7541c0dbde45",
+    "nombre": "Desarrollo Móvil"
+  },
+  {
+    "categoriaId": "2b792f1e-f63d-4b70-ae8b-1b57b17010ae",
+    "nombre": "Testing y QA"
+  },
+  {
+    "categoriaId": "3f577ec3-d78c-4e4f-84b3-c3fd5e897b9d",
+    "nombre": "DevOps e Infraestructura"
+  },
+  {
+    "categoriaId": "6d642f1a-faa5-4fe0-9fa7-706dff14a72e",
+    "nombre": "Redacción y Traducción"
+  },
+  {
+    "categoriaId": "0e735ee1-eeb2-4c91-9d89-7a2a3c5bc524",
+    "nombre": "Fotografía y Video"
+  },
+  {
+    "categoriaId": "4d4f9a70-0f2f-4c6b-a2c2-2276dbbf2e6a",
+    "nombre": "Recursos Humanos"
+  },
+  {
+    "categoriaId": "aa410f8e-9db7-4df8-8e0a-28f293c62334",
+    "nombre": "Legal y Asesoría"
+  },
+  {
+    "categoriaId": "c51283d3-4de1-4d39-90e6-46c3ecdf847e",
+    "nombre": "Arquitectura y Construcción"
+  },
+  {
+    "categoriaId": "f47eebd2-7f08-4e3a-a4c6-85ac7761794b",
+    "nombre": "E-commerce y Dropshipping"
   }
 ]
