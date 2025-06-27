@@ -23,7 +23,7 @@ export default function SignUpPage() {
   });
 
   return (
-    <>
+    <div className="flex flex-col justify-between items-center h-full w-full">
       <div className="progress-bar flex flex-row justify-center items-center w-full py-5">
         <div className="step-1 w-1/4 flex flex-row justify-center items-center">
           <div className={`dot rounded-full h-4 w-4 ${currentStep >= 1 ? "bg-primary" : "bg-gray-300"}`}></div>
@@ -44,6 +44,6 @@ export default function SignUpPage() {
       {currentStep === 1 && <Step1 currentStep={currentStep} setCurrentStep={setCurrentStep} formData={formData} setFormData={setFormData} />}
       {currentStep === 2 && <Step2 currentStep={currentStep} setCurrentStep={setCurrentStep} formData={formData} setFormData={setFormData} />}
       {currentStep === 3 && <Step3 currentStep={currentStep} setCurrentStep={setCurrentStep} formData={formData} setFormData={setFormData} />}
-    </>
+    </div>
   );
 }

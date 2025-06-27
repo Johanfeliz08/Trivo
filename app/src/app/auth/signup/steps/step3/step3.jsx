@@ -16,19 +16,13 @@ export default function Step3({ currentStep, setCurrentStep, formData, setFormDa
   // 2 - Seleccionar intereses
   const [currentInternalStep, setCurrentInternalStep] = useState(1);
 
-  // Categoria de intereses
-  let categoriasIntereses = [];
-  categoriasInteresesData.map((categoriaInteres) => {
-    categoriasIntereses.push(categoriaInteres);
-  });
-
   return (
-    <>
+    <div className="h-190 min-h-190 max-h-190 flex flex-col justify-center items-center gap-8">
       <div className="title">
         <h1 className="text-3xl font-semibold text-primary">¡Dinos en qué te gustaría colaborar!</h1>
       </div>
 
-      {currentInternalStep === 1 && <CategoriaInteresesPage categoriasIntereses={categoriasIntereses} formData={formData} setFormData={setFormData} />}
+      {currentInternalStep === 1 && <CategoriaInteresesPage formData={formData} setFormData={setFormData} />}
 
       {currentInternalStep === 2 && <InteresesPage formData={formData} setFormData={setFormData} />}
 
@@ -78,6 +72,6 @@ export default function Step3({ currentStep, setCurrentStep, formData, setFormDa
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

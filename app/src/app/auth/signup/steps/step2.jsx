@@ -12,7 +12,7 @@ export default function Step2({ currentStep, setCurrentStep, formData, setFormDa
   }
 
   return (
-    <div className="reclutador-form-container h-full flex flex-col justify-center items-center gap-8">
+    <div className="reclutador-form-container h-190 min-h-190 max-h-190 flex flex-col justify-center items-center gap-8">
       <div className="title">
         <h1 className="text-3xl font-semibold text-primary">¡Cuentanos mas sobre ti!</h1>
       </div>
