@@ -78,7 +78,7 @@ export default function LoginPage() {
             <span className="text-regular text-md opacity-60">
               ¿Aun no tienes una cuenta? <br />
             </span>
-            <a href="#" className="font-semibold text-primary hover:underline">
+            <a href="/auth/signup" className="font-semibold text-primary hover:underline">
               Regístrate ahora
             </a>
           </div>
