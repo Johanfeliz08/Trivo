@@ -1,6 +1,10 @@
 import NextButton from "@/components/ui/next-button.jsx";
 import GoBackButton from "@/components/ui/goback-button.jsx";
 export default function Step2({ currentStep, setCurrentStep, formData, setFormData }) {
+  if (currentStep !== 2) {
+    setCurrentStep(2);
+  }
+
   if (formData.role === "") {
     // If the role is not selected, redirect to step 1
     setCurrentStep(1);
