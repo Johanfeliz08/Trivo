@@ -1,0 +1,30 @@
+[
+  {
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff29",
+    "nombre": "Desarrollo de Software"
+  },
+  {
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f300",
+    "nombre": "Diseño y Creatividad"
+  },
+  {
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff22",
+    "nombre": "Marketing y Ventas"
+  },
+  {
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f400",
+    "nombre": "Negocios y Emprendimiento"
+  },
+  {
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f402",
+    "nombre": "Ciencia de Datos"
+  },
+  {
+    "categoriaId": "e658556d-5b68-4b32-8a7b-1abc4b69ff23",
+    "nombre": "Educación y Formación"
+  },
+  {
+    "categoriaId": "9acb21c5-0840-4bbc-aa52-b4c4b3d3f401",
+    "nombre": "Finanzas y Contabilidad"
+  }
+]
