@@ -1,6 +1,6 @@
 import NextButton from "@/components/ui/next-button.jsx";
 
-export default function Step1({ currentStep, setCurrentStep, formData, setFormData }) {
+export default function Step1({ currentStep, setCurrentStep, userData, setUserData }) {
   // Update current step to 1 when this component is rendered
   if (currentStep !== 1) {
     setCurrentStep(1);
@@ -15,11 +15,11 @@ export default function Step1({ currentStep, setCurrentStep, formData, setFormDa
         </div>
         <div className="options flex flex-col gap-8">
           <div className="option w-150 max-w-150">
-            <input type="radio" id="reclutador" name="role" value="reclutador" className="hidden" onChange={(e) => setFormData({ ...formData, role: e.target.value })} />
+            <input type="radio" id="reclutador" name="role" value="reclutador" className="hidden" onChange={(e) => setUserData({ ...userData, role: e.target.value })} />
             <label
               htmlFor="reclutador"
               className={`bg-bg-secondary flex flex-row justify-center items-center border-2 w-full p-5 gap-5 rounded-2xl shadow-md h-36 min-h-36 max-h-36 ${
-                formData.role === "reclutador" ? "border-primary" : "border-transparent"
+                userData.role === "reclutador" ? "border-primary" : "border-transparent"
               }`}
             >
               <div className="icon bg-white rounded-full flex justify-center items-center w-30 h-20">
@@ -34,11 +34,11 @@ export default function Step1({ currentStep, setCurrentStep, formData, setFormDa
             </label>
           </div>
           <div className="option w-150 max-w-150">
-            <input type="radio" id="experto" name="role" value="experto" className="hidden" onChange={(e) => setFormData({ ...formData, role: e.target.value })} />
+            <input type="radio" id="experto" name="role" value="experto" className="hidden" onChange={(e) => setUserData({ ...userData, role: e.target.value })} />
             <label
               htmlFor="experto"
               className={`bg-bg-secondary flex flex-row justify-center border-2 items-center w-full p-5 gap-5 rounded-2xl shadow-md h-36 min-h-36 max-h-36 ${
-                formData.role === "experto" ? "border-primary" : "border-transparent"
+                userData.role === "experto" ? "border-primary" : "border-transparent"
               }`}
             >
               <div className="icon bg-white rounded-full flex justify-center items-center w-35 h-20">
