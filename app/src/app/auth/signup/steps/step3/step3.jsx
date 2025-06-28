@@ -5,7 +5,7 @@ import NextButton from "@/components/ui/next-button.jsx";
 import GoBackButton from "@/components/ui/goback-button.jsx";
 import InteresesPage from "./InteresesPage";
 import CategoriaInteresesPage from "./CategoriaInteresesPage";
-export default function Step3({ currentStep, setCurrentStep, formData, setFormData }) {
+export default function Step3({ currentStep, setCurrentStep, userData, setUserData }) {
   // Numero del paso general
   if (currentStep !== 3) {
     setCurrentStep(3);
@@ -22,9 +22,9 @@ export default function Step3({ currentStep, setCurrentStep, formData, setFormDa
         <h1 className="text-3xl font-semibold text-primary">¡Dinos en qué te gustaría colaborar!</h1>
       </div>
 
-      {currentInternalStep === 1 && <CategoriaInteresesPage formData={formData} setFormData={setFormData} />}
+      {currentInternalStep === 1 && <CategoriaInteresesPage userData={userData} setUserData={setUserData} />}
 
-      {currentInternalStep === 2 && <InteresesPage formData={formData} setFormData={setFormData} />}
+      {currentInternalStep === 2 && <InteresesPage userData={userData} setUserData={setUserData} />}
 
       <div className="buttons flex flex-row-reverse justify-between items-center">
         <div className="next-btn relative">
@@ -37,7 +37,7 @@ export default function Step3({ currentStep, setCurrentStep, formData, setFormDa
                 setCurrentStep(currentStep + 1);
               }
             }}
-            disabled={formData.categoriasIntereses.length === 0}
+            disabled={userData.categoriasIntereses.length === 0}
           >
             <div className="text px-10">
               <span className="main-text font-semibold"></span>
