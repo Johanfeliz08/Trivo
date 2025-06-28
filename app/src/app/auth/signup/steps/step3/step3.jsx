@@ -37,6 +37,7 @@ export default function Step3({ currentStep, setCurrentStep, formData, setFormDa
                 setCurrentStep(currentStep + 1);
               }
             }}
+            disabled={formData.categoriasIntereses.length === 0}
           >
             <div className="text px-10">
               <span className="main-text font-semibold"></span>
