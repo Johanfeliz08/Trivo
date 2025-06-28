@@ -14,6 +14,28 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
     return null; // Prevent rendering this step if role is not selected
   }
 
+  // Define the form schemas for each role
+  const formReclutadorSchema = z.object({
+    nombreEmpresa: z.string().min(5, "El nombre de la empresa debe tener al menos 5 caracteres").max(100, "El nombre de la empresa no puede exceder los 100 caracteres"),
+    nombre: z.string().min(3, "Su nombre debe tener al menos 3 caracteres"),
+    apellido: z.string().min(3, "Su apellido debe tener al menos 3 caracteres"),
+    email: z.string().email("El email es inválido"),
+    ubicacion: z.string().min(1, "La ubicación es requerida"),
+    contraseña: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+    confirmarcontraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
+    biografia: z.string().min(10, "La biografía debe tener al menos 10 caracteres").max(500, "La biografía no puede exceder los 500 caracteres"),
+  });
+
+  const formExpertoSchema = z.object({
+    nombre: z.string().min(3, "Su nombre debe tener al menos 3 caracteres"),
+    apellido: z.string().min(3, "Su apellido debe tener al menos 3 caracteres"),
+    email: z.string().email("El email es inválido"),
+    ubicacion: z.string().min(1, "La ubicación es requerida"),
+    contraseña: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+    confirmarcontraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
+    biografia: z.string().min(10, "La biografía debe tener al menos 10 caracteres").max(500, "La biografía no puede exceder los 500 caracteres"),
+  });
+
   // Handle form data
   const [formData, setFormData] = useState({ ...userData, nombreEmpresa: "" });
   const [errors, setErrors] = useState({
@@ -51,16 +73,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
     },
   });
 
-  // Define the schema for the form validation
-  const formSchema = z.object({
-    nombreEmpresa: z.string().min(5, "El nombre de la empresa debe tener al menos 5 caracteres").max(100, "El nombre de la empresa no puede exceder los 100 caracteres"),
-    nombre: z.string().min(3, "Su nombre debe tener al menos 3 caracteres"),
-    apellido: z.string().min(3, "Su apellido debe tener al menos 3 caracteres"),
-    email: z.string().email("El email es inválido"),
-    ubicacion: z.string().min(1, "La ubicación es requerida"),
-    contraseña: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
-    confirmarcontraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
-  });
+  const [formSchema, setFormSchema] = useState(userData.role === "reclutador" ? formReclutadorSchema : formExpertoSchema);
 
   const validateInput = (inputName, value) => {
     const fieldSchema = formSchema.pick({ [inputName]: true });
@@ -72,7 +85,6 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
     }));
 
     if (!result.success) {
-      console.log(result.error.issues[0].message);
       setErrors((prevErrors) => ({
         ...prevErrors,
         [inputName]: {
@@ -93,20 +105,22 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
 
   const handleSubmit = (formData) => {
     const result = formSchema.safeParse(formData);
+
     if (result.success) {
       setUserData({ ...userData, ...formData });
-      setCurrentStep(3);
+      setCurrentStep(currentStep + 1);
+      console.log("Form submitted successfully:", formData);
     }
   };
 
   return (
-    <div className="reclutador-form-container h-190 min-h-190 max-h-190 flex flex-col justify-center items-center gap-8">
+    <div className="form-container h-190 flex flex-col justify-center items-center gap-8">
       <div className="title">
         <h1 className="text-3xl font-semibold text-primary">¡Cuentanos mas sobre ti!</h1>
       </div>
       <div className="form">
         {userData.role === "reclutador" && currentStep === 2 && (
-          <form id="reclutadorForm" action="" className=" grid grid-cols-2 gap-4 justify-center items-center">
+          <form id="reclutadorForm" action="" className=" grid grid-cols-2 gap-4 justify-center items-center max-w-180 w-180">
             <div className="input flex flex-col gap-2 nombreEmpresa">
               <label className="font-medium text-lg" htmlFor="nombreEmpresa">
                 Nombre de la Empresa
@@ -118,7 +132,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="nombreEmpresa"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.nombreEmpresa.error ? <span className="text-red-500">{errors.nombreEmpresa.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombreEmpresa.error ? errors.nombreEmpresa.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 nombre">
               <label className="font-medium text-lg" htmlFor="nombre">
@@ -131,7 +145,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="nombre"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.nombre.error ? <span className="text-red-500">{errors.nombre.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombre.error ? errors.nombre.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 apellido">
               <label className="font-medium text-lg" htmlFor="apellido">
@@ -144,7 +158,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="apellido"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.apellido.error ? <span className="text-red-500">{errors.apellido.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.apellido.error ? errors.apellido.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 email">
               <label className="font-medium text-lg" htmlFor="email">
@@ -157,7 +171,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="email"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.email.error ? <span className="text-red-500">{errors.email.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.email.error ? errors.email.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 ubicacion">
               <label className="font-medium text-lg" htmlFor="ubicacion">
@@ -170,7 +184,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="ubicacion"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.ubicacion.error ? <span className="text-red-500">{errors.ubicacion.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.ubicacion.error ? errors.ubicacion.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 contraseña">
               <label className="font-medium text-lg" htmlFor="contraseña">
@@ -183,7 +197,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="contraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.contraseña.error ? <span className="text-red-500">{errors.contraseña.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.contraseña.error ? errors.contraseña.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 confirmarContraseña">
               <label className="font-medium text-lg" htmlFor="confirmarcontraseña">
@@ -196,7 +210,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="confirmarcontraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.confirmarcontraseña.error ? <span className="text-red-500">{errors.confirmarcontraseña.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarcontraseña.error ? errors.confirmarcontraseña.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 biografia">
               <label className="font-medium text-lg" htmlFor="biografia">
@@ -209,12 +223,12 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="biografia"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.biografia.error ? <span className="text-red-500">{errors.biografia.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.biografia.error ? errors.biografia.message : ""}</span>}
             </div>
           </form>
         )}
         {userData.role === "experto" && currentStep === 2 && (
-          <form id="expertoForm" action="" className=" grid grid-cols-2 gap-4 justify-center items-center">
+          <form id="expertoForm" action="" className=" grid grid-cols-2 gap-4 justify-center items-center max-w-180 w-180">
             <div className="input flex flex-col gap-2 nombre">
               <label className="font-medium text-lg" htmlFor="nombre">
                 Nombre
@@ -226,7 +240,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="nombre"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.nombre.error ? <span className="text-red-500">{errors.nombre.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombre.error ? errors.nombre.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 apellido">
               <label className="font-medium text-lg" htmlFor="apellido">
@@ -239,7 +253,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="apellido"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.apellido.error ? <span className="text-red-500">{errors.apellido.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.apellido.error ? errors.apellido.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 email">
               <label className="font-medium text-lg" htmlFor="email">
@@ -252,7 +266,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="email"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.email.error ? <span className="text-red-500">{errors.email.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.email.error ? errors.email.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 ubicacion">
               <label className="font-medium text-lg" htmlFor="ubicacion">
@@ -265,7 +279,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="ubicacion"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.ubicacion.error ? <span className="text-red-500">{errors.ubicacion.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.ubicacion.error ? errors.ubicacion.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 contraseña">
               <label className="font-medium text-lg" htmlFor="contraseña">
@@ -278,7 +292,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="contraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.contraseña.error ? <span className="text-red-500">{errors.contraseña.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.contraseña.error ? errors.contraseña.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 confirmarContraseña">
               <label className="font-medium text-lg" htmlFor="confirmarcontraseña">
@@ -291,7 +305,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="confirmarcontraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.confirmarcontraseña.error ? <span className="text-red-500">{errors.confirmarcontraseña.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarcontraseña.error ? errors.confirmarcontraseña.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 biografia">
               <label className="font-medium text-lg" htmlFor="biografia">
@@ -304,13 +318,25 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 id="biografia"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
-              {errors.biografia.error ? <span className="text-red-500">{errors.biografia.message}</span> : ""}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.biografia.error ? errors.biografia.message : ""}</span>}
             </div>
           </form>
         )}
       </div>
       <div className="buttons flex flex-row-reverse justify-between items-center">
-        <NextButton mainText="" secondaryText="Continuar" currentStep={currentStep} setCurrentStep={setCurrentStep} />
+        <div className="next-btn relative">
+          <button className=" cursor-pointer" onClick={() => handleSubmit(formData)} disabled={!formSchema.safeParse(formData).success}>
+            <div className="text px-10">
+              <span className="main-text font-semibold"></span>
+              <span className="secondary-text font-light">Continuar</span>
+            </div>
+            <div className="arrow">
+              <svg className="size-8 fill-white" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+                <path d="m18.541,10.894l-4.717-4.717-.707.707,4.616,4.617H5v1h12.735l-4.618,4.617.707.707,4.717-4.716c.296-.296.459-.69.459-1.108s-.163-.812-.459-1.106Z" />
+              </svg>
+            </div>
+          </button>
+        </div>
         <GoBackButton mainText="" secondaryText="Volver" currentStep={currentStep} setCurrentStep={setCurrentStep} />
       </div>
     </div>
