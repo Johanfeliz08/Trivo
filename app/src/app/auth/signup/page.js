@@ -25,7 +25,7 @@ export default function SignUpPage() {
   return (
     <>
       <title>Trivo | Registrate</title>
-      <div className="flex flex-col justify-between items-center h-full w-full">
+      <div className="flex flex-col justify-between items-center h-full w-full overflow-auto gap-8 hide-scrollbar">
         <div className="progress-bar flex flex-row justify-center items-center w-full py-5">
           <div className="step-1 w-1/4 flex flex-row justify-center items-center">
             <div className={`dot rounded-full h-4 w-4 ${currentStep >= 1 ? "bg-primary" : "bg-gray-300"}`}></div>
