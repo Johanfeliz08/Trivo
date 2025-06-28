@@ -96,6 +96,14 @@
     transition: all 0.3s ease-in-out;
   }
 
+  .next-btn > button:disabled {
+    @apply bg-gray-300 text-gray-500 border-l border-t border-b border-gray-300 cursor-not-allowed;
+  }
+
+  .next-btn > button:disabled > .arrow {
+    @apply bg-gray-500;
+  }
+
   .goback-btn {
     @apply w-60;
   }
