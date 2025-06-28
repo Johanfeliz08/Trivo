@@ -1,8 +1,4 @@
 import { useEffect, useState } from "react";
-import interesesData from "@/lib/mock_data/intereses.json";
-import categoriasInteresesData from "@/lib/mock_data/categoriaIntereses.json";
-import NextButton from "@/components/ui/next-button.jsx";
-import GoBackButton from "@/components/ui/goback-button.jsx";
 import InteresesPage from "./InteresesPage";
 import CategoriaInteresesPage from "./CategoriaInteresesPage";
 export default function Step3({ currentStep, setCurrentStep, userData, setUserData }) {
