@@ -13,7 +13,7 @@ export default function SignUpPage() {
     apellido: "",
     biografia: "",
     email: "",
-    contrasenaHash: "",
+    contraseña: "",
     nombreUsuario: "",
     ubicacion: "",
     cuentaConfirmada: false,
