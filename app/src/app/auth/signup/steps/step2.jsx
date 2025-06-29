@@ -22,7 +22,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
     email: z.string().email("El email es inválido"),
     ubicacion: z.string().min(1, "La ubicación es requerida"),
     contraseña: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
-    confirmarcontraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
+    confirmarContraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
     biografia: z.string().min(10, "La biografía debe tener al menos 10 caracteres").max(500, "La biografía no puede exceder los 500 caracteres"),
   });
 
@@ -32,12 +32,16 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
     email: z.string().email("El email es inválido"),
     ubicacion: z.string().min(1, "La ubicación es requerida"),
     contraseña: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
-    confirmarcontraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
+    confirmarContraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
     biografia: z.string().min(10, "La biografía debe tener al menos 10 caracteres").max(500, "La biografía no puede exceder los 500 caracteres"),
   });
 
   // Handle form data
-  const [formData, setFormData] = useState({ ...userData, nombreEmpresa: "" });
+  const [formData, setFormData] = useState(() => ({
+    ...userData,
+    nombreEmpresa: userData.nombreEmpresa ?? "",
+    confirmarContraseña: "",
+  }));
 
   const [errors, setErrors] = useState({
     nombreEmpresa: {
@@ -64,7 +68,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
       error: false,
       message: "",
     },
-    confirmarcontraseña: {
+    confirmarContraseña: {
       error: false,
       message: "",
     },
@@ -131,7 +135,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 type="text"
                 name="nombreEmpresa"
                 id="nombreEmpresa"
-                value={formData.nombreEmpresa ? formData.nombreEmpresa : userData.nombreEmpresa}
+                value={formData.nombreEmpresa}
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombreEmpresa.error ? errors.nombreEmpresa.message : ""}</span>}
@@ -146,7 +150,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="nombre"
                 id="nombre"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.nombre ? formData.nombre : userData.nombre}
+                value={formData.nombre}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombre.error ? errors.nombre.message : ""}</span>}
             </div>
@@ -160,7 +164,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="apellido"
                 id="apellido"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.apellido ? formData.apellido : userData.apellido}
+                value={formData.apellido}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.apellido.error ? errors.apellido.message : ""}</span>}
             </div>
@@ -174,7 +178,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="email"
                 id="email"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.email ? formData.email : userData.email}
+                value={formData.email}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.email.error ? errors.email.message : ""}</span>}
             </div>
@@ -188,7 +192,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="ubicacion"
                 id="ubicacion"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.ubicacion ? formData.ubicacion : userData.ubicacion}
+                value={formData.ubicacion}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.ubicacion.error ? errors.ubicacion.message : ""}</span>}
             </div>
@@ -202,7 +206,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="biografia"
                 id="biografia"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.biografia ? formData.biografia : userData.biografia}
+                value={formData.biografia}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.biografia.error ? errors.biografia.message : ""}</span>}
             </div>
@@ -216,22 +220,23 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="contraseña"
                 id="contraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.contraseña ? formData.contraseña : userData.contraseña}
+                value={formData.contraseña}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.contraseña.error ? errors.contraseña.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 confirmarContraseña">
-              <label className="font-medium text-lg" htmlFor="confirmarcontraseña">
+              <label className="font-medium text-lg" htmlFor="confirmarContraseña">
                 Confirmar Contraseña
               </label>
               <input
                 className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
                 type="password"
-                name="confirmarcontraseña"
-                id="confirmarcontraseña"
+                name="confirmarContraseña"
+                id="confirmarContraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.confirmarContraseña}
               />
-              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarcontraseña.error ? errors.confirmarcontraseña.message : ""}</span>}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarContraseña.error ? errors.confirmarContraseña.message : ""}</span>}
             </div>
           </form>
         )}
@@ -247,7 +252,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="nombre"
                 id="nombre"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.nombre ? formData.nombre : userData.nombre}
+                value={formData.nombre}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombre.error ? errors.nombre.message : ""}</span>}
             </div>
@@ -261,7 +266,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="apellido"
                 id="apellido"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.apellido ? formData.apellido : userData.apellido}
+                value={formData.apellido}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.apellido.error ? errors.apellido.message : ""}</span>}
             </div>
@@ -275,7 +280,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="email"
                 id="email"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.email ? formData.email : userData.email}
+                value={formData.email}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.email.error ? errors.email.message : ""}</span>}
             </div>
@@ -289,7 +294,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="ubicacion"
                 id="ubicacion"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.ubicacion ? formData.ubicacion : userData.ubicacion}
+                value={formData.ubicacion}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.ubicacion.error ? errors.ubicacion.message : ""}</span>}
             </div>
@@ -304,7 +309,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="biografia"
                 id="biografia"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.biografia ? formData.biografia : userData.biografia}
+                value={formData.biografia}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.biografia.error ? errors.biografia.message : ""}</span>}
             </div>
@@ -318,22 +323,23 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="contraseña"
                 id="contraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.contraseña ? formData.contraseña : userData.contraseña}
+                value={formData.contraseña}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.contraseña.error ? errors.contraseña.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 confirmarContraseña">
-              <label className="font-medium text-lg" htmlFor="confirmarcontraseña">
+              <label className="font-medium text-lg" htmlFor="confirmarContraseña">
                 Confirmar Contraseña
               </label>
               <input
                 className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
                 type="password"
-                name="confirmarcontraseña"
-                id="confirmarcontraseña"
+                name="confirmarContraseña"
+                id="confirmarContraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.confirmarContraseña}
               />
-              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarcontraseña.error ? errors.confirmarcontraseña.message : ""}</span>}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarContraseña.error ? errors.confirmarContraseña.message : ""}</span>}
             </div>
           </form>
         )}
