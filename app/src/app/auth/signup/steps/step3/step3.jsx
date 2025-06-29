@@ -13,7 +13,7 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
   const [currentInternalStep, setCurrentInternalStep] = useState(1);
 
   return (
-    <div className="h-190 min-h-190 max-h-190 flex flex-col justify-center items-center gap-8">
+    <div className="h-190  max-h-190 flex flex-col justify-center items-center gap-8">
       <div className="title">
         <h1 className="text-3xl font-semibold text-primary">¡Dinos en qué te gustaría colaborar!</h1>
       </div>
