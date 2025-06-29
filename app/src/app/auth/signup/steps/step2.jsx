@@ -1,7 +1,7 @@
 import NextButton from "@/components/ui/next-button.jsx";
 import GoBackButton from "@/components/ui/goback-button.jsx";
 import * as z from "zod/v4";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Step2({ currentStep, setCurrentStep, userData, setUserData }) {
   // Update the current step to 2 if it's not already set
@@ -38,6 +38,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
 
   // Handle form data
   const [formData, setFormData] = useState({ ...userData, nombreEmpresa: "" });
+
   const [errors, setErrors] = useState({
     nombreEmpresa: {
       error: false,
@@ -130,6 +131,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 type="text"
                 name="nombreEmpresa"
                 id="nombreEmpresa"
+                value={formData.nombreEmpresa ? formData.nombreEmpresa : userData.nombreEmpresa}
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombreEmpresa.error ? errors.nombreEmpresa.message : ""}</span>}
@@ -144,6 +146,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="nombre"
                 id="nombre"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.nombre ? formData.nombre : userData.nombre}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombre.error ? errors.nombre.message : ""}</span>}
             </div>
@@ -157,6 +160,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="apellido"
                 id="apellido"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.apellido ? formData.apellido : userData.apellido}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.apellido.error ? errors.apellido.message : ""}</span>}
             </div>
@@ -170,6 +174,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="email"
                 id="email"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.email ? formData.email : userData.email}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.email.error ? errors.email.message : ""}</span>}
             </div>
@@ -183,8 +188,23 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="ubicacion"
                 id="ubicacion"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.ubicacion ? formData.ubicacion : userData.ubicacion}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.ubicacion.error ? errors.ubicacion.message : ""}</span>}
+            </div>
+            <div className="input flex flex-col gap-2 biografia">
+              <label className="font-medium text-lg" htmlFor="biografia">
+                Biografía
+              </label>
+              <input
+                className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
+                type="text"
+                name="biografia"
+                id="biografia"
+                onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.biografia ? formData.biografia : userData.biografia}
+              />
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.biografia.error ? errors.biografia.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 contraseña">
               <label className="font-medium text-lg" htmlFor="contraseña">
@@ -196,6 +216,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="contraseña"
                 id="contraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.contraseña ? formData.contraseña : userData.contraseña}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.contraseña.error ? errors.contraseña.message : ""}</span>}
             </div>
@@ -211,19 +232,6 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarcontraseña.error ? errors.confirmarcontraseña.message : ""}</span>}
-            </div>
-            <div className="input flex flex-col gap-2 biografia">
-              <label className="font-medium text-lg" htmlFor="biografia">
-                Biografía
-              </label>
-              <input
-                className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
-                type="text"
-                name="biografia"
-                id="biografia"
-                onChange={(e) => validateInput(e.target.name, e.target.value)}
-              />
-              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.biografia.error ? errors.biografia.message : ""}</span>}
             </div>
           </form>
         )}
@@ -239,6 +247,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="nombre"
                 id="nombre"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.nombre ? formData.nombre : userData.nombre}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.nombre.error ? errors.nombre.message : ""}</span>}
             </div>
@@ -252,6 +261,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="apellido"
                 id="apellido"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.apellido ? formData.apellido : userData.apellido}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.apellido.error ? errors.apellido.message : ""}</span>}
             </div>
@@ -265,6 +275,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="email"
                 id="email"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.email ? formData.email : userData.email}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.email.error ? errors.email.message : ""}</span>}
             </div>
@@ -278,8 +289,24 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="ubicacion"
                 id="ubicacion"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.ubicacion ? formData.ubicacion : userData.ubicacion}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.ubicacion.error ? errors.ubicacion.message : ""}</span>}
+            </div>
+
+            <div className="input flex flex-col gap-2 biografia">
+              <label className="font-medium text-lg" htmlFor="biografia">
+                Biografía
+              </label>
+              <input
+                className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
+                type="text"
+                name="biografia"
+                id="biografia"
+                onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.biografia ? formData.biografia : userData.biografia}
+              />
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.biografia.error ? errors.biografia.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2 contraseña">
               <label className="font-medium text-lg" htmlFor="contraseña">
@@ -291,6 +318,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 name="contraseña"
                 id="contraseña"
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
+                value={formData.contraseña ? formData.contraseña : userData.contraseña}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.contraseña.error ? errors.contraseña.message : ""}</span>}
             </div>
@@ -306,19 +334,6 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 onChange={(e) => validateInput(e.target.name, e.target.value)}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarcontraseña.error ? errors.confirmarcontraseña.message : ""}</span>}
-            </div>
-            <div className="input flex flex-col gap-2 biografia">
-              <label className="font-medium text-lg" htmlFor="biografia">
-                Biografía
-              </label>
-              <input
-                className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
-                type="text"
-                name="biografia"
-                id="biografia"
-                onChange={(e) => validateInput(e.target.name, e.target.value)}
-              />
-              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.biografia.error ? errors.biografia.message : ""}</span>}
             </div>
           </form>
         )}
