@@ -33,7 +33,7 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
                 setCurrentStep(currentStep + 1);
               }
             }}
-            disabled={userData.categoriasIntereses.length === 0}
+            disabled={currentInternalStep === 1 ? userData.categoriasIntereses.length === 0 : userData.intereses.length === 0}
           >
             <div className="text px-10">
               <span className="main-text font-semibold"></span>
