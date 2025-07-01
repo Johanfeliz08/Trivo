@@ -46,6 +46,7 @@ export default function SignUpPage() {
         {currentStep === 1 && <Step1 currentStep={currentStep} setCurrentStep={setCurrentStep} userData={userData} setUserData={setUserData} />}
         {currentStep === 2 && <Step2 currentStep={currentStep} setCurrentStep={setCurrentStep} userData={userData} setUserData={setUserData} />}
         {currentStep === 3 && <Step3 currentStep={currentStep} setCurrentStep={setCurrentStep} userData={userData} setUserData={setUserData} />}
+        {currentStep === 4 && <Step4 currentStep={currentStep} setCurrentStep={setCurrentStep} userData={userData} setUserData={setUserData} />}
       </div>
     </>
   );
