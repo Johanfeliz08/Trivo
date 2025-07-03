@@ -1,5 +1,6 @@
 import categoriasInteresesData from "@/lib/mock_data/categoriaIntereses.json";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "@/lib/api/api.js";
 
 export default function CategoriaInteresesPage({ userData, setUserData }) {
   // Categoria de intereses
@@ -7,6 +8,21 @@ export default function CategoriaInteresesPage({ userData, setUserData }) {
   categoriasInteresesData.map((categoriaInteres) => {
     categoriasIntereses.push(categoriaInteres);
   });
+
+  // Obtener las categorias intereses
+  // useEffect(() => {
+
+  //   const fetchData = async () => {
+  //     try {
+
+  //       const response = await api.get("category-interests")
+
+  //     } catch (error) {
+  //       console.error("Error fetching categorias de intereses:", error);
+  //     }
+  //   }
+
+  // }, []);
 
   // Controlar la paginacion de las categorias de intereses
   const [currentPage, setCurrentPage] = useState(1);

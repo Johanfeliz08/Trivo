@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import InteresesPage from "./InteresesPage";
 import CategoriaInteresesPage from "./CategoriaInteresesPage";
+
 export default function Step3({ currentStep, setCurrentStep, userData, setUserData }) {
   // Numero del paso general
   if (currentStep !== 3) {
@@ -24,7 +25,7 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
 
       <div className="buttons flex flex-row-reverse justify-between items-center">
         <div className="next-btn relative">
-          <button
+          <button // Here we'll handle post request to the backend to create the account and get the conffirmation code
             className=" cursor-pointer"
             onClick={() => {
               if (currentInternalStep === 1) {
