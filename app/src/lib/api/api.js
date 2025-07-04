@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.API_URL || "http://localhost:5026/api/v1/",
+  baseURL: process.env.API_URL || "http://localhost:5026/api/v1",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -31,7 +31,7 @@ api.interceptors.response.use(
         // redirigir al login si aplica
       }
     } else {
-      console.error("Error de red o servidor caído.");
+      console.error("Error de red o servidor caído." + error.message);
     }
     return Promise.reject(error);
   }
