@@ -114,7 +114,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
     if (result.success) {
       setUserData({ ...userData, ...formData });
       setCurrentStep(currentStep + 1);
-      console.log("Form submitted successfully:", formData);
+      // console.log("Form submitted successfully:", formData);
     }
   };
 
@@ -233,8 +233,17 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 type="password"
                 name="confirmarContraseña"
                 id="confirmarContraseña"
-                onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.confirmarContraseña}
+                onChange={(e) => {
+                  if (e.target.value === formData.contraseña) {
+                    setFormData((prevData) => ({ ...prevData, confirmarContraseña: e.target.value }));
+                    setErrors((prevErrors) => ({ ...prevErrors, confirmarContraseña: { error: false, message: "" } }));
+                  } else {
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      confirmarContraseña: { error: true, message: "Las contraseñas deben coincidir" },
+                    }));
+                  }
+                }}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarContraseña.error ? errors.confirmarContraseña.message : ""}</span>}
             </div>
@@ -336,8 +345,17 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
                 type="password"
                 name="confirmarContraseña"
                 id="confirmarContraseña"
-                onChange={(e) => validateInput(e.target.name, e.target.value)}
-                value={formData.confirmarContraseña}
+                onChange={(e) => {
+                  if (e.target.value === formData.contraseña) {
+                    setFormData((prevData) => ({ ...prevData, confirmarContraseña: e.target.value }));
+                    setErrors((prevErrors) => ({ ...prevErrors, confirmarContraseña: { error: false, message: "" } }));
+                  } else {
+                    setErrors((prevErrors) => ({
+                      ...prevErrors,
+                      confirmarContraseña: { error: true, message: "Las contraseñas deben coincidir" },
+                    }));
+                  }
+                }}
               />
               {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.confirmarContraseña.error ? errors.confirmarContraseña.message : ""}</span>}
             </div>
@@ -346,7 +364,9 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
       </div>
       <div className="buttons flex flex-row-reverse justify-between items-center">
         <div className="next-btn relative">
-          <button className=" cursor-pointer" onClick={() => handleSubmit(formData)} disabled={!formSchema.safeParse(formData).success}>
+          {/* Validacion deshabilitada por el momento para realizar pruebas mas rapido -- NO OLVIDES PONERLA DE NUEVO XD */}
+          <button className=" cursor-pointer" onClick={() => setCurrentStep(currentStep + 1)}>
+            {/* <button className=" cursor-pointer" onClick={() => handleSubmit(formData)} disabled={!formSchema.safeParse(formData).success || errors.confirmarContraseña.error}> */}
             <div className="text px-10">
               <span className="main-text font-semibold"></span>
               <span className="secondary-text font-light">Continuar</span>
