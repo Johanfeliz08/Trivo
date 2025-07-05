@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InteresesPage from "./InteresesPage";
 import CategoriaInteresesPage from "./CategoriaInteresesPage";
+import api from "@/lib/api/api";
+import Loader from "@/components/ui/loader";
 
 export default function Step3({ currentStep, setCurrentStep, userData, setUserData }) {
   // Numero del paso general
@@ -12,6 +14,97 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
   // 1 - Seleccionar categoria de intereses
   // 2 - Seleccionar intereses
   const [currentInternalStep, setCurrentInternalStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      // Set the comun data of both roles
+      const formData = new FormData();
+      formData.append("Nombre", userData.nombre);
+      formData.append("Apellido", userData.apellido);
+      formData.append("Biografia", userData.biografia);
+      formData.append("Email", userData.email);
+      formData.append("Contrasena", userData.contraseña);
+      formData.append("NombreUsuario", userData.nombre + userData.apellido + Math.floor(Math.random() * 1000));
+      formData.append("Ubicacion", userData.ubicacion);
+
+      if (userData.intereses.length > 0) {
+        userData.intereses.forEach((interes) => {
+          formData.append("Intereses", interes);
+        });
+      }
+
+      formData.append("Foto", "");
+
+      // Create first the user
+      const resUsuario = await api.post("/users", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // If the user was created successfully, we can continue with the next steps which is assign the role
+      if (resUsuario.status === 200) {
+        const data = resUsuario.data;
+        setUserData({
+          ...userData,
+          usuarioId: data.valor.usuarioId,
+        });
+
+        try {
+          if (data.valor.usuarioId !== "") {
+            if (userData.role === "reclutador") {
+              const reclutadorData = {
+                nombreEmpresa: userData.nombreEmpresa,
+                usuarioId: data.valor.usuarioId,
+              };
+
+              const resReclutador = await api.post(`/recruiters`, reclutadorData, {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+
+              // If the recruiter was created successfully, we can continue to the next step
+              if (resReclutador.status === 200) {
+                setCurrentStep(currentStep + 1);
+              } else {
+                console.error("Error al crear el reclutador:", resReclutador.statusText);
+              }
+            } else if (userData.role === "experto") {
+              expertoData = {
+                usuarioId: data.valor.usuarioId,
+                disponibleParaProyectos: true,
+                contratado: false,
+              };
+
+              const restExperto = await api.post(`/experts`, expertoData, {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+
+              // If the expert was created successfully, we can continue to the next step
+              if (restExperto.status === 200) {
+                setCurrentStep(currentStep + 1);
+              } else {
+                console.error("Error al crear el experto:", restExperto.statusText);
+              }
+            }
+          } else {
+            console.error("Error al crear el reclutador o experto: usuarioId no encontrado");
+          }
+        } catch (error) {
+          console.error("Error al crear el reclutador o experto:", error);
+        }
+      }
+    } catch (error) {
+      console.error("Error al enviar los datos:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="h-190  max-h-190 flex flex-col justify-center items-center gap-8">
@@ -19,19 +112,21 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
         <h1 className="text-3xl font-semibold text-primary">¡Dinos en qué te gustaría colaborar!</h1>
       </div>
 
+      {isLoading && <Loader />}
+
       {currentInternalStep === 1 && <CategoriaInteresesPage userData={userData} setUserData={setUserData} />}
 
       {currentInternalStep === 2 && <InteresesPage userData={userData} setUserData={setUserData} />}
 
       <div className="buttons flex flex-row-reverse justify-between items-center">
         <div className="next-btn relative">
-          <button // Here we'll handle post request to the backend to create the account and get the conffirmation code
+          <button
             className=" cursor-pointer"
             onClick={() => {
               if (currentInternalStep === 1) {
                 setCurrentInternalStep(currentInternalStep + 1);
               } else {
-                setCurrentStep(currentStep + 1);
+                handleSubmit();
               }
             }}
             disabled={currentInternalStep === 1 ? userData.categoriasIntereses.length === 0 : userData.intereses.length === 0}
