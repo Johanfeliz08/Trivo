@@ -9,6 +9,7 @@ import { useState } from "react";
 export default function SignUpPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [userData, setUserData] = useState({
+    usuarioId: "",
     nombre: "",
     apellido: "",
     biografia: "",
@@ -20,6 +21,8 @@ export default function SignUpPage() {
     role: "reclutador", // Default role
     categoriasIntereses: [],
     intereses: [],
+    fotoPerfil: "",
+    estadoUsuario: "",
   });
 
   return (
