@@ -8,11 +8,11 @@ import Chat from "./chat";
 export default function HomeLayout({ children }) {
   return (
     <html lang="es">
-      <body className="flex justify-center items-center w-screen h-screen px-32 py-12">
+      <body className="flex flex-col w-full h-full">
         <TopBar />
         <div className="horizontal-container">
           <Menu />
-          <main>{children}</main>
+          <main className="flex justify-center items-center h-screen">{children}</main>
           <Chat />
         </div>
       </body>

@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function AuthLayout({ children }) {
   return (
     <html lang="es">
-      <body className="flex justify-center items-center w-screen h-screen px-32 py-12">
+      <body className="flex justify-center items-center w-screen h-screen ">
         <div className="login-container relative flex flex-row justify-center items-center bg-white w-full h-full shadow-xl rounded-2xl">
           <div className="left-column flex flex-col gap-8  justify-center items-center w-3/4 h-full p-5">{children}</div>
 
