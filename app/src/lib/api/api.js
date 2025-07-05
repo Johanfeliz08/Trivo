@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const api = axios.create({
   baseURL: process.env.API_URL || "http://localhost:5026/api/v1",
@@ -11,7 +12,7 @@ const api = axios.create({
 // Interceptor para agregar token (si tienes autenticación)
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // o de donde lo tengas
+    const token = Cookies.get("tokenAcceso"); // o de donde lo tengas
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -25,13 +26,11 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      // Puedes manejar errores por código
+      // Manejo de errores basado en el estado HTTP
       if (error.response.status === 401) {
         console.error("No autorizado. Redirigiendo...");
-        // redirigir al login si aplica
       }
     } else {
-      console.error("Error de red o servidor caído." + error.message);
     }
     return Promise.reject(error);
   }
