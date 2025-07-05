@@ -9,6 +9,7 @@ export default function Step1({ currentStep, setCurrentStep, userData, setUserDa
 
   return (
     <>
+      <title>Trivo | Registro - Paso 1</title>
       <div className="step-container flex flex-col justify-center items-center gap-8 h-full w-full">
         <div className="title flex justify-center items-center flex-col gap-4">
           <h1 className="text-3xl font-semibold text-primary">¡Empieza a colaborar ya!</h1>

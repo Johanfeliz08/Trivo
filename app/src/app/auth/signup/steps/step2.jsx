@@ -119,6 +119,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
 
   return (
     <div className="form-container h-190 flex flex-col justify-center items-center gap-8">
+      <title>Trivo | Registro - Paso 2</title>
       <div className="title">
         <h1 className="text-3xl font-semibold text-primary">¡Cuentanos mas sobre ti!</h1>
       </div>

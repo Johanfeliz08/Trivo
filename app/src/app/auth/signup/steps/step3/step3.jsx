@@ -108,6 +108,7 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
 
   return (
     <div className="h-190  max-h-190 flex flex-col justify-center items-center gap-8">
+      <title>Trivo | Registro - Paso 3</title>
       <div className="title">
         <h1 className="text-3xl font-semibold text-primary">¡Dinos en qué te gustaría colaborar!</h1>
       </div>

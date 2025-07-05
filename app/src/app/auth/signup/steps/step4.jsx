@@ -107,6 +107,7 @@ export default function Step4({ currentStep, setCurrentStep, userData, setUserDa
 
   return (
     <>
+      <title>Trivo | Registro - Paso 4</title>
       <div className="step-container flex flex-col justify-center items-center gap-18 h-full w-full">
         {isLoading && <Loader />}
         {showModal && <Modal message="Su cuenta ha sido creada satisfactoriamente, por favor inicie sesion." redirectTo="/auth/login" type="success" />}
