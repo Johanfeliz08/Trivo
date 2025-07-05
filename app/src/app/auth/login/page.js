@@ -1,14 +1,118 @@
+"use client";
+
 import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
-
-export const metadata = {
-  title: "Trivo - Inicio de sesión",
-  description: "Inicia sesión en Trivo para acceder a tu cuenta y disfrutar de todas las funcionalidades.",
-};
+import * as z from "zod/v4";
+import { useState } from "react";
+import Cookies from "js-cookie";
+import Loader from "@/components/ui/loader";
+import api from "@/lib/api/api";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  const loginAuthSchema = z.object({
+    email: z.string().email("El correo no es válido").min(1, "El correo es requerido"),
+    contraseña: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+  });
+
+  const [formData, setFormData] = useState({
+    email: "",
+    contraseña: "",
+  });
+
+  const [errors, setErrors] = useState({
+    email: {
+      error: false,
+      message: "",
+    },
+    contraseña: {
+      error: false,
+      message: "",
+    },
+    general: {
+      error: false,
+      message: "",
+    },
+  });
+
+  const validateInput = (name, value) => {
+    const field = loginAuthSchema.pick({ [name]: true });
+    const result = field.safeParse({ [name]: value });
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    if (!result.success) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: {
+          error: true,
+          message: result.error.issues[0].message,
+        },
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: {
+          error: false,
+          message: "",
+        },
+      }));
+    }
+  };
+
+  const isFormValid = loginAuthSchema.safeParse(formData).success;
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+
+      const userCredentials = {
+        email: formData.email,
+        contrasena: formData.contraseña,
+      };
+
+      const response = await api.post(`/users/auth`, userCredentials, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        Cookies.set("tokenAcceso", response.data.tokenAcceso, { path: "/", expires: 1 / 24 });
+        Cookies.set("tokenRefresco", response.data.tokenRefresco, { expires: 7 });
+        router.push("/home/feed");
+      } else if (response.status === 400) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          general: {
+            error: true,
+            message: "Email o contraseña incorrectos. Por favor, inténtalo de nuevo.",
+          },
+        }));
+      }
+    } catch (error) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        general: {
+          error: true,
+          message: "Email o contraseña incorrectos. Por favor, inténtalo de nuevo.",
+        },
+      }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
+      <title>Trivo | Inicio de sesión</title>
+      {loading && <Loader />}
       <div className="logo p-10 absolute top-0 left-0">
         <a href="#home">
           <Image width={104} height={40} className="h-10 w-26 aspect-video" src="/logos/logotipo_pc.png" alt="LogoTipo Trivo" />
@@ -44,13 +148,34 @@ export default function LoginPage() {
               <label className="font-medium text-lg" htmlFor="email">
                 Email
               </label>
-              <input className="w-130 text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary" type="text" name="email" id="email" />
+              <input
+                className="w-130 text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
+                type="text"
+                name="email"
+                id="email"
+                value={formData.email}
+                onChange={(e) => {
+                  validateInput(e.target.name, e.target.value);
+                }}
+              />
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.email.error ? errors.email.message : ""}</span>}
             </div>
             <div className="input flex flex-col gap-2">
-              <label className="font-medium text-lg" htmlFor="password">
+              <label className="font-medium text-lg" htmlFor="contraseña">
                 Contraseña
               </label>
-              <input className="w-130 text-md h-9 border border-gray-400 rounded-md shadow-sm outline-primary" type="password" name="password" id="password" />
+              <input
+                className="w-130 text-md h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
+                type="password"
+                name="contraseña"
+                id="contraseña"
+                value={formData.contraseña}
+                onChange={(e) => {
+                  validateInput(e.target.name, e.target.value);
+                }}
+              />
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.contraseña.error ? errors.contraseña.message : ""}</span>}
+              {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.general.error ? errors.general.message : ""}</span>}
             </div>
           </form>
           <div className="form-actions flex flex-row justify-between items-center">
@@ -66,10 +191,12 @@ export default function LoginPage() {
               </a>
             </div>
           </div>
-          <div className="submit-button flex justify-center items-center">
+          <div className="login-btn flex justify-center items-center">
             <button
               type="button"
-              className="bg-primary font-semibold text-md text-white w-130 h-11 rounded-md hover:bg-bg-secondary hover:text-primary border border-white hover:border-primary transition-all hover:transition-all hover:duration-500 duration:500"
+              className="bg-primary cursor-pointer font-semibold text-md text-white w-130 h-11 rounded-md hover:bg-bg-secondary hover:text-primary border border-white hover:border-primary transition-all hover:transition-all hover:duration-500 duration:500 disabled:bg-gray-300 disabled:text-gray-500 disabled:border-gray-300"
+              onClick={handleSubmit}
+              disabled={!isFormValid}
             >
               Iniciar Sesión
             </button>
