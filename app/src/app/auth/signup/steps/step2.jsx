@@ -114,7 +114,6 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
     if (result.success) {
       setUserData({ ...userData, ...formData });
       setCurrentStep(currentStep + 1);
-      // console.log("Form submitted successfully:", formData);
     }
   };
 
@@ -364,9 +363,7 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
       </div>
       <div className="buttons flex flex-row-reverse justify-between items-center">
         <div className="next-btn relative">
-          {/* Validacion deshabilitada por el momento para realizar pruebas mas rapido -- NO OLVIDES PONERLA DE NUEVO XD */}
-          <button className=" cursor-pointer" onClick={() => setCurrentStep(currentStep + 1)}>
-            {/* <button className=" cursor-pointer" onClick={() => handleSubmit(formData)} disabled={!formSchema.safeParse(formData).success || errors.confirmarContraseña.error}> */}
+          <button className=" cursor-pointer" onClick={() => handleSubmit(formData)} disabled={!formSchema.safeParse(formData).success || errors.confirmarContraseña.error}>
             <div className="text px-10">
               <span className="main-text font-semibold"></span>
               <span className="secondary-text font-light">Continuar</span>
