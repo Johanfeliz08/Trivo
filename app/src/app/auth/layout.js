@@ -1,11 +1,6 @@
 import "../styles/globals.css";
 import Image from "next/image";
 
-export const metadata = {
-  title: "Auth",
-  description: "Authentication layout for the application",
-};
-
 export default function AuthLayout({ children }) {
   return (
     <html lang="es">
