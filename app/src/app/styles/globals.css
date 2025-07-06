@@ -236,6 +236,22 @@
   #expertoForm > .confirmarContraseña {
     grid-area: confirmarContraseña;
   }
+
+  /* Home/Feed */
+  /* User dropdowMenu */
+
+  .dropdown-menu > .dropdown-icon > svg {
+    transition: all 0.5s ease-in-out;
+  }
+
+  .dropdown-menu:hover > .dropdown-icon > svg {
+    rotate: 180deg;
+    transition: all 0.5s ease-in-out;
+  }
+}
+
+.dropdown-menu:hover > .menu {
+  @apply max-h-[170px];
 }
 
 body {
