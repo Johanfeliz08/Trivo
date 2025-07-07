@@ -9,7 +9,7 @@ export default function TopBar() {
 
   return (
     <>
-      <div className="topbar-container relative flex flex-row items-center w-full justify-center h-20 px-32 py-12 bg-white border-b-2 border-b-gray-200 shadow-sm">
+      <div className="topbar-container relative flex flex-row items-center w-full justify-center h-20 px-32 py-12 bg-white border-b-2 border-b-gray-200 shadow-sm z-50">
         <div className="search-bar">
           <label htmlFor="search-input" className="bg-bg-secondary flex flex-row justify-center items-center relative rounded-xl px-4 gap-2">
             <div className="icon">
@@ -85,7 +85,7 @@ export default function TopBar() {
               <path d="m12,18c-.4,0-.777-.156-1.061-.439L.112,6.733l.707-.707,10.827,10.827c.189.189.518.189.707,0l10.827-10.827.707.707-10.827,10.827c-.283.283-.66.439-1.061.439Z" />
             </svg>
           </div>
-          <div className="menu h-[170px] max-h-0 overflow-hidden border absolute bg-white shadow-xl top-24 right-0 rounded-md w-full z-10">
+          <div className="menu h-[170px] overflow-hidden border absolute bg-white shadow-xl top-24 right-0 rounded-md w-full z-10">
             <nav className="">
               <ul className="flex flex-col gap-3">
                 <li className="hover:bg-primary px-5 py-3 fill-primary hover:text-white hover:fill-white">
