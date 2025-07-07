@@ -10,9 +10,9 @@ export default function HomeLayout({ children }) {
     <html lang="es">
       <body className="flex flex-col w-full h-full">
         <TopBar />
-        <div className="horizontal-container">
+        <div className="horizontal-container relative flex flex-row justify-between w-full h-full">
           <Menu />
-          <main className="flex justify-center items-center h-screen">{children}</main>
+          <main className="flex justify-center items-center h-[calc(100vh-5rem)]">{children}</main>
           <Chat />
         </div>
       </body>
