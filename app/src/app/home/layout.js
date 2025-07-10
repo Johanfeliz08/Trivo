@@ -1,9 +1,9 @@
 "use client";
 
 import "../styles/globals.css";
-import Menu from "./menu";
-import TopBar from "./topBar";
-import Chat from "./chat";
+import Menu from "../../components/ui/home/menu";
+import TopBar from "../../components/ui/home/topBar";
+import Chat from "../../components/ui/home/chat";
 
 export default function HomeLayout({ children }) {
   return (

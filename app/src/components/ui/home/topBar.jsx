@@ -9,7 +9,7 @@ export default function TopBar() {
 
   return (
     <>
-      <div className="topbar-container relative flex flex-row items-center w-full justify-center h-20 px-32 py-12 bg-white border-b-2 border-b-gray-200 shadow-sm z-50">
+      <div className="topbar-container relative flex flex-row items-center w-full justify-center h-20 px-32 py-4 bg-white border-b-2 border-b-gray-200 shadow-sm z-50">
         <div className="search-bar">
           <label htmlFor="search-input" className="bg-bg-secondary flex flex-row justify-center items-center relative rounded-xl px-4 gap-2">
             <div className="icon">
@@ -68,24 +68,24 @@ export default function TopBar() {
           <div className="action-icons">
             <div className="notifications flex justify-center items-center">
               <button type="button" className="cursor-pointer">
-                <svg className="fill-black size-6 hover:fill-primary transition-all" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+                <svg className="fill-black size-5 hover:fill-primary transition-all" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
                   <path d="M23.391,16.207l-2.413-9.39C19.864,2.803,16.172,0,12,0,7.598,0,3.855,3.002,2.903,7.29L.692,16.359c-.197,.887,.019,1.805,.59,2.518,.572,.714,1.425,1.123,2.34,1.123h3.479c.465,2.279,2.484,4,4.899,4s4.434-1.721,4.899-4h3.599c.946,0,1.817-.432,2.389-1.185,.573-.753,.755-1.707,.504-2.608Zm-11.391,6.793c-1.858,0-3.411-1.279-3.858-3h7.716c-.447,1.721-2,3-3.858,3Zm10.091-4.79c-.381,.502-.962,.79-1.593,.79H3.623c-.61,0-1.179-.272-1.56-.748-.381-.476-.525-1.087-.396-1.666L3.877,7.517C4.729,3.68,8.07,1,12,1c3.724,0,7.02,2.502,8.012,6.075l2.413,9.39c.169,.607,.047,1.243-.334,1.745Z" />
                 </svg>
               </button>
             </div>
           </div>
-          <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-12 h-12 bg-gray-200">
+          <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
             <Image src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
           </div>
           <div className="name">
-            <span className="font-regular text-lg">Johan Feliz</span>
+            <span className="font-regular text-md">Johan Feliz</span>
           </div>
           <div className="dropdown-icon">
-            <svg className="fill-black size-4" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+            <svg className="fill-black size-3" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
               <path d="m12,18c-.4,0-.777-.156-1.061-.439L.112,6.733l.707-.707,10.827,10.827c.189.189.518.189.707,0l10.827-10.827.707.707-10.827,10.827c-.283.283-.66.439-1.061.439Z" />
             </svg>
           </div>
-          <div className="menu h-[170px] overflow-hidden border absolute bg-white shadow-xl top-24 right-0 rounded-md w-full z-10">
+          <div className="menu h-[170px] overflow-hidden border absolute bg-white shadow-xl top-20 right-0 rounded-md w-full z-10">
             <nav className="">
               <ul className="flex flex-col gap-3">
                 <li className="hover:bg-primary px-5 py-3 fill-primary hover:text-white hover:fill-white">
@@ -113,15 +113,23 @@ export default function TopBar() {
                     <span>Configuracion</span>
                   </a>
                 </li>
-                <li className="hover:bg-primary px-5 py-3 fill-primary hover:text-white hover:fill-white">
-                  <a href="" className="flex flex-row justify-start items-center gap-2">
+                <li className="hover:bg-primary px-5 py-3 fill-primary hover:text-white hover:fill-white cursor-pointer">
+                  <button
+                    type="button"
+                    className="flex flex-row justify-start items-center gap-2 cursor-pointer"
+                    onClick={() => {
+                      Cookies.remove("tokenAcceso");
+                      Cookies.remove("tokenRefresco");
+                      router.push("/auth/login");
+                    }}
+                  >
                     <div className="icon">
                       <svg className="w-6 h-5" xmlns="http://www.w3.org/2000/svg" id="Layer_1" viewBox="0 0 24 24" data-name="Layer 1">
                         <path d="m23 1.5v21.5c0 .276-.224.5-.5.5s-.5-.224-.5-.5v-21.5c0-.276.224-.5.5-.5s.5.224.5.5zm-4.5 10h-16.032c1.407-1.973 3.176-3.689 5.306-5.082.231-.15.296-.461.145-.691s-.46-.297-.692-.145c-2.525 1.651-4.593 3.72-6.147 6.148-.105.164-.105.375 0 .539 1.554 2.429 3.623 4.497 6.147 6.148.228.151.54.088.692-.145.151-.23.086-.541-.145-.691-2.13-1.393-3.899-3.109-5.306-5.082h16.032c.276 0 .5-.224.5-.5s-.224-.5-.5-.5z" />
                       </svg>
                     </div>
                     <span>Cerrar sesion</span>
-                  </a>
+                  </button>
                 </li>
               </ul>
             </nav>
