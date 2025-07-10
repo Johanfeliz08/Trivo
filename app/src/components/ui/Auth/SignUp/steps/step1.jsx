@@ -1,5 +1,5 @@
-import NextButton from "@/components/ui/next-button.jsx";
-import Loader from "@/components/ui/loader.jsx";
+import NextButton from "@/components/ui/NextButton.jsx";
+import Loader from "@/components/ui/Loader.jsx";
 
 export default function Step1({ currentStep, setCurrentStep, userData, setUserData }) {
   // Update current step to 1 when this component is rendered

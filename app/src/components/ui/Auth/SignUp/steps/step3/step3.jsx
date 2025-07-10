@@ -2,7 +2,7 @@ import { useState } from "react";
 import InteresesPage from "./InteresesPage";
 import CategoriaInteresesPage from "./CategoriaInteresesPage";
 import api from "@/lib/api/api";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 
 export default function Step3({ currentStep, setCurrentStep, userData, setUserData }) {
   // Numero del paso general

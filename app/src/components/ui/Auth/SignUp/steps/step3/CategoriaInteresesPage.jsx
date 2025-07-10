@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "@/lib/api/api.js";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 
 export default function CategoriaInteresesPage({ userData, setUserData }) {
   const [categoriasIntereses, setCategoriasIntereses] = useState([]);

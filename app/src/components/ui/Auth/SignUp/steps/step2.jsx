@@ -1,5 +1,5 @@
-import NextButton from "@/components/ui/next-button.jsx";
-import GoBackButton from "@/components/ui/goback-button.jsx";
+import NextButton from "@/components/ui/NextButton.jsx";
+import GoBackButton from "@/components/ui/GoBackButton.jsx";
 import * as z from "zod/v4";
 import { useState, useEffect } from "react";
 

@@ -1,9 +1,9 @@
 "use client";
 
-import Step1 from "@/components/ui/Auth/SignUp/steps/step1.jsx";
-import Step2 from "@/components/ui/Auth/SignUp/steps/step2.jsx";
-import Step3 from "@/components/ui/Auth/SignUp/steps/step3/step3.jsx";
-import Step4 from "@/components/ui/Auth/SignUp/steps/step4.jsx";
+import Step1 from "@/components/ui/Auth/SignUp/steps/Step1.jsx";
+import Step2 from "@/components/ui/Auth/SignUp/steps/Step2.jsx";
+import Step3 from "@/components/ui/Auth/SignUp/steps/step3/Step3.jsx";
+import Step4 from "@/components/ui/Auth/SignUp/steps/Step4.jsx";
 import { useState } from "react";
 
 export default function SignUpPage() {

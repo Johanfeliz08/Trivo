@@ -1,7 +1,7 @@
 // import interesesData from "@/lib/mock_data/intereses.json";
 import { useState, useEffect } from "react";
 import api from "@/lib/api/api";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 
 export default function InteresesPage({ userData, setUserData }) {
   // Intereses

@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/CheckBox";
 import * as z from "zod/v4";
 import { useState } from "react";
 import Cookies from "js-cookie";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 import api from "@/lib/api/api";
 import { useRouter } from "next/navigation";
 

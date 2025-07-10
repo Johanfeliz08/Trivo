@@ -2,8 +2,8 @@ import * as z from "zod/v4";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api/api";
-import Loader from "@/components/ui/loader";
-import Modal from "@/components/ui/modal";
+import Loader from "@/components/ui/Loader";
+import Modal from "@/components/ui/Modal";
 
 export default function Step4({ currentStep, setCurrentStep, userData, setUserData }) {
   const router = useRouter();

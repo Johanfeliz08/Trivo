@@ -71,7 +71,7 @@ export default function Chat() {
     <>
       <div
         className={`chat-container shadow-2xl bg-white ease-in-out duration-400 w-240 h-[calc(100vh-5rem)] flex flex-col overflow-y-scroll hide-scrollbar z-40 ${
-          isOpen ? "absolute top-0 right-0 max-w-240 flex flex-row" : "max-w-15"
+          isOpen ? "absolute top-0 right-0 max-w-240 flex flex-row" : "max-w-15 w-15 ease-in-out duration-400"
         }`}
       >
         <div className={`chats-bar hide-scrollbar overflow-y-scroll h-full ${isOpen ? "h-24 w-1/2 border-r border-gray-200" : ""}`}>

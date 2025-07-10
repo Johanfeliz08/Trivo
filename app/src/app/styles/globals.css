@@ -72,6 +72,12 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* .user-gradient {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(124, 58, 237, 0.4) 70.19%, #7c3aed 88.94%), lightgray 50% / cover no-repeat;
+    box-shadow: 10px 10px 50px 20px rgba(0, 0, 0, 0.15) inset;
+    @apply shadow-2xl;
+  } */
 }
 
 @layer components {
