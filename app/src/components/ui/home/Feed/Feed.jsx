@@ -45,7 +45,7 @@ export default function Feed() {
 
   return (
     <>
-      <div className="feed-content flex flex-row justify-center items-center">
+      <div className="feed-content flex flex-row justify-center items-center ">
         <div className="dislike-btn">
           <button type="button" className="cursor-pointer">
             <div className="icon">
@@ -66,7 +66,7 @@ export default function Feed() {
             </div>
           </button>
         </div>
-        <div className="users-container  2xl:w-[1400px] 2xl:h-[750px] xl:w-[800px] xl:h-[400px] ">
+        <div className="users-container  2xl:w-[1400px] 2xl:h-[650px] xl:w-[800px] xl:h-[380px] ">
           <div className="users-caraousel flex flex-row justify-center items-center relative w-full h-full">
             {userMockData.map((user, i) => {
               let style = "";

@@ -2,7 +2,7 @@ import Image from "next/image";
 export default function UserCard({ user, className }) {
   return (
     <>
-      <div className={`user-card flex flex-col justify-end items-start 2xl:w-120 2xl:h-160 xl:w-80 xl:h-100 rounded-2xl ${className}`}>
+      <div className={`user-card flex flex-col justify-end items-start 2xl:w-120 2xl:h-160 xl:w-80 xl:h-90 rounded-2xl ${className}`}>
         <div
           className="gradient w-full h-full absolute top-0 left-0 rounded-2xl z-10"
           style={{
