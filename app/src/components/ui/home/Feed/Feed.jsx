@@ -66,11 +66,8 @@ export default function Feed() {
             </div>
           </button>
         </div>
-        <div className="users-container  lg:w-[1400px] lg:h-[750px] ">
+        <div className="users-container  2xl:w-[1400px] 2xl:h-[750px] xl:w-[800px] xl:h-[400px] ">
           <div className="users-caraousel flex flex-row justify-center items-center relative w-full h-full">
-            {/* {userMockData.map((user, i) =>
-                currentItem === i + 1 ? <UserCard key={user.id} user={user} className="active absolute z-40 transition-all" /> : <UserCard key={user.id} user={user} className="inactive blur-[3px]" />
-              )} */}
             {userMockData.map((user, i) => {
               let style = "";
               const index = i + 1;

@@ -2,7 +2,7 @@ import Image from "next/image";
 export default function UserCard({ user, className }) {
   return (
     <>
-      <div className={`user-card flex flex-col justify-end items-start w-120 h-160 rounded-2xl ${className}`}>
+      <div className={`user-card flex flex-col justify-end items-start 2xl:w-120 2xl:h-160 xl:w-80 xl:h-100 rounded-2xl ${className}`}>
         <div
           className="gradient w-full h-full absolute top-0 left-0 rounded-2xl z-10"
           style={{
@@ -13,10 +13,10 @@ export default function UserCard({ user, className }) {
         <div className="image">
           <Image src={user.imagen} alt={user.nombre} layout="fill" className="object-cover rounded-2xl" />
         </div>
-        <div className="user-info p-10 flex flex-col relative z-20">
-          <h3 className="user-name text-white font-bold text-2xl">{user.nombre}</h3>
-          <p className="user-occupation text-white font-semibold">{user.ocupacion}</p>
-          <p className="user-description text-white font-light text-justify mt-1">{user.descripcion}</p>
+        <div className="user-info 2xl:p-10 xl:p-7 flex flex-col relative z-20">
+          <h3 className="user-name text-white font-bold 2xl:text-2xl xl:text-sm">{user.nombre}</h3>
+          <p className="user-occupation text-white font-semibold xl:text-xs">{user.ocupacion}</p>
+          <p className="user-description text-white font-light text-justify mt-1 xl:text-xs">{user.descripcion}</p>
         </div>
       </div>
     </>
