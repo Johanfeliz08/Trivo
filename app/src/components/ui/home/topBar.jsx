@@ -89,7 +89,7 @@ export default function TopBar() {
             <nav className="">
               <ul className="flex flex-col gap-3">
                 <li className="hover:bg-primary px-5 py-3 fill-primary hover:text-white hover:fill-white">
-                  <a href="" className="flex flex-row justify-start items-center gap-2">
+                  <a href="/usuario/miperfil" className="flex flex-row justify-start items-center gap-2">
                     <div className="icon">
                       <svg className="size-6" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
                         <path d="M12.003,11.774c3.5-.021,5.307-1.83,5.372-5.396-.06-3.446-1.967-5.356-5.378-5.378-3.452,.021-5.372,2.066-5.372,5.378,0,3.462,1.921,5.375,5.378,5.396Zm-.006-9.774c2.855,.019,4.328,1.498,4.378,4.378-.055,2.982-1.446,4.379-4.372,4.396-2.93-.017-4.321-1.411-4.378-4.387,.055-2.934,1.487-4.369,4.372-4.387Z" />
@@ -136,7 +136,7 @@ export default function TopBar() {
           </div>
         </div>
 
-        <button
+        {/* <button
           type="button"
           className="btn hidden bg-primary p-3 text-white rounded-md shadow-md cursor-pointer absolute right-12"
           onClick={() => {
@@ -146,7 +146,7 @@ export default function TopBar() {
           }}
         >
           Cerrar sesion
-        </button>
+        </button> */}
       </div>
     </>
   );
