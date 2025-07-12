@@ -86,7 +86,7 @@ export default function LoginPage() {
       if (response.status === 200) {
         Cookies.set("tokenAcceso", response.data.tokenAcceso, { path: "/", expires: 1 / 24 });
         Cookies.set("tokenRefresco", response.data.tokenRefresco, { expires: 7 });
-        router.push("/home/feed");
+        router.push("/feed");
       } else if (response.status === 400) {
         setErrors((prevErrors) => ({
           ...prevErrors,
