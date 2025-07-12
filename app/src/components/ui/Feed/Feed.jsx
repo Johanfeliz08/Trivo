@@ -45,6 +45,7 @@ export default function Feed() {
 
   return (
     <>
+      <title>Feed | Trivo </title>
       <div className="feed-content flex flex-row justify-center items-center ">
         <div className="dislike-btn">
           <button type="button" className="cursor-pointer">
@@ -77,11 +78,11 @@ export default function Feed() {
               const isLast = index == currentItem + 2;
 
               if (isActive) {
-                style = "active absolute z-40 transition-all";
+                style = "active absolute z-40 ease-in-out duration-500";
               } else if (isNext) {
-                style = "next absolute z-30 transition-all right-40 blur-[3px]";
+                style = "next absolute z-30 ease-in-out duration-500 2xl:translate-x-60 xl:translate-x-40 blur-[3px]";
               } else if (isPrev || isLast) {
-                style = "prev absolute z-30 transition-all left-40 blur-[3px]";
+                style = "prev absolute z-30 ease-in-out duration-500 2xl:-translate-x-60 xl:-translate-x-40 blur-[3px]";
               }
 
               return <UserCard key={user.id} user={user} className={style} />;
