@@ -1,6 +1,6 @@
 "use client";
 
-import UserCard from "@/components/ui/Home/Feed/UserCard";
+import UserCard from "@/components/ui/Feed/UserCard";
 import { useState } from "react";
 
 export default function Feed() {

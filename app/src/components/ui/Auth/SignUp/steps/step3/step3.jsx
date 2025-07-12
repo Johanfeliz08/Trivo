@@ -73,7 +73,7 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
                 console.error("Error al crear el reclutador:", resReclutador.statusText);
               }
             } else if (userData.role === "experto") {
-              expertoData = {
+              const expertoData = {
                 usuarioId: data.valor.usuarioId,
                 disponibleParaProyectos: true,
                 contratado: false,

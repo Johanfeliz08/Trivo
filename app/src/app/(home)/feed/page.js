@@ -1,6 +1,6 @@
-import TabBar from "@/components/ui/Home/Feed/TabBar";
-import Feed from "@/components/ui/Home/Feed/Feed";
-import ActionBar from "@/components/ui/Home/Feed/ActionBar";
+import TabBar from "@/components/ui/Feed/TabBar";
+import Feed from "@/components/ui/Feed/Feed";
+import ActionBar from "@/components/ui/Feed/ActionBar";
 
 export default function feedPage() {
   return (

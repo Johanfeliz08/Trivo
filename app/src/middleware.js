@@ -1,30 +1,26 @@
 import { NextResponse } from "next/server";
 
 /**
- * @param {import('next/server').NextRequest} request
+ * @param {import("next/server").NextRequest} request
  */
-
 export function middleware(request) {
-  const token = request.cookies.get("tokenAcceso");
+  const token = request.cookies.get("tokenAcceso")?.value;
+  const pathname = request.nextUrl.pathname;
 
-  // const isAuthRoute = request.nextUrl.pathname.startsWith("/auth");
-  const isProtected = request.nextUrl.pathname.startsWith("/home");
+  const isAuthRoute = pathname.startsWith("/auth");
+  const isProtectedRoute = ["/feed", "/usuario", "/configuracion"].some((route) => pathname.startsWith(route));
 
-  // if (isProtected && !token) {
-  //   const loginUrl = new URL("/auth/login", request.url);
-  //   return NextResponse.redirect(loginUrl);
-  // }
+  if (isProtectedRoute && !token) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
 
-  // if (isAuthRoute && token) {
-  //   const homeUrl = new URL("/home/feed", request.url);
-  //   return NextResponse.redirect(homeUrl);
-  // }
+  if (isAuthRoute && token) {
+    return NextResponse.redirect(new URL("/feed", request.url));
+  }
 
   return NextResponse.next();
 }
 
-// A qué rutas aplicar el middleware
 export const config = {
-  // matcher: ["/home/:path*", "/auth/:path*"],
-  matcher: ["/home/:path*"],
+  matcher: ["/auth/:path*", "/feed/:path*", "/usuario/:path*", "/configuracion/:path*"],
 };
