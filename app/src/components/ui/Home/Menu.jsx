@@ -11,7 +11,7 @@ export default function Menu() {
   return (
     <>
       <div
-        className={`menu-container bg-white ease-in-out duration-400 shadow-2xl w-60 h-[calc(100vh-5rem)] flex flex-col overflow-y-scroll hide-scrollbar z-50 max-w-15 ${
+        className={`menu-container bg-white ease-in-out duration-400 shadow-2xl w-90 h-[calc(100vh-5rem)] flex flex-col overflow-y-scroll hide-scrollbar z-50 max-w-15 ${
           isOpen ? "justify-start items-start max-w-70 " : "py-6 justify-center items-center"
         }`}
       >
