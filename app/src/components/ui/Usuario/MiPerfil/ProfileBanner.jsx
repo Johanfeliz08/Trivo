@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function ProfileBanner({ user }) {
+export default function ProfileBanner({ userData }) {
   return (
     <>
       <div className="profile-header w-full">
@@ -11,15 +11,17 @@ export default function ProfileBanner({ user }) {
         </div>
         <div className="user-info">
           <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-30 h-30 bg-gray-200 relative -top-20 left-10">
-            <Image src={user.imagen} width={800} height={800} alt="user-avatar" className="object-cover" />
+            <Image src={userData.fotoPerfil != "" ? userData.fotoPerfil : "/imagenes/userDefault.png"} width={850} height={850} alt="user-avatar" className="object-cover" />
           </div>
           <div className="user-details relative -top-18 left-10">
-            <h2 className="text-xl font-semibold">{user.nombre}</h2>
-            <h3 className="text-md font-regular">{user.profesion}</h3>
+            <h2 className="text-xl font-semibold">
+              {userData.nombre} {userData.apellido}
+            </h2>
+            <h3 className="text-md font-regular">{userData.profesion ? userData.profesion : "Sin profesión"}</h3>
             <p className="flex flex-row gap-2 text-gray-500">
-              <span className="status">{user.estado}</span>
+              <span className="status">{userData.estado ? userData.estado : "Sin estado"}</span>
               <span>-</span>
-              <span className="location">{user.ubicacion}</span>
+              <span className="location">{userData.ubicacion ? userData.ubicacion : "Sin ubicación"}</span>
             </p>
           </div>
         </div>
