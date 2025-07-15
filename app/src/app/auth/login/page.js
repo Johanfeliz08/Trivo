@@ -7,6 +7,7 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import Loader from "@/components/ui/Loader";
 import api from "@/lib/api/api";
+import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -53,6 +54,7 @@ export default function LoginPage() {
           error: true,
           message: result.error.issues[0].message,
         },
+        general: { error: false, message: "" },
       }));
     } else {
       setErrors((prevErrors) => ({
@@ -61,6 +63,7 @@ export default function LoginPage() {
           error: false,
           message: "",
         },
+        general: { error: false, message: "" },
       }));
     }
   };
@@ -86,24 +89,71 @@ export default function LoginPage() {
       if (response.status === 200) {
         Cookies.set("tokenAcceso", response.data.tokenAcceso, { path: "/", expires: 1 / 24 });
         Cookies.set("tokenRefresco", response.data.tokenRefresco, { expires: 7 });
+
+        // Decode JWT TOken
+        const token = response.data.tokenAcceso;
+        const decodedToken = jwtDecode(token);
+        Cookies.set("userId", decodedToken.sub, { path: "/", expires: 1 / 24 });
+        Cookies.set("email", decodedToken.email, { path: "/", expires: 1 / 24 });
+        Cookies.set("nombreUsuario", decodedToken.nombreUsuario, { path: "/", expires: 1 / 24 });
+        Cookies.set("roles", decodedToken.roles, { path: "/", expires: 1 / 24 });
+
+        if (decodedToken.roles === "Experto") {
+          Cookies.set("expertoId", decodedToken.expertoId, { path: "/", expires: 1 / 24 });
+        } else {
+          Cookies.set("reclutadorId", decodedToken.reclutadorId, { path: "/", expires: 1 / 24 });
+        }
+
         router.push("/feed");
-      } else if (response.status === 400) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
+      } else {
+        setErrors({
+          email: {
+            error: false,
+            message: "",
+          },
+          contraseña: {
+            error: false,
+            message: "",
+          },
           general: {
             error: true,
-            message: "Email o contraseña incorrectos. Por favor, inténtalo de nuevo.",
+            message: "El email o contraseña ingresados son incorrectos. Por favor, inténtalo de nuevo.",
           },
-        }));
+        });
       }
     } catch (error) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        general: {
-          error: true,
-          message: "Email o contraseña incorrectos. Por favor, inténtalo de nuevo.",
-        },
-      }));
+      const errorData = error.response.data;
+      if (errorData.codigo === "409") {
+        setErrors({
+          email: {
+            error: false,
+            message: "",
+          },
+          contraseña: {
+            error: false,
+            message: "",
+          },
+          general: {
+            error: true,
+            message: "El email o contraseña ingresados son incorrectos. Por favor, inténtalo de nuevo.",
+          },
+        });
+      } else if (errorData.codigo === "404") {
+        setErrors({
+          email: {
+            error: false,
+            message: "",
+          },
+          contraseña: {
+            error: false,
+            message: "",
+          },
+          general: {
+            error: true,
+            message: "El email o contraseña ingresados son incorrectos. Por favor, inténtalo de nuevo.",
+          },
+        });
+      }
     } finally {
       setLoading(false);
     }
