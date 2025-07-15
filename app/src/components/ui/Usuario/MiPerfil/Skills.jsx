@@ -76,20 +76,24 @@ export default function Skills({ habilidades }) {
             )}
           </div>
           <div className="skills-list flex flex-row justify-start items-center gap-x-2 gap-y-4 flex-wrap">
-            {skills.map((skill, i) => {
-              return (
-                <div className="skill bg-primary rounded-2xl p-2 flex flex-row justify-center items-center relative shadow-md" key={i + 1}>
-                  <span className="text-white font-light px-8">{skill}</span>
-                  <div className={`remove-btn ${isEditable ? "block" : "hidden"} absolute right-2 top-2`}>
-                    <button type="button" className="flex justify-center items-center cursor-pointer">
-                      <svg className="size-[14px] fill-white hover:fill-black transition-all" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
-                        <path d="M18,6h0a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,6H6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,6,18H6a1,1,0,0,0,1.414,0L12,13.414,16.586,18A1,1,0,0,0,18,18h0a1,1,0,0,0,0-1.414L13.414,12,18,7.414A1,1,0,0,0,18,6Z" />
-                      </svg>
-                    </button>
+            {skills.length > 0 ? (
+              skills.map((skill, i) => {
+                return (
+                  <div className="skill bg-primary rounded-2xl p-2 flex flex-row justify-center items-center relative shadow-md" key={i + 1}>
+                    <span className="text-white font-light px-8">{skill.nombre}</span>
+                    <div className={`remove-btn ${isEditable ? "block" : "hidden"} absolute right-2 top-2`}>
+                      <button type="button" className="flex justify-center items-center cursor-pointer">
+                        <svg className="size-[14px] fill-white hover:fill-black transition-all" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
+                          <path d="M18,6h0a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,6H6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,6,18H6a1,1,0,0,0,1.414,0L12,13.414,16.586,18A1,1,0,0,0,18,18h0a1,1,0,0,0,0-1.414L13.414,12,18,7.414A1,1,0,0,0,18,6Z" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className="no-skills text-gray-500">No tiene habilidades asignadas.</div>
+            )}
           </div>
         </div>
         <div className="footer flex justify-end py-4">
