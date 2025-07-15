@@ -24,16 +24,7 @@ api.interceptors.request.use(
 // Interceptor para manejar errores globales
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response) {
-      // Manejo de errores basado en el estado HTTP
-      if (error.response.status === 401) {
-        console.error("No autorizado. Redirigiendo...");
-      }
-    } else {
-    }
-    return Promise.reject(error);
-  }
+  (error) => error
 );
 
 export default api;
