@@ -29,7 +29,7 @@ export default function AboutMe({ biografia }) {
             id="biografia"
             className={`resize-none text-gray-600 h-auto xl:min-h-15 2xl:min-h-25 font-light text-md w-full focus:outline-0 hide-scrollbar ${isEditable ? "border-b-2 border-primary" : ""}`}
             readOnly={!isEditable}
-            value={bio}
+            value={bio ? bio : "No tiene biografía."}
             onChange={(e) => setBio(e.target.value)}
           />
         </div>
