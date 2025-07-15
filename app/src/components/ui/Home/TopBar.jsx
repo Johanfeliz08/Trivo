@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 
-export default function TopBar() {
+export default function TopBar({ userData }) {
   const router = useRouter();
   const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
 
@@ -75,10 +75,12 @@ export default function TopBar() {
             </div>
           </div>
           <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
-            <Image src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
+            <Image src={userData.fotoPerfil ? userData.fotoPerfil : "/imagenes/userDefault.png"} width={100} height={100} alt="user-avatar" />
           </div>
           <div className="name">
-            <span className="font-regular text-md">Johan Feliz</span>
+            <span className="font-regular text-md">
+              {userData.nombre} {userData.apellido}
+            </span>
           </div>
           <div className="dropdown-icon">
             <svg className="fill-black size-3" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
@@ -118,8 +120,26 @@ export default function TopBar() {
                     type="button"
                     className="flex flex-row justify-start items-center gap-2 cursor-pointer"
                     onClick={() => {
+                      Cookies.remove("userId");
                       Cookies.remove("tokenAcceso");
                       Cookies.remove("tokenRefresco");
+                      Cookies.remove("email");
+                      Cookies.remove("nombreUsuario");
+                      if (Cookies.get("roles") === "Experto") {
+                        Cookies.remove("expertoId");
+                      } else {
+                        Cookies.remove("reclutadorId");
+                      }
+                      Cookies.remove("roles");
+                      Cookies.remove("nombre");
+                      Cookies.remove("apellido");
+                      Cookies.remove("fotoPerfil");
+                      Cookies.remove("profesion");
+                      Cookies.remove("ubicacion");
+                      Cookies.remove("estado");
+                      Cookies.remove("habilidad");
+                      Cookies.remove("interes");
+                      Cookies.remove("biografia");
                       router.push("/auth/login");
                     }}
                   >
@@ -135,18 +155,6 @@ export default function TopBar() {
             </nav>
           </div>
         </div>
-
-        {/* <button
-          type="button"
-          className="btn hidden bg-primary p-3 text-white rounded-md shadow-md cursor-pointer absolute right-12"
-          onClick={() => {
-            Cookies.remove("tokenAcceso");
-            Cookies.remove("tokenRefresco");
-            router.push("/auth/login");
-          }}
-        >
-          Cerrar sesion
-        </button> */}
       </div>
     </>
   );
