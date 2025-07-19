@@ -68,15 +68,15 @@ export default function InteresesPage({ userData, setUserData }) {
                 ...prevErrors,
                 noData: {
                   error: true,
-                  message: "No hay categorias de intereses disponibles.",
+                  message: "No hay intereses disponibles.",
                 },
               }));
             }
           } else {
-            console.error("Error al obtener las categorias de intereses:", res.statusText);
+            console.error("Error al obtener los intereses:", res.statusText);
           }
         } catch (error) {
-          console.error("Error al obtener las categorias de intereses:", error);
+          console.error("Error al obtener los intereses:", error);
         } finally {
           setIsLoading(false);
         }
