@@ -4,6 +4,9 @@ import Image from "next/image";
 export default function AuthLayout({ children }) {
   return (
     <html lang="es">
+      <head>
+        <link rel="icon" href="/favicons/favicon.ico" />
+      </head>
       <body className="flex justify-center items-center w-screen h-screen ">
         <div className="auth-container relative flex flex-row justify-center items-center bg-white w-[90%] h-[90%] shadow-xl rounded-2xl">
           <div className="left-column flex flex-col gap-8  justify-center items-center w-3/4 h-full p-5">{children}</div>
