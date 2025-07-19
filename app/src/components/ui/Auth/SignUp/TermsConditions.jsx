@@ -18,95 +18,95 @@ export default function TermsConditions({ isModalOpen, setIsModalOpen }) {
             </div>
           </div>
           <div className="content w-full h-full flex flex-col items-start justify-start px-20 py-10 overflow-scroll hide-scrollbar">
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">1. Aceptación de los términos</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">1. Aceptación de los términos</h2>
               <p>
                 Al acceder, o utilizar la aplicación Trivo, usted acepta cumplir y quedar legalmente vinculado por estos Términos y Condiciones de Uso. Si no está de acuerdo con alguna parte de estos
                 términos, no debe utilizar la Aplicación.
               </p>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">2. Descripción del servicio</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">2. Descripción del servicio</h2>
               <p>
                 Trivo es una plataforma digital que permite a los usuarios recibir recomendaciones personalizadas de otros usuarios, facilitando conexiones sociales, profesionales o de interés común.
                 Algunas funcionalidades incluyen:
               </p>
-              <ul class="list-disc list-inside mt-2 space-y-1">
+              <ul className="list-disc list-inside mt-2 space-y-1">
                 <li>Visualización de usuarios recomendados.</li>
                 <li>Actualización dinámica de contenido relevante.</li>
                 <li>Registro y autenticación de usuarios.</li>
               </ul>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">3. Requisitos de registro</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">3. Requisitos de registro</h2>
               <p>
                 Para acceder a la mayoría de las funciones, el usuario debe registrarse y proporcionar información verídica y actualizada. Trivo se reserva el derecho de suspender o eliminar cuentas
                 que infrinjan estos términos o presenten actividad sospechosa.
               </p>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">4. Privacidad y seguridad</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">4. Privacidad y seguridad</h2>
               <p>
                 El tratamiento de sus datos personales se realiza de conformidad con la Política de Privacidad de Trivo. Utilizamos protocolos seguros de autenticación, incluyendo JWT y canales
                 cifrados, para proteger su información.
               </p>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">5. Uso aceptable</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">5. Uso aceptable</h2>
               <p>Al utilizar Trivo, usted se compromete a no:</p>
-              <ul class="list-disc list-inside mt-2 space-y-1">
+              <ul className="list-disc list-inside mt-2 space-y-1">
                 <li>Utilizar la plataforma para enviar contenido ofensivo, ilegal o engañoso.</li>
                 <li>Suplantar a otra persona o entidad.</li>
                 <li>Intentar vulnerar la seguridad del sistema o interceptar información.</li>
               </ul>
-              <p class="mt-2">El uso indebido de la aplicación puede derivar en la suspensión inmediata de su cuenta.</p>
+              <p className="mt-2">El uso indebido de la aplicación puede derivar en la suspensión inmediata de su cuenta.</p>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">6. Comunicación en tiempo real</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">6. Comunicación en tiempo real</h2>
               <p>
                 Algunas funcionalidades de la aplicación pueden requerir comunicaciones dinámicas para ofrecer una experiencia personalizada. Estas comunicaciones pueden depender de la estabilidad de
                 su conexión y del estado del servidor.
               </p>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">7. Propiedad intelectual</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">7. Propiedad intelectual</h2>
               <p>
                 Todo el contenido de Trivo, incluyendo marca, logo, diseño y funcionalidades, pertenece a sus desarrolladores y está protegido por leyes de propiedad intelectual. Usted no puede
                 reproducir, distribuir ni modificar ningún contenido sin autorización previa.
               </p>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">8. Responsabilidad</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">8. Responsabilidad</h2>
               <p>Trivo no se hace responsable por:</p>
-              <ul class="list-disc list-inside mt-2 space-y-1">
+              <ul className="list-disc list-inside mt-2 space-y-1">
                 <li>La veracidad de las recomendaciones recibidas.</li>
                 <li>Interacciones fuera de la plataforma entre usuarios.</li>
                 <li>Pérdidas de datos causadas por factores externos (fallos eléctricos, ataques cibernéticos, etc.).</li>
               </ul>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">9. Modificaciones</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">9. Modificaciones</h2>
               <p>
                 Nos reservamos el derecho de modificar estos Términos en cualquier momento. Los cambios serán notificados a través de la aplicación o del sitio web. El uso continuo después de dichas
                 modificaciones constituye su aceptación.
               </p>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">10. Terminación</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">10. Terminación</h2>
               <p>Podemos suspender o cancelar su acceso a Trivo si incumple estos Términos o si detectamos uso indebido de la plataforma.</p>
             </section>
 
-            <section class="mb-6">
-              <h2 class="text-xl font-semibold mb-2">11. Legislación aplicable</h2>
+            <section className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">11. Legislación aplicable</h2>
               <p>Estos Términos se rigen por las leyes de la República Dominicana, sin perjuicio de cualquier conflicto con otras jurisdicciones.</p>
             </section>
           </div>
