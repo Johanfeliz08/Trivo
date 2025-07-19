@@ -87,21 +87,22 @@ export default function LoginPage() {
       });
 
       if (response.status === 200) {
-        Cookies.set("tokenAcceso", response.data.tokenAcceso, { path: "/", expires: 1 / 24 });
+        const EXPIRE_TIME = 30 / (24 * 60); // 30 minutes in days
+        Cookies.set("tokenAcceso", response.data.tokenAcceso, { path: "/", expires: EXPIRE_TIME });
         Cookies.set("tokenRefresco", response.data.tokenRefresco, { expires: 7 });
 
         // Decode JWT TOken
         const token = response.data.tokenAcceso;
         const decodedToken = jwtDecode(token);
-        Cookies.set("userId", decodedToken.sub, { path: "/", expires: 1 / 24 });
-        Cookies.set("email", decodedToken.email, { path: "/", expires: 1 / 24 });
-        Cookies.set("nombreUsuario", decodedToken.nombreUsuario, { path: "/", expires: 1 / 24 });
-        Cookies.set("roles", decodedToken.roles, { path: "/", expires: 1 / 24 });
+        Cookies.set("userId", decodedToken.sub, { path: "/", expires: EXPIRE_TIME });
+        Cookies.set("email", decodedToken.email, { path: "/", expires: EXPIRE_TIME });
+        Cookies.set("nombreUsuario", decodedToken.nombreUsuario, { path: "/", expires: EXPIRE_TIME });
+        Cookies.set("roles", decodedToken.roles, { path: "/", expires: EXPIRE_TIME });
 
         if (decodedToken.roles === "Experto") {
-          Cookies.set("expertoId", decodedToken.expertoId, { path: "/", expires: 1 / 24 });
+          Cookies.set("expertoId", decodedToken.expertoId, { path: "/", expires: EXPIRE_TIME });
         } else {
-          Cookies.set("reclutadorId", decodedToken.reclutadorId, { path: "/", expires: 1 / 24 });
+          Cookies.set("reclutadorId", decodedToken.reclutadorId, { path: "/", expires: EXPIRE_TIME });
         }
 
         router.push("/feed");
@@ -199,7 +200,7 @@ export default function LoginPage() {
                 Email
               </label>
               <input
-                className="w-130 text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
+                className="w-130 text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary px-2"
                 type="text"
                 name="email"
                 id="email"
@@ -215,7 +216,7 @@ export default function LoginPage() {
                 Contraseña
               </label>
               <input
-                className="w-130 text-md h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
+                className="w-130 text-md h-9 border border-gray-400 rounded-md shadow-sm outline-primary px-2"
                 type="password"
                 name="contraseña"
                 id="contraseña"
