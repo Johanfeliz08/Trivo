@@ -65,7 +65,13 @@ export default function ProfileBanner({ userIdProp }) {
         <div className="user-info">
           <div className="user-profile-container flex flex-row relative">
             <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-30 h-30 bg-gray-200 relative -top-20 left-10">
-              <Image src={userData.fotoPerfil != "" ? userData.fotoPerfil : "/imagenes/userDefault.png"} width={850} height={850} alt="user-avatar" className="object-cover" />
+              <Image
+                src={userData.fotoPerfil != "" && userData.fotoPerfil !== null ? userData.fotoPerfil : "/imagenes/userDefault.png"}
+                width={850}
+                height={850}
+                alt="user-avatar"
+                className="object-cover"
+              />
             </div>
             <div className="edit-btn flex justify-center items-center relative z-50 bottom-10 -right-8">
               <button type="button" className="flex flex-row justify-center items-center" onClick={() => setOpenUploadImage(!openUploadImage)}>
