@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "@/lib/api/api";
+import Cookies from "js-cookie";
+import SimpleLoader from "../../SimpleLoader";
 
-export default function Interests({ intereses }) {
-  const [interests, setInterests] = useState(intereses);
+export default function Interests({ userIdProp }) {
+  const userId = userIdProp ? userIdProp : Cookies.get("userId");
+  const [interests, setInterests] = useState([]);
   const [isEditable, setIsEditable] = useState(false);
   const [searchTerm, setSearchTerm] = useState(" ");
   const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchIsLoading, setSearchIsLoading] = useState(false);
 
   const handleEditClick = () => {
     setIsEditable(!isEditable);
@@ -12,15 +19,97 @@ export default function Interests({ intereses }) {
     setIsSearching(false);
   };
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
+  const handleSearch = async (e) => {
+    const term = e.target.value;
     setSearchTerm(term);
     setIsSearching(true);
+
+    if (searchTerm != "" && term.length >= 1) {
+      try {
+        setSearchIsLoading(true);
+        const response = await api.get(`/interests/search?nombre=${term}`);
+        if (response.status === 200) {
+          const results = response.data;
+          if (results.length > 0) {
+            setSearchResults(results);
+          }
+        } else if (response.status === 404) {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error("Error al buscar intereses:", error);
+      } finally {
+        setSearchIsLoading(false);
+      }
+    }
   };
+
+  const handleAddInterest = (interest) => {
+    setIsSearching(false);
+    setSearchTerm("");
+    if (!interests.some((s) => s.interesId === interest.interesId)) {
+      setInterests([...interests, interest]);
+    }
+  };
+
+  const handleRemoveInterest = (interest) => {
+    setInterests(interests.filter((i) => i.interesId !== interest.interesId));
+  };
+
+  const handleSaveInterests = async () => {
+    try {
+      setIsLoading(true);
+      const interestsIds = {
+        interesIds: interests.map((interest) => interest.interesId),
+      };
+
+      if (userId) {
+        const response = await api.put(`/users/${userId}/interests`, interestsIds, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 200) {
+          setIsEditable(false);
+          setSearchTerm("");
+          setSearchResults([]);
+          setIsSearching(false);
+          await handleFetchInterests(); // Refresh the interests after saving
+        }
+      }
+    } catch (error) {
+      console.error("Error al guardar los intereses:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFetchInterests = async () => {
+    try {
+      setIsLoading(true);
+      if (userId) {
+        const response = await api.get(`/users/${userId}/interests`);
+
+        if (response.status === 200) {
+          setInterests(response.data);
+        }
+      }
+    } catch (error) {
+      console.error("Error al cargar los intereses:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchInterests();
+  }, []);
 
   return (
     <>
       <div className="interests-container flex flex-col bg-bg-secondary rounded-2xl shadow-xl pt-10 px-10 gap-2">
+        {isLoading && <SimpleLoader />}
         <div className="header flex flex-row justify-start gap-2 items-center ">
           <h3 className="text-xl font-semibold text-primary">Intereses</h3>
           <div className="edit-btn flex justify-center items-center">
@@ -51,7 +140,7 @@ export default function Interests({ intereses }) {
               name="searchInterest"
               id="searchInterest"
               placeholder="Buscar intereses"
-              onChange={handleSearch}
+              onChange={(e) => handleSearch(e)}
               className="bg-white border-primary border rounded-2xl p-2 2xl:w-100 focus:outline-primary"
               value={searchTerm}
               autoComplete="off"
@@ -59,18 +148,16 @@ export default function Interests({ intereses }) {
             {isSearching && searchTerm !== "" && (
               <div className="searchResults">
                 <ul className="bg-white border-primary border rounded-2xl p-2 absolute top-full left-0 w-full z-10 overflow-scroll hide-scrollbar max-h-40">
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">HTML</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">CSS</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
+                  {searchIsLoading && <SimpleLoader />}
+                  {searchResults.length > 0 ? (
+                    searchResults.map((interest) => (
+                      <li key={interest.interesId} onClick={() => handleAddInterest(interest)} className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">
+                        {interest.nombre}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-black">No hay resultados</li>
+                  )}
                 </ul>
               </div>
             )}
@@ -82,7 +169,7 @@ export default function Interests({ intereses }) {
                   <div className="interest bg-primary rounded-2xl p-2 flex flex-row justify-center items-center relative shadow-md" key={i + 1}>
                     <span className="text-white font-light px-8">{interest.nombre}</span>
                     <div className={`remove-btn ${isEditable ? "block" : "hidden"} absolute right-2 top-2`}>
-                      <button type="button" className="flex justify-center items-center cursor-pointer">
+                      <button type="button" className="flex justify-center items-center cursor-pointer" onClick={() => handleRemoveInterest(interest)}>
                         <svg className="size-[14px] fill-white hover:fill-black transition-all" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
                           <path d="M18,6h0a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,6H6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,6,18H6a1,1,0,0,0,1.414,0L12,13.414,16.586,18A1,1,0,0,0,18,18h0a1,1,0,0,0,0-1.414L13.414,12,18,7.414A1,1,0,0,0,18,6Z" />
                         </svg>
@@ -100,7 +187,7 @@ export default function Interests({ intereses }) {
           <button
             type="button"
             className={`save-btn border border-primary py-2 px-5 rounded-2xl text-primary hover:bg-primary hover:text-white ease-in-out duration-400 cursor-pointer ${isEditable ? "block" : "hidden"}`}
-            onClick={() => setIsEditable(false)}
+            onClick={handleSaveInterests}
           >
             Guardar
           </button>

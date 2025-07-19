@@ -1,36 +1,73 @@
 "use client";
 
 import UserCard from "@/components/ui/Feed/UserCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createSignalRConnection } from "@/lib/signalr";
+import * as signalR from "@microsoft/signalr";
+import Cookie from "js-cookie";
 
-export default function Feed() {
+export default function Feed({ setCurrentUserId }) {
+  const userId = Cookie.get("userId");
+  const [recomendedUsers, setRecommendedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
   const [currentItem, setCurrentItem] = useState(1); // Current item index for the carousel
   const itemsPerPage = 3;
 
+  useEffect(() => {
+    if (!userId) {
+      console.error("User ID is not available");
+      return;
+    }
+
+    const connection = createSignalRConnection(userId);
+
+    connection.start().then(() => {
+      console.log("✅ Conectado al hub de recomendaciones");
+
+      connection.on("RecibirRecomendaciones", (recomendacion) => {
+        console.log("📩 Recomendaciones recibidas:", recomendacion);
+        setRecommendedUsers(recomendacion);
+      });
+    });
+
+    console.log("Conectando al hub de recomendaciones...");
+
+    return () => {
+      connection.stop();
+      console.log("❌ Desconectado del hub de recomendaciones");
+    };
+  }, [userId]); // Asegura que esto solo se corra si cambia el userId
+
   const userMockData = [
     {
-      id: 1,
+      id: "b08fd9c4-4db6-4c9a-a2ff-521ddb8d3892",
       nombre: "Eziel R. Feliz Alcantara",
       ocupacion: "Ingeniero de Software",
       imagen: "/imagenes/user.jpg",
       descripcion: "Desarrollador Full Stack con experiencia en Next.js y React.",
     },
     {
-      id: 2,
+      id: "bf883b37-52e4-4def-9f1a-991abc1e3bd6",
       nombre: "Ana M. Torres",
       ocupacion: "Diseñadora UX/UI",
       imagen: "/imagenes/user2.jpg",
       descripcion: "Apasionada por crear experiencias de usuario intuitivas.",
     },
     {
-      id: 3,
+      id: "db343c21-bde1-44a3-a716-4f1ff74e4a3f",
       nombre: "Carlos J. Ramirez",
       ocupacion: "Gerente de Proyectos",
       imagen: "/imagenes/user3.jpg",
       descripcion: "Experto en gestión de proyectos ágiles y Scrum.",
     },
   ];
+
+  useEffect(() => {
+    const currentUser = userMockData[currentItem - 1];
+    if (currentUser) {
+      setCurrentUserId(currentUser.id);
+    }
+  }, [currentItem, setCurrentUserId]);
 
   const handleInteraction = (e) => {
     e.preventDefault();
@@ -45,7 +82,7 @@ export default function Feed() {
 
   return (
     <>
-      <title>Feed | Trivo </title>
+      <title>Trivo | Feed </title>
       <div className="feed-content flex flex-row justify-center items-center ">
         <div className="dislike-btn">
           <button type="button" className="cursor-pointer">

@@ -1,16 +1,68 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "@/lib/api/api";
+import SimpleLoader from "../../SimpleLoader";
+import Cookies from "js-cookie";
+import { set } from "zod/v4";
 
-export default function AboutMe({ biografia }) {
-  const [bio, setBio] = useState(biografia);
+export default function AboutMe({ userIdProp }) {
+  const [bio, setBio] = useState("");
+  const userId = userIdProp ? userIdProp : Cookies.get("userId");
   const [isEditable, setIsEditable] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEditClick = () => {
     setIsEditable(!isEditable);
   };
 
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const userBio = {
+        biografia: bio,
+      };
+
+      if (userId) {
+        const response = await api.put(`/users/${userId}/bio`, userBio, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 200) {
+          setBio(bio);
+          await fetchUserBio();
+        }
+      }
+    } catch (error) {
+      console.error("Error al guardar la biografía:", error);
+    } finally {
+      setIsEditable(false);
+      setIsLoading(false);
+    }
+  };
+
+  const fetchUserBio = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get(`/users/${userId}/bio`);
+      if (response.status === 200) {
+        setBio(response.data.biografia);
+      }
+    } catch (error) {
+      console.error("Error al cargar la biografía:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserBio();
+  }, []);
+
   return (
     <>
-      <div className="aboutme-container flex flex-col bg-bg-secondary rounded-2xl shadow-xl pt-10 px-10 gap-2">
+      <div className="aboutme-container flex flex-col bg-bg-secondary rounded-2xl shadow-xl pt-10 px-10 gap-2 relative">
+        {isLoading && <SimpleLoader />}
         <div className="header flex flex-row justify-start gap-3 items-center ">
           <h3 className="text-xl font-semibold text-primary">Acerca de mí</h3>
           <div className="edit-btn flex justify-center items-center">
@@ -37,7 +89,7 @@ export default function AboutMe({ biografia }) {
           <button
             type="button"
             className={`save-btn border border-primary py-2 px-5 rounded-2xl text-primary hover:bg-primary hover:text-white ease-in-out duration-400 cursor-pointer ${isEditable ? "block" : "hidden"}`}
-            onClick={() => setIsEditable(false)}
+            onClick={handleSave}
           >
             Guardar
           </button>

@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "@/lib/api/api";
+import Cookies from "js-cookie";
+import SimpleLoader from "../../SimpleLoader";
 
-export default function Skills({ habilidades }) {
-  const [skills, setSkills] = useState(habilidades);
+export default function Skills({ userIdProp }) {
+  const userId = userIdProp ? userIdProp : Cookies.get("userId");
+  const [skills, setSkills] = useState([]);
   const [isEditable, setIsEditable] = useState(false);
   const [searchTerm, setSearchTerm] = useState(" ");
   const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchIsLoading, setSearchIsLoading] = useState(false);
 
   const handleEditClick = () => {
     setIsEditable(!isEditable);
@@ -12,15 +19,97 @@ export default function Skills({ habilidades }) {
     setIsSearching(false);
   };
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
+  const handleSearch = async (e) => {
+    const term = e.target.value;
     setSearchTerm(term);
     setIsSearching(true);
+
+    if (searchTerm != "" && term.length >= 1) {
+      try {
+        setSearchIsLoading(true);
+        const response = await api.get(`/ability/search?nombre=${term}`);
+        if (response.status === 200) {
+          const results = response.data;
+          if (results.length > 0) {
+            setSearchResults(results);
+          }
+        } else if (response.status === 404) {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error("Error al buscar habilidades:", error);
+      } finally {
+        setSearchIsLoading(false);
+      }
+    }
   };
+
+  const handleAddSkill = (skill) => {
+    setIsSearching(false);
+    setSearchTerm("");
+    if (!skills.some((s) => s.habilidadId === skill.habilidadId)) {
+      setSkills([...skills, skill]);
+    }
+  };
+
+  const handleRemoveSkill = (skillId) => {
+    setSkills(skills.filter((skill) => skill.habilidadId !== skillId));
+  };
+
+  const handleSaveSkills = async () => {
+    try {
+      setIsLoading(true);
+      const skillsIds = {
+        habilidadesIds: skills.map((skill) => skill.habilidadId),
+      };
+
+      if (userId) {
+        const response = await api.put(`/users/${userId}/ability`, skillsIds, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 200) {
+          setIsEditable(false);
+          setSearchTerm("");
+          setSearchResults([]);
+          setIsSearching(false);
+          await handleFetchSkills(); // Refresh the skills after saving
+        }
+      }
+    } catch (error) {
+      console.error("Error al guardar las habilidades:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFetchSkills = async () => {
+    try {
+      setIsLoading(true);
+      if (userId) {
+        const response = await api.get(`/users/${userId}/ability`);
+
+        if (response.status === 200) {
+          setSkills(response.data);
+        }
+      }
+    } catch (error) {
+      console.error("Error al cargar las habilidades:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchSkills();
+  }, []);
 
   return (
     <>
       <div className="skills-container flex flex-col bg-bg-secondary rounded-2xl shadow-xl pt-10 px-10 gap-2">
+        {isLoading && <SimpleLoader />}
         <div className="header flex flex-row justify-start gap-2 items-center ">
           <h3 className="text-xl font-semibold text-primary">Habilidades</h3>
           <div className="edit-btn flex justify-center items-center">
@@ -51,7 +140,7 @@ export default function Skills({ habilidades }) {
               name="searchSkill"
               id="searchSkill"
               placeholder="Buscar habilidad"
-              onChange={handleSearch}
+              onChange={(e) => handleSearch(e)}
               className="bg-white border-primary border rounded-2xl p-2 2xl:w-100 focus:outline-primary"
               value={searchTerm}
               autoComplete="off"
@@ -59,18 +148,16 @@ export default function Skills({ habilidades }) {
             {isSearching && searchTerm !== "" && (
               <div className="searchResults">
                 <ul className="bg-white border-primary border rounded-2xl p-2 absolute top-full left-0 w-full z-10 overflow-scroll hide-scrollbar max-h-40">
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">HTML</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">CSS</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
-                  <li className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">JavaScript</li>
+                  {searchIsLoading && <SimpleLoader />}
+                  {searchResults.length > 0 ? (
+                    searchResults.map((skill) => (
+                      <li key={skill.habilidadId} onClick={() => handleAddSkill(skill)} className="text-black cursor-pointer hover:bg-primary hover:text-white transition-all p-2 rounded-2xl">
+                        {skill.nombre}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-black">No hay resultados</li>
+                  )}
                 </ul>
               </div>
             )}
@@ -82,7 +169,7 @@ export default function Skills({ habilidades }) {
                   <div className="skill bg-primary rounded-2xl p-2 flex flex-row justify-center items-center relative shadow-md" key={i + 1}>
                     <span className="text-white font-light px-8">{skill.nombre}</span>
                     <div className={`remove-btn ${isEditable ? "block" : "hidden"} absolute right-2 top-2`}>
-                      <button type="button" className="flex justify-center items-center cursor-pointer">
+                      <button type="button" className="flex justify-center items-center cursor-pointer" onClick={() => handleRemoveSkill(skill.habilidadId)}>
                         <svg className="size-[14px] fill-white hover:fill-black transition-all" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
                           <path d="M18,6h0a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,6H6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,6,18H6a1,1,0,0,0,1.414,0L12,13.414,16.586,18A1,1,0,0,0,18,18h0a1,1,0,0,0,0-1.414L13.414,12,18,7.414A1,1,0,0,0,18,6Z" />
                         </svg>
@@ -100,7 +187,7 @@ export default function Skills({ habilidades }) {
           <button
             type="button"
             className={`save-btn border border-primary py-2 px-5 rounded-2xl text-primary hover:bg-primary hover:text-white ease-in-out duration-400 cursor-pointer ${isEditable ? "block" : "hidden"}`}
-            onClick={() => setIsEditable(false)}
+            onClick={handleSaveSkills}
           >
             Guardar
           </button>
