@@ -4,11 +4,15 @@ import { useRouter } from "next/navigation";
 import api from "@/lib/api/api";
 import Loader from "@/components/ui/Loader";
 import Modal from "@/components/ui/Modal";
+import { Checkbox } from "@/components/ui/CheckBox";
+import TermsConditions from "@/components/ui/Auth/SignUp/TermsConditions";
 
 export default function Step4({ currentStep, setCurrentStep, userData, setUserData }) {
   const router = useRouter();
 
   const digitSchema = z.string().regex(/^\d{1}$/, "Debe ser un número de un solo dígito");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const confirmationCodeSchema = z.object({
     firstDigit: digitSchema,
@@ -31,7 +35,7 @@ export default function Step4({ currentStep, setCurrentStep, userData, setUserDa
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const isCodeValid = confirmationCodeSchema.safeParse(confirmationCode).success;
+  const isCodeValid = confirmationCodeSchema.safeParse(confirmationCode).success && termsAccepted;
 
   const [currentDigit, setCurrentDigit] = useState(1);
   const [errors, setErrors] = useState({
@@ -111,7 +115,7 @@ export default function Step4({ currentStep, setCurrentStep, userData, setUserDa
       <div className="step-container flex flex-col justify-center items-center gap-18 h-full w-full">
         {isLoading && <Loader />}
         {showModal && <Modal message="Su cuenta ha sido creada satisfactoriamente, por favor inicie sesion." redirectTo="/auth/login" type="success" />}
-
+        {isModalOpen && <TermsConditions isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />}
         <div className="title flex justify-center items-center flex-col gap-4">
           <h1 className="text-3xl font-semibold text-primary">¡Confirma tu cuenta!</h1>
           <p className="font-regular opacity-60 text-md w-1/2 text-justify">
@@ -247,6 +251,21 @@ export default function Step4({ currentStep, setCurrentStep, userData, setUserDa
           <div className="no-data flex justify-center items-center">
             <p className="text-center text-red-500">{errors.confirmationCode ? errors.confirmationCode.message : ""}</p>
           </div>
+        </div>
+
+        <div className="terms-condition flex flex-row justify-center items-center">
+          <Checkbox
+            className={"checked:bg-primary"}
+            id="terms"
+            onCheckedChange={(checked) => {
+              setTermsAccepted(checked === true);
+            }}
+          />
+          <label htmlFor="terms" className="ml-2 opacity-70 font-regular hover:underline hover:cursor-pointer">
+            <button type="button" onClick={() => setIsModalOpen(true)} className="hover:underline hover:cursor-pointer">
+              Acepto los términos y condiciones
+            </button>
+          </label>
         </div>
 
         <div className="buttons flex flex-row-reverse justify-between items-center">
