@@ -2,6 +2,7 @@ import NextButton from "@/components/ui/NextButton.jsx";
 import GoBackButton from "@/components/ui/GoBackButton.jsx";
 import * as z from "zod/v4";
 import { useState, useEffect } from "react";
+import api from "@/lib/api/api";
 
 export default function Step2({ currentStep, setCurrentStep, userData, setUserData }) {
   // Update the current step to 2 if it's not already set
@@ -80,9 +81,33 @@ export default function Step2({ currentStep, setCurrentStep, userData, setUserDa
 
   const [formSchema, setFormSchema] = useState(userData.role === "reclutador" ? formReclutadorSchema : formExpertoSchema);
 
+  const isEmailTaken = async (email) => {
+    try {
+      const response = await api.get(`/users/verify-email?email=${encodeURIComponent(email)}`);
+
+      if (response.status === 200 && response.data === true) {
+        return; // Email is available, no action needed
+      } else if (response.status === 400 && response.response.data.codigo === "409") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: {
+            error: true,
+            message: "El email ya está en uso, por favor ingrese otro.",
+          },
+        }));
+      }
+    } catch (error) {
+      console.error("Error checking email:", error);
+    }
+  };
+
   const validateInput = (inputName, value) => {
     const fieldSchema = formSchema.pick({ [inputName]: true });
     const result = fieldSchema.safeParse({ [inputName]: value });
+
+    if (inputName === "email") {
+      isEmailTaken(value);
+    }
 
     setFormData((prevData) => ({
       ...prevData,
