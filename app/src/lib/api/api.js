@@ -1,5 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import redirectToLogin from "../redirect";
+import { isTokenValid } from "../utils";
+import { removeCookies } from "../utils";
 
 const api = axios.create({
   baseURL: process.env.API_URL || "http://localhost:5026/api/v1",
@@ -9,12 +12,28 @@ const api = axios.create({
   },
 });
 
-// Interceptor para agregar token (si tienes autenticación)
+// Interceptor para agregar token
 api.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("tokenAcceso"); // o de donde lo tengas
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const publicPaths = ["/users/auth", "/users", "/recruiters", "/experts", "/users/confirm-account"];
+    const requestPath = new URL(config.url, config.baseURL).pathname;
+    // console.log("Request Path:", requestPath);
+
+    const isPublicPath = publicPaths.some((path) => requestPath === path);
+    // console.log("Is Public Path:", isPublicPath + "." + requestPath);
+    // const isPublicPath = publicPaths.some((path) => requestPath === path || requestPath.startsWith(`${path}/`));
+
+    if (!isPublicPath) {
+      if (!isTokenValid()) {
+        removeCookies();
+        redirectToLogin();
+        throw new axios.Cancel("Token expirado o inválido");
+      }
+
+      const token = Cookies.get("tokenAcceso");
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
     }
     return config;
   },
