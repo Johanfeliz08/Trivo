@@ -10,6 +10,7 @@ import Loader from "@/components/ui/Loader";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Modal from "@/components/ui/Modal";
+import { isTokenValid } from "@/lib/utils";
 
 export default function HomeLayout({ children }) {
   const [userData, setUserData] = useState({
@@ -64,6 +65,10 @@ export default function HomeLayout({ children }) {
 
   return (
     <html lang="es">
+      <head>
+        <title>Trivo | Home</title>
+        <link rel="icon" href="/favicons/favicon.ico" />
+      </head>
       <body className="flex flex-col w-full h-full relative">
         {loading && <Loader />}
         {errors.general.error && <Modal message={errors.general.message} redirectTo="/auth/login" type="error" logout={true} />}
