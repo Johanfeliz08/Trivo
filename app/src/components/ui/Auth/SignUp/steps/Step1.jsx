@@ -1,7 +1,9 @@
 import NextButton from "@/components/ui/NextButton.jsx";
-import Loader from "@/components/ui/Loader.jsx";
-
+import GoBackButton from "@/components/ui/GoBackButton.jsx";
+import { useRouter } from "next/navigation";
 export default function Step1({ currentStep, setCurrentStep, userData, setUserData }) {
+  const router = useRouter();
+
   // Update current step to 1 when this component is rendered
   if (currentStep !== 1) {
     setCurrentStep(1);
@@ -56,7 +58,22 @@ export default function Step1({ currentStep, setCurrentStep, userData, setUserDa
             </label>
           </div>
         </div>
-        <div className="buttons-container">
+        <div className="buttons-container flex flex-row">
+          <div className="go-backbtn">
+            <div className="goback-btn relative">
+              <button className=" cursor-pointer" onClick={() => router.push("/auth/login")}>
+                <div className="arrow">
+                  <svg className="size-8 fill-white rotate-180" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+                    <path d="m18.541,10.894l-4.717-4.717-.707.707,4.616,4.617H5v1h12.735l-4.618,4.617.707.707,4.717-4.716c.296-.296.459-.69.459-1.108s-.163-.812-.459-1.106Z" />
+                  </svg>
+                </div>
+                <div className="text px-10">
+                  <span className="main-text font-semibold"></span>
+                  <span className="secondary-text font-light">Volver</span>
+                </div>
+              </button>
+            </div>
+          </div>
           <NextButton mainText="" secondaryText="Continuar" currentStep={currentStep} setCurrentStep={setCurrentStep} />
         </div>
       </div>
