@@ -3,15 +3,16 @@
 import UserCard from "@/components/ui/Feed/UserCard";
 import { useState, useEffect } from "react";
 import { createSignalRConnection } from "@/lib/signalr";
-import * as signalR from "@microsoft/signalr";
 import Cookie from "js-cookie";
+import SimpleLoader from "../SimpleLoader";
 
 export default function Feed({ setCurrentUserId }) {
   const userId = Cookie.get("userId");
-  const [recomendedUsers, setRecommendedUsers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
+  const [recomendedUsers, setRecommendedUsers] = useState([]); // State to hold recommended users return from SignalR
   const [currentItem, setCurrentItem] = useState(1); // Current item index for the carousel
-  const itemsPerPage = 3;
+  const totalItems = recomendedUsers.length; // Total number of items received
+  const [isLoading, setIsLoading] = useState(false); // Loading state for the component
+  setCurrentUserId(recomendedUsers ? recomendedUsers[0]?.usuarioId : null); // Set initial user ID if available
 
   useEffect(() => {
     if (!userId) {
@@ -19,64 +20,50 @@ export default function Feed({ setCurrentUserId }) {
       return;
     }
 
+    setIsLoading(true);
+    console.log("🔗 Conectando al hub de recomendaciones...");
     const connection = createSignalRConnection(userId);
 
     connection.start().then(() => {
       console.log("✅ Conectado al hub de recomendaciones");
-
-      connection.on("RecibirRecomendaciones", (recomendacion) => {
-        console.log("📩 Recomendaciones recibidas:", recomendacion);
-        setRecommendedUsers(recomendacion);
+      connection.on("RecibirRecomendaciones", (recomendaciones) => {
+        console.log("📩 Recomendaciones recibidas:", recomendaciones);
+        setRecommendedUsers(recomendaciones);
+        setCurrentItem(1); // Reset current item to 1 when new recommendations are received
+        setIsLoading(false);
       });
     });
-
-    console.log("Conectando al hub de recomendaciones...");
 
     return () => {
       connection.stop();
       console.log("❌ Desconectado del hub de recomendaciones");
     };
-  }, [userId]); // Asegura que esto solo se corra si cambia el userId
-
-  const userMockData = [
-    {
-      id: "b08fd9c4-4db6-4c9a-a2ff-521ddb8d3892",
-      nombre: "Eziel R. Feliz Alcantara",
-      ocupacion: "Ingeniero de Software",
-      imagen: "/imagenes/user.jpg",
-      descripcion: "Desarrollador Full Stack con experiencia en Next.js y React.",
-    },
-    {
-      id: "bf883b37-52e4-4def-9f1a-991abc1e3bd6",
-      nombre: "Ana M. Torres",
-      ocupacion: "Diseñadora UX/UI",
-      imagen: "/imagenes/user2.jpg",
-      descripcion: "Apasionada por crear experiencias de usuario intuitivas.",
-    },
-    {
-      id: "db343c21-bde1-44a3-a716-4f1ff74e4a3f",
-      nombre: "Carlos J. Ramirez",
-      ocupacion: "Gerente de Proyectos",
-      imagen: "/imagenes/user3.jpg",
-      descripcion: "Experto en gestión de proyectos ágiles y Scrum.",
-    },
-  ];
+  }, [userId]);
 
   useEffect(() => {
-    const currentUser = userMockData[currentItem - 1];
+    const currentUser = recomendedUsers[currentItem - 1];
     if (currentUser) {
-      setCurrentUserId(currentUser.id);
+      setCurrentUserId(currentUser.usuarioId);
     }
   }, [currentItem, setCurrentUserId]);
 
-  const handleInteraction = (e) => {
+  const handleLike = (e) => {
     e.preventDefault();
 
-    if (currentItem === itemsPerPage) {
-      setCurrentItem(1);
-      setCurrentPage(currentPage + 1);
-    } else {
+    if (totalItems === 0) return;
+
+    if (currentItem < totalItems) {
       setCurrentItem(currentItem + 1);
+    }
+  };
+
+  const handleDislike = (e) => {
+    e.preventDefault();
+
+    if (totalItems === 0) return;
+
+    if (currentItem > 1) {
+      setCurrentItem(currentItem - 1);
     }
   };
 
@@ -85,7 +72,7 @@ export default function Feed({ setCurrentUserId }) {
       <title>Trivo | Feed </title>
       <div className="feed-content flex flex-row justify-center items-center ">
         <div className="dislike-btn">
-          <button type="button" className="cursor-pointer">
+          <button type="button" className="cursor-pointer" onClick={handleDislike}>
             <div className="icon">
               <svg
                 className="size-18 fill-bg-secondary stroke-2 stroke-primary hover:fill-primary ease-in-out duration-400"
@@ -106,28 +93,31 @@ export default function Feed({ setCurrentUserId }) {
         </div>
         <div className="users-container  2xl:w-[1400px] 2xl:h-[650px] xl:w-[800px] xl:h-[380px] ">
           <div className="users-caraousel flex flex-row justify-center items-center relative w-full h-full">
-            {userMockData.map((user, i) => {
-              let style = "";
-              const index = i + 1;
-              const isActive = currentItem === index;
-              const isNext = index === currentItem + 1 || (currentItem === itemsPerPage && index === 1);
-              const isPrev = index === currentItem - 1;
-              const isLast = index == currentItem + 2;
+            {isLoading || recomendedUsers.length === 0 ? (
+              <SimpleLoader />
+            ) : (
+              recomendedUsers.map((user, i) => {
+                const globalIndex = i + 1; // índice 1-based
+                const isActive = globalIndex === currentItem;
+                const isNext = globalIndex === (currentItem % totalItems) + 1;
+                const isPrev = globalIndex === (currentItem - 1 === 0 ? totalItems : currentItem - 1);
 
-              if (isActive) {
-                style = "active absolute z-40 ease-in-out duration-500";
-              } else if (isNext) {
-                style = "next absolute z-30 ease-in-out duration-500 2xl:translate-x-60 xl:translate-x-40 blur-[3px]";
-              } else if (isPrev || isLast) {
-                style = "prev absolute z-30 ease-in-out duration-500 2xl:-translate-x-60 xl:-translate-x-40 blur-[3px]";
-              }
+                let style = "hidden"; // Ocultamos por defecto
+                if (isActive) {
+                  style = "active absolute z-40 ease-in-out duration-500";
+                } else if (isNext) {
+                  style = "next absolute z-30 ease-in-out duration-500 2xl:translate-x-60 xl:translate-x-40 blur-[3px]";
+                } else if (isPrev) {
+                  style = "prev absolute z-30 ease-in-out duration-500 2xl:-translate-x-60 xl:-translate-x-40 blur-[3px]";
+                }
 
-              return <UserCard key={user.id} user={user} className={style} />;
-            })}
+                return <UserCard key={user.usuarioId} user={user} className={style} />;
+              })
+            )}
           </div>
         </div>
         <div className="like-btn">
-          <button type="button" className="cursor-pointer" onClick={handleInteraction}>
+          <button type="button" className="cursor-pointer" onClick={handleLike}>
             <div className="icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
