@@ -12,7 +12,7 @@ export default function Feed({ setCurrentUserId }) {
   const [currentItem, setCurrentItem] = useState(1); // Current item index for the carousel
   const totalItems = recomendedUsers.length; // Total number of items received
   const [isLoading, setIsLoading] = useState(false); // Loading state for the component
-  setCurrentUserId(recomendedUsers ? recomendedUsers[0]?.usuarioId : null); // Set initial user ID if available
+  // setCurrentUserId(recomendedUsers ? recomendedUsers[0]?.usuarioId : null); // Set initial user ID if available
 
   useEffect(() => {
     if (!userId) {
@@ -31,6 +31,7 @@ export default function Feed({ setCurrentUserId }) {
         setRecommendedUsers(recomendaciones);
         setCurrentItem(1); // Reset current item to 1 when new recommendations are received
         setIsLoading(false);
+        setCurrentUserId(recomendaciones[0]?.usuarioId || null); // Set the first user ID if available
       });
     });
 
