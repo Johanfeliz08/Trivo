@@ -58,7 +58,16 @@ export default function CategoriaInteresesPage({ userData, setUserData }) {
             }));
           }
         } else {
-          console.error("Error al obtener las categorias de intereses:", res.statusText);
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            noData: {
+              error: true,
+              message: "Error al obtener las categorias de intereses.",
+            },
+          }));
+          setCategoriasIntereses([]);
+          setTotalPages(1);
+          console.log("Error al obtener las categorias de intereses:", res);
         }
       } catch (error) {
         console.error("Error al obtener las categorias de intereses:", error);
