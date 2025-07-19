@@ -2,6 +2,8 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { removeCookies } from "@/lib/utils";
+import redirectToLogin from "@/lib/redirect";
 
 export default function TopBar({ userData }) {
   const router = useRouter();
@@ -120,26 +122,7 @@ export default function TopBar({ userData }) {
                     type="button"
                     className="flex flex-row justify-start items-center gap-2 cursor-pointer"
                     onClick={() => {
-                      Cookies.remove("userId");
-                      Cookies.remove("tokenAcceso");
-                      Cookies.remove("tokenRefresco");
-                      Cookies.remove("email");
-                      Cookies.remove("nombreUsuario");
-                      if (Cookies.get("roles") === "Experto") {
-                        Cookies.remove("expertoId");
-                      } else {
-                        Cookies.remove("reclutadorId");
-                      }
-                      Cookies.remove("roles");
-                      Cookies.remove("nombre");
-                      Cookies.remove("apellido");
-                      Cookies.remove("fotoPerfil");
-                      Cookies.remove("profesion");
-                      Cookies.remove("ubicacion");
-                      Cookies.remove("estado");
-                      Cookies.remove("habilidad");
-                      Cookies.remove("interes");
-                      Cookies.remove("biografia");
+                      removeCookies();
                       router.push("/auth/login");
                     }}
                   >
