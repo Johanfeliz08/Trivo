@@ -15,7 +15,7 @@ const api = axios.create({
 // Interceptor para agregar token
 api.interceptors.request.use(
   (config) => {
-    const publicPaths = ["/users/auth", "/users", "/recruiters", "/experts", "/users/confirm-account"];
+    const publicPaths = ["/users/auth", "/users", "/recruiters", "/experts", "/users/confirm-account", "/category-interests/pagination", "/interests/by-categories"];
     const requestPath = new URL(config.url, config.baseURL).pathname;
     // console.log("Request Path:", requestPath);
 

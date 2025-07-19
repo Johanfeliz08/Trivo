@@ -2,6 +2,6 @@
 
 import Router from "next/router";
 
-export default function redirectToLogin() {
+export default function RedirectToLogin() {
   Router.push("/auth/login");
 }
