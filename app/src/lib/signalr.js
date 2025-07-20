@@ -1,10 +1,10 @@
 import * as signalR from "@microsoft/signalr";
 import Cookie from "js-cookie";
 
-export const createSignalRConnection = (usuarioId) => {
+export const createSignalRConnection = (usuarioId, url) => {
   const token = Cookie.get("tokenAcceso");
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`http://localhost:5026/hubs/recomendaciones`, {
+    .withUrl(url, {
       accessTokenFactory: () => token,
     })
     .configureLogging(signalR.LogLevel.Information)
