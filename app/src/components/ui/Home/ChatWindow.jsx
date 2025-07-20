@@ -1,5 +1,115 @@
 import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
+import * as z from "zod/v4";
+import Cookie from "js-cookie";
+
 export default function ChatWindow({ chatId }) {
+  // const userId = Cookie.get("userId");
+  const userId = 1;
+  const [message, setMessage] = useState({
+    message: "",
+    file: null,
+  });
+  const messagesContainerRef = useRef(null);
+  const mockData = [
+    {
+      mensajeId: 1,
+      chatId: 1,
+      emisorId: 1,
+      contenido: "Mensaje 1",
+      fechaEnvio: "2025-07-19 21:50:36.983 -0400",
+      estado: "Enviado",
+    },
+    {
+      mensajeId: 2,
+      chatId: 1,
+      emisorId: 2,
+      contenido: "Mensaje 2",
+      fechaEnvio: "2025-07-19 21:45:36.983 -0400",
+      estado: "Enviado",
+    },
+    {
+      mensajeId: 3,
+      chatId: 1,
+      emisorId: 1,
+      contenido: "Mensaje 3",
+      fechaEnvio: "2025-07-19 21:43:36.983 -0400",
+      estado: "Enviado",
+    },
+    {
+      mensajeId: 4,
+      chatId: 1,
+      emisorId: 1,
+      contenido: "Mensaje 3",
+      fechaEnvio: "2025-07-19 21:42:36.983 -0400",
+      estado: "Enviado",
+    },
+    {
+      mensajeId: 5,
+      chatId: 1,
+      emisorId: 1,
+      contenido: "Mensaje 3",
+      fechaEnvio: "2025-07-19 21:40:36.983 -0400",
+      estado: "Enviado",
+    },
+    {
+      mensajeId: 6,
+      chatId: 1,
+      emisorId: 1,
+      contenido: "Mensaje 3",
+      fechaEnvio: "2025-07-19 21:20:36.983 -0400",
+      estado: "Enviado",
+    },
+    {
+      mensajeId: 7,
+      chatId: 1,
+      emisorId: 1,
+      contenido: "Mensaje 3",
+      fechaEnvio: "2025-07-19 21:15:36.983 -0400",
+      estado: "Enviado",
+    },
+  ];
+
+  const orderChatsByDate = (chats) => {
+    return chats.sort((a, b) => new Date(b.fechaEnvio) - new Date(a.fechaEnvio)).reverse();
+  };
+  const [chatMessages, setChatMessages] = useState(orderChatsByDate(mockData));
+
+  const messageSchema = z
+    .object({
+      message: z.string().optional(),
+      file: z.instanceof(File).optional().or(z.literal(null)),
+    })
+    .refine((data) => (data.message && data.message.trim().length > 0) || data.file instanceof File, {
+      message: "Debes escribir un mensaje o subir un archivo.",
+    });
+
+  const handleFileChange = (e) => {
+    setMessage((prev) => ({
+      ...prev,
+      file: e.target.files[0],
+    }));
+  };
+
+  const handleMessage = (message) => {
+    setMessage((prev) => ({
+      ...prev,
+      message: message,
+    }));
+  };
+
+  const isMessageValid = () => {
+    const result = messageSchema.safeParse(message);
+    return result.success;
+  };
+
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [chatMessages]);
+
   return (
     <>
       <div className={`chat flex flex-col w-full`}>
@@ -11,10 +121,108 @@ export default function ChatWindow({ chatId }) {
             <span className="text-primary font-medium text-2xl">Misael Gomez</span>
           </div>
         </div>
-        <div className="messages-container w-full h-full bg-bg-secondary"></div>
-        <div className="message-bar bg-bg-secondary flex items-center">
+        <div className="messages-container w-full h-full py-10 bg-bg-secondary overflow-scroll hide-scrollbar scroll-smooth" ref={messagesContainerRef}>
+          <div className="messages w-full  flex flex-col justify-start items-center gap-15 relative">
+            {chatMessages.length > 0 ? (
+              chatMessages.map((message) => {
+                return message.emisorId === userId ? (
+                  <div className={`message currentUser flex flex-row-reverse justify-start items-start gap-4 relative 2xl:translate-x-40`} key={message.mensajeId}>
+                    <div className="user-profile">
+                      <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
+                        <Image className="object-cover w-full h-full" src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
+                      </div>
+                    </div>
+                    <div className="content">
+                      <div className="message-header flex flex-row-reverse justify-start items-center gap-4 w-auto">
+                        <div className="user-name">
+                          <span className="font-semibold text-md">Tu</span>
+                        </div>
+                        <div className="time">
+                          <span className="text-gray-500 text-sm">11:12 PM</span>
+                        </div>
+                      </div>
+                      <div className="text-white bg-primary py-4 px-6 rounded-b-lg rounded-tl-lg shadow-md mt-2">
+                        <p className="">Faribe, manito lindo.</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={`message externalUser flex flex-row justify-start items-start gap-4 relative 2xl:-translate-x-40`} key={message.mensajeId}>
+                    <div className="user-profile">
+                      <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
+                        <Image className="object-cover w-full h-full" src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
+                      </div>
+                    </div>
+                    <div className="content">
+                      <div className="message-header flex flex-row justify-start items-center gap-4 w-auto">
+                        <div className="user-name">
+                          <span className="font-semibold text-md">Misael Gomez</span>
+                        </div>
+                        <div className="time">
+                          <span className="text-gray-500 text-sm">11:12 PM</span>
+                        </div>
+                      </div>
+                      <div className="text bg-white py-4 px-6 rounded-b-lg rounded-tr-lg shadow-md mt-2">
+                        <p className="">Faribe, manito lindo.</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <>
+                <span className="text-gray-500 text-sm">No hay mensajes en este chat.</span>
+              </>
+            )}
+          </div>
+        </div>
+        <div className="message-bar bg-bg-secondary flex items-center flex-col">
+          <div className="file-info-container bg-primary w-full">
+            {message.file && (
+              <div className="px-4 py-2 flex flex-row gap-3 justify-between items-center">
+                <div className="file-info">
+                  <span className="text-white font-bold">Archivo seleccionado: </span>
+                  <span className="text-white">{message.file?.name}</span>
+                </div>
+                <span>
+                  <button
+                    type="button"
+                    className="text-white hover:underline flex items-center justify-center"
+                    onClick={() => {
+                      setMessage((prev) => ({ ...prev, file: null }));
+                    }}
+                  >
+                    <div className="icon flex items-center justify-center">
+                      <svg
+                        className="size-5 fill-white opacity-65 hover:opacity-100 transition-all cursor-pointer"
+                        xmlns="http://www.w3.org/2000/svg"
+                        id="Outline"
+                        viewBox="0 0 24 24"
+                        width="512"
+                        height="512"
+                      >
+                        <path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z" />
+                        <path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z" />
+                        <path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z" />
+                      </svg>
+                    </div>
+                  </button>
+                </span>
+              </div>
+            )}
+          </div>
           <div className="bar-container bg-white w-full flex flex-row justify-between items-center gap-5 px-4 py-2">
-            <input type="text" placeholder="Escribir un mensaje nuevo." id="message" name="message" className="w-full py-5 px-3 outline-none" />
+            <input
+              type="text"
+              placeholder="Escribir un mensaje nuevo."
+              id="message"
+              name="message"
+              className="w-full py-5 px-3 outline-none"
+              value={message.message}
+              onChange={(e) => {
+                handleMessage(e.target.value);
+              }}
+            />
             <div className="attachment">
               <label htmlFor="file" className="cursor-pointer flex items-center justify-center">
                 <div className="icon">
@@ -34,13 +242,21 @@ export default function ChatWindow({ chatId }) {
                     </g>
                   </svg>
                 </div>
-                <input type="file" name="file" id="file" className="hidden" />
+                <input
+                  type="file"
+                  name="file"
+                  id="file"
+                  className="hidden"
+                  onChange={(e) => {
+                    handleFileChange(e);
+                  }}
+                />
               </label>
             </div>
             <div className="send-btn">
-              <button type="button" className="flex items-center justify-center">
+              <button type="button" className="flex items-center justify-center fill-primary disabled:fill-gray-500" disabled={!isMessageValid()}>
                 <div className="icon">
-                  <svg className="size-6 fill-primary cursor-pointer" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
+                  <svg className="size-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
                     <path d="M23.119.882a2.966,2.966,0,0,0-2.8-.8l-16,3.37a4.995,4.995,0,0,0-2.853,8.481L3.184,13.65a1,1,0,0,1,.293.708v3.168a2.965,2.965,0,0,0,.3,1.285l-.008.007.026.026A3,3,0,0,0,5.157,20.2l.026.026.007-.008a2.965,2.965,0,0,0,1.285.3H9.643a1,1,0,0,1,.707.292l1.717,1.717A4.963,4.963,0,0,0,15.587,24a5.049,5.049,0,0,0,1.605-.264,4.933,4.933,0,0,0,3.344-3.986L23.911,3.715A2.975,2.975,0,0,0,23.119.882ZM4.6,12.238,2.881,10.521a2.94,2.94,0,0,1-.722-3.074,2.978,2.978,0,0,1,2.5-2.026L20.5,2.086,5.475,17.113V14.358A2.978,2.978,0,0,0,4.6,12.238Zm13.971,7.17a3,3,0,0,1-5.089,1.712L11.762,19.4a2.978,2.978,0,0,0-2.119-.878H6.888L21.915,3.5Z" />
                   </svg>
                 </div>
