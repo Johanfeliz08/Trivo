@@ -13,6 +13,7 @@ export default function Feed({ setCurrentUserId }) {
   const totalItems = recomendedUsers.length; // Total number of items received
   const [isLoading, setIsLoading] = useState(false); // Loading state for the component
   // setCurrentUserId(recomendedUsers ? recomendedUsers[0]?.usuarioId : null); // Set initial user ID if available
+  const hub = "http://localhost:5026/hubs/recomendaciones"; // SignalR hub URL
 
   useEffect(() => {
     if (!userId) {
@@ -22,12 +23,11 @@ export default function Feed({ setCurrentUserId }) {
 
     setIsLoading(true);
     console.log("🔗 Conectando al hub de recomendaciones...");
-    const connection = createSignalRConnection(userId);
+    const connection = createSignalRConnection(userId, hub);
 
     connection.start().then(() => {
       console.log("✅ Conectado al hub de recomendaciones");
       connection.on("RecibirRecomendaciones", (recomendaciones) => {
-        console.log("📩 Recomendaciones recibidas:", recomendaciones);
         setRecommendedUsers(recomendaciones);
         setCurrentItem(1); // Reset current item to 1 when new recommendations are received
         setIsLoading(false);
