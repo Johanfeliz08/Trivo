@@ -1,14 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 import Image from "next/image";
-import ChatWindow from "./ChatWindow"; // Assuming ChatWindow is in the same directory
+import ChatWindow from "./ChatWindow";
+import { createSignalRConnection } from "@/lib/signalr";
+import Cookie from "js-cookie";
 
 export default function Chat() {
+  const userId = Cookie.get("userId");
+  const hub = "http://localhost:5026/hubs/chat";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [selectedChatId, setSelectedChatId] = useState(null);
+  const [chats, setChats] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleChatModal = () => {
     setIsModalOpen(!isModalOpen);
+    if (!isModalOpen) {
+      setIsChatOpen(false);
+      setSelectedChatId(null);
+    }
   };
 
   const openChatWindow = (chatId) => {
@@ -75,6 +85,25 @@ export default function Chat() {
     },
   ];
 
+  useEffect(() => {
+    if (!userId) {
+      console.error("User ID is not available");
+      return;
+    }
+
+    setIsLoading(true);
+    console.log("🔗 Conectando al hub de chats");
+
+    const connection = createSignalRConnection(userId, hub);
+
+    connection.start().then(() => {
+      console.log("✅ Conectado al hub de chats");
+      connection.on("ObtenerChatsUsuario", (chats) => {
+        console.log("📩 Chats recibidos:", chats);
+      });
+    });
+  }, []);
+
   return (
     <>
       <div
@@ -131,8 +160,8 @@ export default function Chat() {
             })}
           </div>
         </div>
-        {isChatOpen ? (
-          <ChatWindow chatId={selectedChatId} />
+        {isChatOpen && isModalOpen ? (
+          <ChatWindow chatId={selectedChatId} isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
         ) : (
           <div className={`empty-chat justify-center items-center w-full h-full ${isModalOpen ? "flex flex-col" : "hidden"}`}>
             <span className="text-gray-500 text-sm">Selecciona un chat para comenzar a chatear.</span>
