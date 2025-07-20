@@ -4,49 +4,8 @@ import ProfileBanner from "@/components/ui/Usuario/MiPerfil/ProfileBanner";
 import AboutMe from "@/components/ui/Usuario/MiPerfil/AboutMe";
 import Skills from "@/components/ui/Usuario/MiPerfil/Skills";
 import Interests from "@/components/ui/Usuario/MiPerfil/Interests";
-// import { useState, useEffect } from "react";
-// import Cookies from "js-cookie";
-// import Loader from "@/components/ui/Loader";
-// import api from "@/lib/api/api";
-// import Modal from "@/components/ui/Modal";
 
 export default function MiPerfilPage() {
-  // const [userData, setUserData] = useState(null);
-  // const [loading, setLoading] = useState(false);
-  // const [errors, setErrors] = useState({
-  //   general: {
-  //     error: false,
-  //     message: "Error al cargar sus datos. Por favor, intente nuevamente.",
-  //   },
-  // });
-
-  // const fetchUserData = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const userId = Cookies.get("userId");
-  //     if (userId) {
-  //       const response = await api.get(`/users/profile/${userId}`);
-  //       if (response.status === 200) {
-  //         setUserData(response.data);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     setErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       general: {
-  //         error: true,
-  //         message: "Error al cargar sus datos. Por favor, intente nuevamente.",
-  //       },
-  //     }));
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // // Fetch user data when the component mounts
-  // useEffect(() => {
-  //   fetchUserData();
-  // }, []);
   return (
     <>
       <div className="MiPerfil-container w-full h-full xl:p-10 z-5">
