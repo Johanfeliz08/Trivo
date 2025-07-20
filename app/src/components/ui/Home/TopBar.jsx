@@ -104,7 +104,7 @@ export default function TopBar({ userData }) {
                   </a>
                 </li>
                 <li className="hover:bg-primary px-5 py-3 fill-primary hover:text-white hover:fill-white">
-                  <a href="" className="flex flex-row justify-start items-center gap-2">
+                  <a href="/configuracion" className="flex flex-row justify-start items-center gap-2">
                     <div className="icon">
                       <svg className="size-6" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
                         <path d="M9.8,9.802c-.755,.753-1.122,1.476-1.122,2.208,0,.957,.64,1.706,1.122,2.187,.74,.739,1.47,1.108,2.2,1.108s1.46-.37,2.2-1.108c.755-.753,1.122-1.476,1.122-2.208,0-.957-.64-1.706-1.122-2.187-1.48-1.478-2.92-1.478-4.4,0Zm3.694,3.688c-1.251,1.248-2.042,.944-2.988,0-.565-.564-.828-1.034-.828-1.479,0-.454,.271-.944,.828-1.5,.583-.582,1.065-.826,1.511-.826,.511,0,.972,.322,1.478,.826,.565,.564,.828,1.034,.828,1.479,0,.454-.271,.944-.828,1.5Z" />
