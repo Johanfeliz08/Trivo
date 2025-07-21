@@ -5,64 +5,8 @@ import Menu from "@/components/ui/Home/Menu";
 import TopBar from "@/components/ui/Home/TopBar";
 import Chat from "@/components/ui/Home/Chat";
 import Image from "next/image";
-import api from "@/lib/api/api";
-import Loader from "@/components/ui/Loader";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import Modal from "@/components/ui/Modal";
-import { isTokenValid } from "@/lib/utils";
 
 export default function HomeLayout({ children }) {
-  const [userData, setUserData] = useState({
-    nombre: "",
-    apellido: "",
-    biografia: "",
-    fotoPerfil: "",
-    ubicacion: "",
-    habilidad: [],
-    interes: [],
-  });
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({
-    general: {
-      error: false,
-      message: "Error al cargar los datos del usuario. Por favor, vuelva a iniciar sesión.",
-    },
-  });
-
-  // Fetch user data from the API
-  const fetchUserData = async () => {
-    try {
-      const userId = Cookies.get("userId");
-      setLoading(true);
-
-      if (userId) {
-        const response = await api.get(`/users/profile/${userId}`);
-        if (response.status === 200) {
-          Cookies.set("nombre", response.data.nombre);
-          Cookies.set("apellido", response.data.apellido);
-          Cookies.set("fotoPerfil", response.data.fotoPerfil);
-          setUserData(response.data);
-        }
-      }
-    } catch (error) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        general: {
-          error: true,
-          message: "Error al cargar los datos del usuario. Por favor, vuelva a iniciar sesión.",
-        },
-      }));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Feth de user data when the component mounts
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
   return (
     <html lang="es">
       <head>
@@ -70,9 +14,7 @@ export default function HomeLayout({ children }) {
         <link rel="icon" href="/favicons/favicon.ico" />
       </head>
       <body className="flex flex-col w-full h-full relative">
-        {loading && <Loader />}
-        {errors.general.error && <Modal message={errors.general.message} redirectTo="/auth/login" type="error" logout={true} />}
-        <TopBar userData={userData} />
+        <TopBar />
         <div className="horizontal-container relative flex flex-row justify-between w-full h-full">
           <Menu />
 

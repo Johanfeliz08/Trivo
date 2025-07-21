@@ -1,13 +1,69 @@
-import Cookies from "js-cookie";
+"";
+
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { removeCookies } from "@/lib/utils";
-import redirectToLogin from "@/lib/redirect";
+import api from "@/lib/api/api";
+import Cookies from "js-cookie";
+import Modal from "@/components/ui/Modal";
+import UserSkeleton from "@/components/ui/Home/Skeletons/UserSkeleton";
 
-export default function TopBar({ userData }) {
+export default function TopBar() {
   const router = useRouter();
+  const [userData, setUserData] = useState({
+    nombre: "",
+    apellido: "",
+    biografia: "",
+    fotoPerfil: "",
+    ubicacion: "",
+    habilidad: [],
+    interes: [],
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    general: {
+      error: false,
+      message: "Error al cargar los datos del usuario. Por favor, vuelva a iniciar sesión.",
+    },
+  });
   const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
+
+  const fetchUserData = async () => {
+    try {
+      const userId = Cookies.get("userId");
+      setIsLoading(true);
+
+      if (userId) {
+        const response = await api.get(`/users/profile/${userId}`);
+        if (response.status === 200) {
+          const fotoPerfil = response.data.fotoPerfil != "" ? response.data.fotoPerfil : "/imagenes/userDefault.png";
+          Cookies.set("nombre", response.data.nombre);
+          Cookies.set("apellido", response.data.apellido);
+          Cookies.set("fotoPerfil", fotoPerfil);
+          setUserData({
+            ...response.data,
+            fotoPerfil: fotoPerfil,
+          });
+        }
+      }
+    } catch (error) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        general: {
+          error: true,
+          message: "Error al cargar los datos del usuario. Por favor, vuelva a iniciar sesión.",
+        },
+      }));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Feth de user data when the component mounts
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   return (
     <>
@@ -76,14 +132,21 @@ export default function TopBar({ userData }) {
               </button>
             </div>
           </div>
-          <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
-            <Image src={userData.fotoPerfil ? userData.fotoPerfil : "/imagenes/userDefault.png"} width={100} height={100} alt="user-avatar" />
-          </div>
-          <div className="name">
-            <span className="font-regular text-md">
-              {userData.nombre} {userData.apellido}
-            </span>
-          </div>
+          {isLoading || userData.fotoPerfil === "" || userData.nombre === "" || userData.apellido === "" ? (
+            <UserSkeleton />
+          ) : (
+            <>
+              <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
+                <Image src={userData.fotoPerfil ? userData.fotoPerfil : "/imagenes/userDefault.png"} width={100} height={100} alt="user-avatar" />
+              </div>
+              <div className="name">
+                <span className="font-regular text-md">
+                  {userData.nombre} {userData.apellido}
+                </span>
+              </div>
+            </>
+          )}
+
           <div className="dropdown-icon">
             <svg className="fill-black size-3" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
               <path d="m12,18c-.4,0-.777-.156-1.061-.439L.112,6.733l.707-.707,10.827,10.827c.189.189.518.189.707,0l10.827-10.827.707.707-10.827,10.827c-.283.283-.66.439-1.061.439Z" />
