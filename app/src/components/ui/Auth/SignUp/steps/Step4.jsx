@@ -85,6 +85,13 @@ export default function Step4({ currentStep, setCurrentStep, userData, setUserDa
         });
 
         setShowModal(true);
+      } else if (res.status === 404 || res.status === 400) {
+        setErrors({
+          confirmationCode: {
+            error: true,
+            message: "Código de confirmación inválido. Por favor, inténtalo de nuevo.",
+          },
+        });
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
