@@ -32,64 +32,65 @@ export default function Chat() {
     setIsChatOpen(true);
   };
 
-  const mockData = [
-    {
-      id: 1,
-      name: "Misael Gomez",
-      lastMessage: "Hola, ¿cómo estás?",
-      time: "10:04 PM",
-      avatar: "/imagenes/user.jpg",
-    },
-    {
-      id: 2,
-      name: "Misael Gomez",
-      lastMessage: "Hola, ¿cómo estás?",
-      time: "10:04 PM",
-      avatar: "/imagenes/user.jpg",
-    },
-    {
-      id: 3,
-      name: "Misael Gomez",
-      lastMessage: "Hola, ¿cómo estás?",
-      time: "10:04 PM",
-      avatar: "/imagenes/user.jpg",
-    },
-    {
-      id: 4,
-      name: "Misael Gomez",
-      lastMessage: "Hola, ¿cómo estás?",
-      time: "10:04 PM",
-      avatar: "/imagenes/user.jpg",
-    },
-    {
-      id: 5,
-      name: "Misael Gomez",
-      lastMessage: "Hola, ¿cómo estás?",
-      time: "10:04 PM",
-      avatar: "/imagenes/user.jpg",
-    },
-    {
-      id: 6,
-      name: "Misael Gomez",
-      lastMessage: "Hola, ¿cómo estás?",
-      time: "10:04 PM",
-      avatar: "/imagenes/user.jpg",
-    },
-    {
-      id: 7,
-      name: "Misael Gomez",
-      lastMessage: "Hola, ¿cómo estás?",
-      time: "10:04 PM",
-      avatar: "/imagenes/user.jpg",
-    },
-    {
-      id: 8,
-      name: "Misael Gomez",
-      lastMessage: "Hola, ¿cómo estás?",
-      time: "10:04 PM",
-      avatar: "/imagenes/user.jpg",
-    },
-  ];
+  const getTimeFromDate = (dateRaw) => {
+    const date = new Date(dateRaw);
+    const time = date.toLocaleTimeString("es-DO", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    return time;
+  };
+
+  // useEffect(() => {
+  //   if (!userId) {
+  //     console.error("El ID de usuario no está disponible");
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+  //   console.log("🔗 Conectando al hub de chats...");
+
+  //   const connection = createSignalRConnection(userId, hub);
+
+  //   connection.start().then(async () => {
+  //     console.log("✅ Conectado al hub de chats");
+
+  //     // Listen for chats received
+  //     connection.on("RecibirChats", (chats) => {
+  //       console.log("📦 Lista de chats recibida:", chats);
+  //       setTotalItems(chats.totalElementos);
+  //       setTotalPages(chats.totalPaginas);
+  //       setCurrentPage(chats.paginaActual);
+  //       setChats(chats.elementos);
+  //       setIsLoading(false);
+  //     });
+
+  //     connection.on("RecibirMensajesDelChat", (chatId, mensajes) => {
+  //       console.log(`📨 Mensajes del chat ${chatId}:`, mensajes);
+  //     });
+
+  //     connection.on("RecibirMensajePrivado", (mensaje) => {
+  //       console.log("📬 Mensaje privado recibido:", mensaje);
+  //     });
+
+  //     try {
+  //       // Fetch initial chats
+  //       await connection.invoke("ObtenerChatsUsuario", currentPage, pageSize);
+  //     } catch (error) {
+  //       console.error("Error al obtener chats:", error);
+  //       setIsLoading(false);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   });
+
+  //   // Limpieza al desmontar
+  //   return () => {
+  //     connection.stop();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (!userId) {
@@ -102,39 +103,42 @@ export default function Chat() {
 
     const connection = createSignalRConnection(userId, hub);
 
-    connection.start().then(async () => {
-      console.log("✅ Conectado al hub de chats");
-
-      // Listen for chats received
-      connection.on("RecibirChats", (chats) => {
-        console.log("📦 Lista de chats recibida:", chats);
-        setTotalItems(chats.totalElementos);
-        setTotalPages(chats.totalPaginas);
-        setCurrentPage(chats.paginaActual);
-        setChats(chats.elementos);
-        setIsLoading(false);
-      });
-
-      connection.on("RecibirMensajesDelChat", (chatId, mensajes) => {
-        console.log(`📨 Mensajes del chat ${chatId}:`, mensajes);
-      });
-
-      connection.on("RecibirMensajePrivado", (mensaje) => {
-        console.log("📬 Mensaje privado recibido:", mensaje);
-      });
-
-      try {
-        // Fetch initial chats
-        await connection.invoke("ObtenerChatsUsuario", currentPage, pageSize);
-      } catch (error) {
-        console.error("Error al obtener chats:", error);
-        setIsLoading(false);
-      } finally {
-        setIsLoading(false);
-      }
+    // 👉 Registrar los manejadores primero
+    connection.on("RecibirChats", (chats) => {
+      console.log("📦 Lista de chats recibida:", chats);
+      setTotalItems(chats.totalElementos);
+      setTotalPages(chats.totalPaginas);
+      setCurrentPage(chats.paginaActual);
+      setChats(chats.elementos);
+      setIsLoading(false);
     });
 
-    // Limpieza al desmontar
+    connection.on("RecibirMensajesDelChat", (chatId, mensajes) => {
+      console.log(`📨 Mensajes del chat ${chatId}:`, mensajes);
+    });
+
+    connection.on("RecibirMensajePrivado", (mensaje) => {
+      console.log("📬 Mensaje privado recibido:", mensaje);
+    });
+
+    connection
+      .start()
+      .then(async () => {
+        console.log("✅ Conectado al hub de chats");
+
+        try {
+          await connection.invoke("ObtenerChatsUsuario", currentPage, pageSize);
+        } catch (error) {
+          console.error("Error al obtener chats:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("❌ Error al conectar al hub:", err);
+        setIsLoading(false);
+      });
+
     return () => {
       connection.stop();
     };
@@ -191,16 +195,22 @@ export default function Chat() {
                       >
                         <div className="user-picture">
                           <div className="user-picture-frame rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
-                            <Image className="object-cover w-full h-full" src={chat.avatar} width={50} height={50} alt="user-avatar" />
+                            <Image
+                              className="object-cover w-full h-full"
+                              src={chat.participantes.filter((p) => p.usuarioId !== userId)[0]?.fotoPerfil || "/imagenes/userDefault.png"}
+                              width={50}
+                              height={50}
+                              alt="user-avatar"
+                            />
                           </div>
                         </div>
                         <div className={`description flex-col justify-center items-start w-full ${isModalOpen ? "flex" : "hidden"}`}>
                           <div className="name-time w-full flex flex-row justify-between items-center">
-                            <span className="user-name font-medium">{chat.name}</span>
-                            <span className="last-message-time text-gray-500 text-sm">{chat.time}</span>
+                            <span className="user-name font-medium">{chat.participantes.filter((p) => p.usuarioId !== userId)[0]?.nombreCompleto}</span>
+                            <span className="last-message-time text-gray-500 text-sm">{chat.ultimoMensaje ? getTimeFromDate(chat.ultimoMensaje.fechaEnvio) : ""}</span>
                           </div>
                           <div className="last-message">
-                            <span className="text-gray-500 text-sm">{chat.lastMessage}</span>
+                            <span className="text-gray-500 text-sm">{chat.ultimoMensaje?.contenido ? chat.ultimoMensaje.contenido : "No hay mensajes."}</span>
                           </div>
                         </div>
                       </div>
