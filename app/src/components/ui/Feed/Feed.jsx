@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { createSignalRConnection } from "@/lib/signalr";
 import Cookie from "js-cookie";
 import SimpleLoader from "../SimpleLoader";
+import userCardSkeleton from "@/components/ui/Feed/Skeletons/userCardSkeleton";
+import CarouselSkeleton from "./Skeletons/CaraouselSkeleton";
 
 export default function Feed({ setCurrentUserId }) {
   const userId = Cookie.get("userId");
@@ -93,9 +95,9 @@ export default function Feed({ setCurrentUserId }) {
           </button>
         </div>
         <div className="users-container  2xl:w-[1400px] 2xl:h-[650px] xl:w-[800px] xl:h-[380px] ">
-          <div className="users-caraousel flex flex-row justify-center items-center relative w-full h-full">
+          <div className="users-caraousel flex flex-row justify-center items-center w-full relative h-full">
             {isLoading || recomendedUsers.length === 0 ? (
-              <SimpleLoader />
+              <CarouselSkeleton />
             ) : (
               recomendedUsers.map((user, i) => {
                 const globalIndex = i + 1; // índice 1-based
