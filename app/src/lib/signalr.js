@@ -6,6 +6,8 @@ export const createSignalRConnection = (usuarioId, url) => {
   const connection = new signalR.HubConnectionBuilder()
     .withUrl(url, {
       accessTokenFactory: () => token,
+      transport: signalR.HttpTransportType.WebSockets,
+      skipNegotiation: true,
     })
     .configureLogging(signalR.LogLevel.Information)
     .withAutomaticReconnect()
