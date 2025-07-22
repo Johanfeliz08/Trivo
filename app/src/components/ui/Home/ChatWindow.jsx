@@ -2,78 +2,24 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import * as z from "zod/v4";
 import Cookie from "js-cookie";
+import { createSignalRConnection } from "@/lib/signalr";
 
-export default function ChatWindow({ chatId }) {
-  // const userId = Cookie.get("userId");
-  const userId = 1;
+export default function ChatWindow({ chat }) {
+  const userId = Cookie.get("userId");
+  const hub = "http://localhost:5026/hubs/chat";
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  // const [connection, setConnection] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 10;
+
   const [message, setMessage] = useState({
     message: "",
     file: null,
   });
   const messagesContainerRef = useRef(null);
-  const mockData = [
-    {
-      mensajeId: 1,
-      chatId: 1,
-      emisorId: 1,
-      contenido: "Mensaje 1",
-      fechaEnvio: "2025-07-19 21:50:36.983 -0400",
-      estado: "Enviado",
-    },
-    {
-      mensajeId: 2,
-      chatId: 1,
-      emisorId: 2,
-      contenido: "Mensaje 2",
-      fechaEnvio: "2025-07-19 21:45:36.983 -0400",
-      estado: "Enviado",
-    },
-    {
-      mensajeId: 3,
-      chatId: 1,
-      emisorId: 1,
-      contenido: "Mensaje 3",
-      fechaEnvio: "2025-07-19 21:43:36.983 -0400",
-      estado: "Enviado",
-    },
-    {
-      mensajeId: 4,
-      chatId: 1,
-      emisorId: 1,
-      contenido: "Mensaje 3",
-      fechaEnvio: "2025-07-19 21:42:36.983 -0400",
-      estado: "Enviado",
-    },
-    {
-      mensajeId: 5,
-      chatId: 1,
-      emisorId: 1,
-      contenido: "Mensaje 3",
-      fechaEnvio: "2025-07-19 21:40:36.983 -0400",
-      estado: "Enviado",
-    },
-    {
-      mensajeId: 6,
-      chatId: 1,
-      emisorId: 1,
-      contenido: "Mensaje 3",
-      fechaEnvio: "2025-07-19 21:20:36.983 -0400",
-      estado: "Enviado",
-    },
-    {
-      mensajeId: 7,
-      chatId: 1,
-      emisorId: 1,
-      contenido: "Mensaje 3",
-      fechaEnvio: "2025-07-19 21:15:36.983 -0400",
-      estado: "Enviado",
-    },
-  ];
-
-  const orderChatsByDate = (chats) => {
-    return chats.sort((a, b) => new Date(b.fechaEnvio) - new Date(a.fechaEnvio)).reverse();
-  };
-  const [chatMessages, setChatMessages] = useState(orderChatsByDate(mockData));
 
   const messageSchema = z
     .object({
@@ -83,6 +29,70 @@ export default function ChatWindow({ chatId }) {
     .refine((data) => (data.message && data.message.trim().length > 0) || data.file instanceof File, {
       message: "Debes escribir un mensaje o subir un archivo.",
     });
+
+  // const mockData = [
+  //   {
+  //     mensajeId: 1,
+  //     chatId: 1,
+  //     emisorId: 1,
+  //     contenido: "Mensaje 1",
+  //     fechaEnvio: "2025-07-19 21:50:36.983 -0400",
+  //     estado: "Enviado",
+  //   },
+  //   {
+  //     mensajeId: 2,
+  //     chatId: 1,
+  //     emisorId: 2,
+  //     contenido: "Mensaje 2",
+  //     fechaEnvio: "2025-07-19 21:45:36.983 -0400",
+  //     estado: "Enviado",
+  //   },
+  //   {
+  //     mensajeId: 3,
+  //     chatId: 1,
+  //     emisorId: 1,
+  //     contenido: "Mensaje 3",
+  //     fechaEnvio: "2025-07-19 21:43:36.983 -0400",
+  //     estado: "Enviado",
+  //   },
+  //   {
+  //     mensajeId: 4,
+  //     chatId: 1,
+  //     emisorId: 1,
+  //     contenido: "Mensaje 3",
+  //     fechaEnvio: "2025-07-19 21:42:36.983 -0400",
+  //     estado: "Enviado",
+  //   },
+  //   {
+  //     mensajeId: 5,
+  //     chatId: 1,
+  //     emisorId: 1,
+  //     contenido: "Mensaje 3",
+  //     fechaEnvio: "2025-07-19 21:40:36.983 -0400",
+  //     estado: "Enviado",
+  //   },
+  //   {
+  //     mensajeId: 6,
+  //     chatId: 1,
+  //     emisorId: 1,
+  //     contenido: "Mensaje 3",
+  //     fechaEnvio: "2025-07-19 21:20:36.983 -0400",
+  //     estado: "Enviado",
+  //   },
+  //   {
+  //     mensajeId: 7,
+  //     chatId: 1,
+  //     emisorId: 1,
+  //     contenido: "Mensaje 3",
+  //     fechaEnvio: "2025-07-19 21:15:36.983 -0400",
+  //     estado: "Enviado",
+  //   },
+  // ];
+
+  const orderChatsByDate = (chats) => {
+    return chats.sort((a, b) => new Date(b.fechaEnvio) - new Date(a.fechaEnvio)).reverse();
+  };
+  // const [chatMessages, setChatMessages] = useState(orderChatsByDate(mockData));
 
   const handleFileChange = (e) => {
     setMessage((prev) => ({
@@ -103,30 +113,99 @@ export default function ChatWindow({ chatId }) {
     return result.success;
   };
 
+  const getTimeFromDate = (dateRaw) => {
+    const date = new Date(dateRaw);
+    const time = date.toLocaleTimeString("es-DO", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    return time;
+  };
+
+  const sortMessagesByTime = (messages) => {
+    return messages.sort((a, b) => new Date(a.fechaEnvio) - new Date(b.fechaEnvio));
+  };
+
+  useEffect(() => {
+    if (!userId) {
+      console.error("El ID de usuario no está disponible");
+      return;
+    }
+
+    if (!chat.id) {
+      console.error("El ID de chat no está disponible");
+      return;
+    }
+
+    setIsLoading(true);
+    console.log("🔗 Conectando al hub de chats...");
+
+    const connection = createSignalRConnection(userId, hub);
+
+    connection.on("RecibirMensajesDelChat", (chatId, messages) => {
+      console.log(`📨 Mensajes del chat ${chatId}:`, messages);
+      setMessages(sortMessagesByTime(messages.elementos));
+    });
+
+    connection.on("RecibirMensajePrivado", (mensaje) => {
+      console.log("📬 Mensaje privado recibido:", mensaje);
+    });
+
+    connection
+      .start()
+      .then(async () => {
+        console.log("✅ Conectado al hub de chats");
+        try {
+          console.log(`🔍 Obteniendo mensajes del chat ${chat.id}...`);
+          await connection.invoke("ObtenerMensajesChat", chat.id, currentPage, pageSize).then((messages) => {});
+        } catch (error) {
+          console.error("Error al obtener los mensajes de este chat:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("❌ Error al conectar al hub de chats:", err);
+        setIsLoading(false);
+      });
+
+    return () => {
+      connection.stop();
+    };
+  }, []);
+
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (container) {
       container.scrollTop = container.scrollHeight;
     }
-  }, [chatMessages]);
+  }, [messages]);
 
   return (
     <>
       <div className={`chat flex flex-col w-full`}>
         <div className="header flex flex-row justify-start items-center gap-4 p-5 border-b border-gray-200 w-full h-26">
           <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-15 h-15 bg-gray-200">
-            <Image className="object-cover w-full h-full" src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
+            <Image
+              className="object-cover w-full h-full"
+              src={chat.participantes.filter((p) => p.usuarioId !== userId)[0]?.fotoPerfil || "/imagenes/userDefault.png"}
+              width={50}
+              height={50}
+              alt="user-avatar"
+            />
           </div>
           <div className="chat-name">
-            <span className="text-primary font-medium text-2xl">Misael Gomez</span>
+            <span className="text-primary font-medium text-2xl">{chat.participantes.filter((p) => p.usuarioId !== userId)[0]?.nombreCompleto}</span>
           </div>
         </div>
         <div className="messages-container w-full h-full py-10 bg-bg-secondary overflow-scroll hide-scrollbar scroll-smooth" ref={messagesContainerRef}>
           <div className="messages w-full  flex flex-col justify-start items-center gap-15 relative">
-            {chatMessages.length > 0 ? (
-              chatMessages.map((message) => {
+            {messages.length > 0 ? (
+              messages.map((message) => {
                 return message.emisorId === userId ? (
-                  <div className={`message currentUser flex flex-row-reverse justify-start items-start gap-4 relative 2xl:translate-x-40`} key={message.mensajeId}>
+                  <div className={`message currentUser flex flex-row-reverse justify-start items-start gap-4 relative 2xl:translate-x-40`} key={message.id}>
                     <div className="user-profile">
                       <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
                         <Image className="object-cover w-full h-full" src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
@@ -138,32 +217,38 @@ export default function ChatWindow({ chatId }) {
                           <span className="font-semibold text-md">Tu</span>
                         </div>
                         <div className="time">
-                          <span className="text-gray-500 text-sm">11:12 PM</span>
+                          <span className="text-gray-500 text-sm">{getTimeFromDate(message.fechaEnvio)}</span>
                         </div>
                       </div>
                       <div className="text-white bg-primary py-4 px-6 rounded-b-lg rounded-tl-lg shadow-md mt-2">
-                        <p className="">Faribe, manito lindo.</p>
+                        <p className="">{message.contenido}</p>
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div className={`message externalUser flex flex-row justify-start items-start gap-4 relative 2xl:-translate-x-40`} key={message.mensajeId}>
+                  <div className={`message externalUser flex flex-row justify-start items-start gap-4 relative 2xl:-translate-x-40`} key={message.id}>
                     <div className="user-profile">
                       <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
-                        <Image className="object-cover w-full h-full" src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
+                        <Image
+                          className="object-cover w-full h-full"
+                          src={chat.participantes.filter((p) => p.usuarioId !== userId)[0]?.fotoPerfil || "/imagenes/userDefault.png"}
+                          width={50}
+                          height={50}
+                          alt="user-avatar"
+                        />
                       </div>
                     </div>
                     <div className="content">
                       <div className="message-header flex flex-row justify-start items-center gap-4 w-auto">
                         <div className="user-name">
-                          <span className="font-semibold text-md">Misael Gomez</span>
+                          <span className="font-semibold text-md">{chat.participantes.filter((p) => p.usuarioId !== userId)[0]?.nombreCompleto}</span>
                         </div>
                         <div className="time">
-                          <span className="text-gray-500 text-sm">11:12 PM</span>
+                          <span className="text-gray-500 text-sm">{getTimeFromDate(message.fechaEnvio)}</span>
                         </div>
                       </div>
                       <div className="text bg-white py-4 px-6 rounded-b-lg rounded-tr-lg shadow-md mt-2">
-                        <p className="">Faribe, manito lindo.</p>
+                        <p className="">{message.contenido}</p>
                       </div>
                     </div>
                   </div>

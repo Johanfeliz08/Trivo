@@ -6,30 +6,26 @@ import ChatWindow from "./ChatWindow";
 import { createSignalRConnection } from "@/lib/signalr";
 import Cookie from "js-cookie";
 import SimpleLoader from "../SimpleLoader";
-import { set } from "zod/v4";
 
 export default function Chat() {
   const userId = Cookie.get("userId");
   const hub = "http://localhost:5026/hubs/chat";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [selectedChatId, setSelectedChatId] = useState(null);
+  const [selectedChat, setSelectedChat] = useState(null);
   const [chats, setChats] = useState([]);
+  // const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  // const [connection, setConnection] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 10;
 
   const toggleChatModal = () => {
     setIsModalOpen(!isModalOpen);
     setIsChatOpen(false);
-    setSelectedChatId(null);
-  };
-
-  const openChatWindow = (chatId) => {
-    setSelectedChatId(chatId);
-    setIsChatOpen(true);
+    setSelectedChat(null);
   };
 
   const getTimeFromDate = (dateRaw) => {
@@ -42,55 +38,6 @@ export default function Chat() {
 
     return time;
   };
-
-  // useEffect(() => {
-  //   if (!userId) {
-  //     console.error("El ID de usuario no está disponible");
-  //     return;
-  //   }
-
-  //   setIsLoading(true);
-  //   console.log("🔗 Conectando al hub de chats...");
-
-  //   const connection = createSignalRConnection(userId, hub);
-
-  //   connection.start().then(async () => {
-  //     console.log("✅ Conectado al hub de chats");
-
-  //     // Listen for chats received
-  //     connection.on("RecibirChats", (chats) => {
-  //       console.log("📦 Lista de chats recibida:", chats);
-  //       setTotalItems(chats.totalElementos);
-  //       setTotalPages(chats.totalPaginas);
-  //       setCurrentPage(chats.paginaActual);
-  //       setChats(chats.elementos);
-  //       setIsLoading(false);
-  //     });
-
-  //     connection.on("RecibirMensajesDelChat", (chatId, mensajes) => {
-  //       console.log(`📨 Mensajes del chat ${chatId}:`, mensajes);
-  //     });
-
-  //     connection.on("RecibirMensajePrivado", (mensaje) => {
-  //       console.log("📬 Mensaje privado recibido:", mensaje);
-  //     });
-
-  //     try {
-  //       // Fetch initial chats
-  //       await connection.invoke("ObtenerChatsUsuario", currentPage, pageSize);
-  //     } catch (error) {
-  //       console.error("Error al obtener chats:", error);
-  //       setIsLoading(false);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   });
-
-  //   // Limpieza al desmontar
-  //   return () => {
-  //     connection.stop();
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (!userId) {
@@ -113,19 +60,20 @@ export default function Chat() {
       setIsLoading(false);
     });
 
-    connection.on("RecibirMensajesDelChat", (chatId, mensajes) => {
-      console.log(`📨 Mensajes del chat ${chatId}:`, mensajes);
-    });
+    // connection.on("RecibirMensajesDelChat", (chatId, messages) => {
+    //   console.log(`📨 Mensajes del chat ${chatId}:`, messages);
+    //   setMessages(messages.elementos);
+    // });
 
-    connection.on("RecibirMensajePrivado", (mensaje) => {
-      console.log("📬 Mensaje privado recibido:", mensaje);
-    });
+    // connection.on("RecibirMensajePrivado", (mensaje) => {
+    //   console.log("📬 Mensaje privado recibido:", mensaje);
+    // });
 
     connection
       .start()
       .then(async () => {
         console.log("✅ Conectado al hub de chats");
-
+        // setConnection(connection);
         try {
           await connection.invoke("ObtenerChatsUsuario", currentPage, pageSize);
         } catch (error) {
@@ -143,6 +91,31 @@ export default function Chat() {
       connection.stop();
     };
   }, []);
+
+  // const openChatWindow = async (chatId) => {
+  //   if (!chatId) {
+  //     console.error("El id del chat no es válido.");
+  //     return;
+  //   }
+
+  //   setSelectedChatId(chatId);
+
+  //   try {
+  //     if (!connection) {
+  //       console.log("La conexión no está establecida.");
+  //       return;
+  //     }
+
+  //     await connection.invoke("ObtenerMensajesChat", chatId, currentPage, pageSize).then((messages) => {});
+  //   } catch (error) {
+  //     console.error("Error al cargar los mensajes del chat", error);
+  //   }
+  // };
+
+  const openChatWindow = (selectedChat) => {
+    setSelectedChat(selectedChat);
+    setIsChatOpen(true);
+  };
 
   return (
     <>
@@ -185,7 +158,7 @@ export default function Chat() {
                   </div>
                 ) : (
                   chats.map((chat) => (
-                    <button key={chat.id} type="button" onClick={() => openChatWindow(chat.id)}>
+                    <button key={chat.id} type="button" onClick={() => openChatWindow(chat)}>
                       <div
                         className={`chat-item py-2 cursor-pointer transition-all border-l-5 border-transparent ${
                           isModalOpen
@@ -220,7 +193,7 @@ export default function Chat() {
               </div>
             </div>
             {isChatOpen && isModalOpen ? (
-              <ChatWindow chatId={selectedChatId} isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
+              <ChatWindow chat={selectedChat} isChatOpen={isChatOpen} />
             ) : (
               <div className={`empty-chat justify-center items-center w-full h-full ${isModalOpen ? "flex flex-col" : "hidden"}`}>
                 <span className="text-gray-500 text-sm">Selecciona un chat para comenzar a chatear.</span>
