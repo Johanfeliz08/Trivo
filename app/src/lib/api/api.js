@@ -15,11 +15,30 @@ const api = axios.create({
 // Interceptor para agregar token
 api.interceptors.request.use(
   (config) => {
-    const publicPaths = ["/users/auth", "/users", "/recruiters", "/experts", "/users/confirm-account", "/category-interests/pagination", "/interests/by-categories"];
+    const publicPaths = [
+      "/users/auth",
+      "/users",
+      "/recruiters",
+      "/experts",
+      "/users/confirm-account",
+      "/category-interests/pagination",
+      "/interests/by-categories",
+      "/users/forgot-password",
+      "/users/validate-code",
+      "/users/modify-password",
+    ];
     const requestPath = new URL(config.url, config.baseURL).pathname;
     // console.log("Request Path:", requestPath);
+    let isPublicPath = false;
 
-    const isPublicPath = publicPaths.some((path) => requestPath === path);
+    // The public paths are statics due to the backend has protected routes and public routes under the same path.
+    // There for i had to add a validation for validate-code due to the fact that is dynamic
+    if (requestPath.startsWith("/users/validate-code")) {
+      isPublicPath = true;
+    } else {
+      isPublicPath = publicPaths.some((path) => requestPath === path);
+    }
+
     // console.log("Is Public Path:", isPublicPath + "." + requestPath);
     // const isPublicPath = publicPaths.some((path) => requestPath === path || requestPath.startsWith(`${path}/`));
 
