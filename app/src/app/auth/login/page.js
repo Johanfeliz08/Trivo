@@ -237,7 +237,7 @@ export default function LoginPage() {
               </label>
             </div>
             <div className="forgot-password">
-              <a href="/auth/recuperar-contraseña" className="font-semibold text-primary hover:underline">
+              <a href="/auth/recuperar-contrasena" className="font-semibold text-primary hover:underline">
                 ¿Olvidaste tu contraseña?
               </a>
             </div>
