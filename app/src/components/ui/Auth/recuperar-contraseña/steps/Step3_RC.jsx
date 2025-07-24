@@ -1,19 +1,17 @@
-import GoBackButton from "@/components/ui/GoBackButton.jsx";
 import * as z from "zod/v4";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-export default function Step3_RC({ currentStep, setCurrentStep }) {
-  const router = useRouter();
+import Modal from "@/components/ui/Modal";
+import Loader from "@/components/ui/Loader";
+import api from "@/lib/api/api";
 
+export default function Step3_RC({ currentStep, setCurrentStep, userData, setUserData }) {
   const [formData, setFormData] = useState({
     contraseña: "",
     confirmarContraseña: "",
   });
 
-  const formSchema = z.object({
-    contraseña: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
-    confirmarContraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
-  });
+  const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     contraseña: {
@@ -24,6 +22,11 @@ export default function Step3_RC({ currentStep, setCurrentStep }) {
       error: false,
       message: "",
     },
+  });
+
+  const formSchema = z.object({
+    contraseña: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+    confirmarContraseña: z.string().min(6, "La confirmación de contraseña debe tener al menos 6 caracteres"),
   });
 
   const validateInput = (inputName, value) => {
@@ -54,20 +57,59 @@ export default function Step3_RC({ currentStep, setCurrentStep }) {
     }
   };
 
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const response = await api.post(`/users/modify-password?email=${userData.email}`, {
+        contrasena: formData.contraseña,
+        confirmacionDeContrasena: formData.confirmarContraseña,
+      });
+
+      if (response.status === 200) {
+        setErrors({
+          contraseña: { error: false, message: "" },
+          confirmarContraseña: { error: false, message: "" },
+        });
+        setShowModal(true);
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          confirmarContraseña: {
+            error: true,
+            message: "Ha ocurrido un error al reestablecer la contraseña.",
+          },
+        }));
+      }
+    } catch (error) {
+      console.error("Ha ocurrido un error al reestablecer la contraseña:", error);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        confirmarContraseña: {
+          error: true,
+          message: "Ha ocurrido un error al reestablecer la contraseña.",
+        },
+      }));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="form-container h-190 flex flex-col justify-center items-center gap-8">
-      {/* <title>Trivo | Registro - Paso 2</title> */}
+      {showModal && <Modal message="Su contraseña ha sido reestablecida satisfactoriamente, por favor inicie sesion." redirectTo="/auth/login" type="success" />}
+      {isLoading && <Loader />}
+      <title>Trivo | Confirmar contraseña</title>
       <div className="title">
-        <h1 className="text-3xl font-semibold text-primary">¡Ingresa tu nueva contraseña!</h1>
+        <h1 className="text-3xl font-semibold text-primary">¡Configura tu nueva contraseña!</h1>
       </div>
       <div className="form">
-        <form id="resetPasswordForm" action="" className="flex flex-col gap-4 justify-center items-center max-w-180 w-180">
-          <div className="input flex flex-col gap-2 contraseña">
+        <form id="resetPasswordForm" action="" className="flex flex-col gap-4 justify-center items-center max-w-220 w-220">
+          <div className="input flex flex-col gap-2 contraseña w-1/2">
             <label className="font-medium text-lg" htmlFor="contraseña">
               Contraseña
             </label>
             <input
-              className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
+              className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary px-2"
               type="password"
               name="contraseña"
               id="contraseña"
@@ -76,12 +118,12 @@ export default function Step3_RC({ currentStep, setCurrentStep }) {
             />
             {<span className="text-red-500 text-sm min-h-1 h-1 py-2 flex justify-start items-center">{errors.contraseña.error ? errors.contraseña.message : ""}</span>}
           </div>
-          <div className="input flex flex-col gap-2 confirmarContraseña">
+          <div className="input flex flex-col gap-2 confirmarContraseña w-1/2">
             <label className="font-medium text-lg" htmlFor="confirmarContraseña">
               Confirmar Contraseña
             </label>
             <input
-              className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary"
+              className="w-auto text-lg h-9 border border-gray-400 rounded-md shadow-sm outline-primary px-2"
               type="password"
               name="confirmarContraseña"
               id="confirmarContraseña"
@@ -101,21 +143,18 @@ export default function Step3_RC({ currentStep, setCurrentStep }) {
           </div>
         </form>
       </div>
-      <div className="buttons flex flex-row-reverse justify-between items-center">
-        <div className="next-btn relative">
-          <button className=" cursor-pointer" onClick={() => handleSubmit(formData)} disabled={!formSchema.safeParse(formData).success || errors.confirmarContraseña.error}>
+      <div className="buttons flex flex-row-reverse justify-center items-center max-w-220 w-220">
+        <div className="submit-btn relative w-1/2">
+          <button
+            className="cursor-pointer w-full flex justify-center items-center bg-primary text-white h-14 rounded-xl shadow-lg border border-transparent hover:bg-bg-secondary hover:text-primary hover:border-primary duration-400 ease-in-out"
+            onClick={() => handleSubmit(formData)}
+            disabled={!formSchema.safeParse(formData).success || errors.confirmarContraseña.error}
+          >
             <div className="text px-10">
-              <span className="main-text font-semibold"></span>
-              <span className="secondary-text font-light">Continuar</span>
-            </div>
-            <div className="arrow">
-              <svg className="size-8 fill-white" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
-                <path d="m18.541,10.894l-4.717-4.717-.707.707,4.616,4.617H5v1h12.735l-4.618,4.617.707.707,4.717-4.716c.296-.296.459-.69.459-1.108s-.163-.812-.459-1.106Z" />
-              </svg>
+              <span className="secondary-text font-light">Cambiar contraseña</span>
             </div>
           </button>
         </div>
-        <GoBackButton mainText="" secondaryText="Volver" currentStep={currentStep} setCurrentStep={setCurrentStep} />
       </div>
     </div>
   );

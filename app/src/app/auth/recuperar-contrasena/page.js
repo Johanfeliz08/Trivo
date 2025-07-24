@@ -7,6 +7,11 @@ import Step3 from "@/components/ui/Auth/recuperar-contraseña/steps/Step3_RC.jsx
 
 export default function RecuperarContraseñaPage() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [userData, setUserData] = useState({
+    email: "",
+    contraseña: "",
+    confirmContraseña: "",
+  });
 
   return (
     <>
@@ -25,9 +30,9 @@ export default function RecuperarContraseñaPage() {
         </div>
 
         {/* Render the steps */}
-        {currentStep === 1 && <Step1 currentStep={currentStep} setCurrentStep={setCurrentStep} />}
-        {currentStep === 2 && <Step2 currentStep={currentStep} setCurrentStep={setCurrentStep} />}
-        {currentStep === 3 && <Step3 currentStep={currentStep} setCurrentStep={setCurrentStep} />}
+        {currentStep === 1 && <Step1 currentStep={currentStep} setCurrentStep={setCurrentStep} userData={userData} setUserData={setUserData} />}
+        {currentStep === 2 && <Step2 currentStep={currentStep} setCurrentStep={setCurrentStep} userData={userData} setUserData={setUserData} />}
+        {currentStep === 3 && <Step3 currentStep={currentStep} setCurrentStep={setCurrentStep} userData={userData} setUserData={setUserData} />}
       </div>
     </>
   );

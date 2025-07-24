@@ -1,12 +1,17 @@
 import * as z from "zod/v4";
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import api from "@/lib/api/api";
 import Loader from "@/components/ui/Loader";
-import NextButton from "@/components/ui/NextButton.jsx";
-import GoBackButton from "@/components/ui/GoBackButton.jsx";
 
 export default function Step2_RC({ currentStep, setCurrentStep }) {
+  const [currentDigit, setCurrentDigit] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    confirmationCode: {
+      error: false,
+      message: "",
+    },
+  });
   const digitSchema = z.string().regex(/^\d{1}$/, "Debe ser un número de un solo dígito");
 
   const confirmationCodeSchema = z.object({
@@ -27,17 +32,7 @@ export default function Step2_RC({ currentStep, setCurrentStep }) {
     sixthDigit: "",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const isCodeValid = confirmationCodeSchema.safeParse(confirmationCode).success;
-
-  const [currentDigit, setCurrentDigit] = useState(1);
-  const [errors, setErrors] = useState({
-    confirmationCode: {
-      error: false,
-      message: "",
-    },
-  });
 
   const firstDigitRef = useRef(null);
   const secondDigitRef = useRef(null);
@@ -53,16 +48,58 @@ export default function Step2_RC({ currentStep, setCurrentStep }) {
   }, [currentDigit]);
 
   const handleConfirmationCode = async () => {
-    setCurrentStep(3);
+    try {
+      setIsLoading(true);
+      const parsedCode = confirmationCodeSchema.safeParse(confirmationCode);
+      if (!parsedCode.success) {
+        setErrors({
+          confirmationCode: {
+            error: true,
+            message: "El codigo de confirmación no es válido. Por favor, verifique e intente nuevamente.",
+          },
+        });
+        return;
+      }
+
+      const code = Object.values(parsedCode.data).join("");
+      const res = await api.post(`/users/validate-code/${code}`);
+
+      if (res.status === 200) {
+        setCurrentStep(3);
+        setErrors({
+          confirmationCode: {
+            error: false,
+            message: "",
+          },
+        });
+      } else if (res.status === 400) {
+        setErrors({
+          confirmationCode: {
+            error: true,
+            message: "El código de confirmación no es válido o ya ha expirado. Por favor, inténtelo de nuevo.",
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error validating confirmation code:", error);
+      setErrors({
+        confirmationCode: {
+          error: true,
+          message: "Ha ocurrido un error al validar el codigo. Por favor, inténtelo de nuevo más tarde.",
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <>
-      <title>Trivo | Registro - Paso 4</title>
+      <title>Trivo | Recuperar contraseña</title>
       <div className="step-container flex flex-col justify-center items-center gap-18 h-full w-full">
         {isLoading && <Loader />}
         <div className="title flex justify-center items-center flex-col gap-4">
-          <h1 className="text-3xl font-semibold text-primary">¡Confirma tu cuenta!</h1>
+          <h1 className="text-3xl font-semibold text-primary">¡Confirma tu identidad!</h1>
           <p className="font-regular opacity-60 text-md w-1/2 text-justify">
             Te hemos enviado un correo electrónico con un código de confirmación. Revisa tu bandeja de entrada (y la carpeta de spam, por si acaso).
           </p>
@@ -193,13 +230,13 @@ export default function Step2_RC({ currentStep, setCurrentStep }) {
               />
             </div>
           </form>
-          <div className="no-data flex justify-center items-center">
+          <div className="no-data flex justify-center items-center w-3/4">
             <p className="text-center text-red-500">{errors.confirmationCode ? errors.confirmationCode.message : ""}</p>
           </div>
         </div>
         <div className="buttons flex flex-row-reverse justify-between items-center">
           <div className="next-btn relative">
-            <button className="cursor-pointer" onClick={handleConfirmationCode} disabled={!isCodeValid}>
+            <button className="cursor-pointer " type="button" onClick={handleConfirmationCode} disabled={!isCodeValid}>
               <div className="text px-10">
                 <span className="main-text font-semibold"></span>
                 <span className="secondary-text font-light">Continuar</span>
