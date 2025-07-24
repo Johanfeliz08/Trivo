@@ -1,8 +1,8 @@
-export default function nextButton({ mainText, secondaryText, currentStep, setCurrentStep }) {
+export default function nextButton({ mainText, secondaryText, currentStep, setCurrentStep, disabled }) {
   return (
     <>
       <div className="next-btn relative">
-        <button className=" cursor-pointer" onClick={() => setCurrentStep(currentStep + 1)}>
+        <button className=" cursor-pointer" onClick={() => setCurrentStep(currentStep + 1)} disabled={disabled}>
           <div className="text px-10">
             <span className="main-text font-semibold">{mainText}</span>
             <span className="secondary-text font-light">{secondaryText}</span>
