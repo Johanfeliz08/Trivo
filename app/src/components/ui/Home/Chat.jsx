@@ -120,9 +120,12 @@ export default function Chat() {
   return (
     <>
       <div
-        className={`chat-container shadow-2xl bg-white ease-in-out duration-400 w-240 h-[calc(100vh-5rem)] flex flex-col overflow-y-scroll hide-scrollbar z-40 ${
-          isModalOpen ? "absolute top-0 right-0 max-w-240 flex flex-row" : "max-w-15 w-15 ease-in-out duration-400"
+        className={`chat-container shadow-2xl bg-white h-[calc(100vh-5rem)] flex flex-col overflow-hidden transition-[width] duration-400 ease-in-out z-40 absolute top-0 right-0 ${
+          isModalOpen ? "w-[60rem] flex flex-row" : "w-[3.75rem]"
         }`}
+        // className={`chat-container shadow-2xl bg-white ease-in-out duration-400 w-240 h-[calc(100vh-5rem)] flex flex-col overflow-y-scroll hide-scrollbar z-40 ${
+        //   isModalOpen ? "absolute top-0 right-0 max-w-240 flex flex-row" : "max-w-15 w-15 ease-in-out duration-400"
+        // }`}
       >
         {isLoading ? (
           <SimpleLoader />
