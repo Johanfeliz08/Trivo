@@ -18,7 +18,7 @@ export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  // const [connection, setConnection] = useState(null);
+  const [connection, setConnection] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 10;
 
@@ -39,6 +39,27 @@ export default function Chat() {
     return time;
   };
 
+  // if (connection) {
+  //   connection.on("RecibirNuevoChat", (chat) => {
+  //     console.log("Nuevo chat recibido:", chat);
+  //     setChats((prevChats) => [...prevChats, chat]);
+  //     setTotalItems(chats.length);
+  //   });
+  // }
+
+  useEffect(() => {
+    if (!connection) {
+      return;
+    }
+
+    connection.on("RecibirNuevoChat", (chat) => {
+      console.log("Nuevo chat recibido:", chat);
+      setChats(chats.push(chat));
+      console.log("Chats actualizados:", chats);
+      setTotalItems(chats.length);
+    });
+  }, [connection]);
+
   useEffect(() => {
     if (!userId) {
       console.error("El ID de usuario no está disponible");
@@ -49,33 +70,23 @@ export default function Chat() {
     console.log("🔗 Conectando al hub de chats...");
 
     const connection = createSignalRConnection(userId, hub);
+    setConnection(connection);
 
-    // 👉 Registrar los manejadores primero
     connection.on("RecibirChats", (chats) => {
       console.log("📦 Lista de chats recibida:", chats);
-      setTotalItems(chats.totalElementos);
-      setTotalPages(chats.totalPaginas);
-      setCurrentPage(chats.paginaActual);
-      setChats(chats.elementos);
+      setTotalItems(chats.length);
+      // setTotalPages(chats.totalPaginas);
+      // setCurrentPage(chats.paginaActual);
+      setChats(chats);
       setIsLoading(false);
     });
-
-    // connection.on("RecibirMensajesDelChat", (chatId, messages) => {
-    //   console.log(`📨 Mensajes del chat ${chatId}:`, messages);
-    //   setMessages(messages.elementos);
-    // });
-
-    // connection.on("RecibirMensajePrivado", (mensaje) => {
-    //   console.log("📬 Mensaje privado recibido:", mensaje);
-    // });
 
     connection
       .start()
       .then(async () => {
         console.log("✅ Conectado al hub de chats");
-        // setConnection(connection);
         try {
-          await connection.invoke("ObtenerChatsUsuario", currentPage, pageSize);
+          // await connection.invoke("ObtenerChats");
         } catch (error) {
           console.error("Error al obtener chats:", error);
         } finally {
@@ -91,26 +102,6 @@ export default function Chat() {
       connection.stop();
     };
   }, []);
-
-  // const openChatWindow = async (chatId) => {
-  //   if (!chatId) {
-  //     console.error("El id del chat no es válido.");
-  //     return;
-  //   }
-
-  //   setSelectedChatId(chatId);
-
-  //   try {
-  //     if (!connection) {
-  //       console.log("La conexión no está establecida.");
-  //       return;
-  //     }
-
-  //     await connection.invoke("ObtenerMensajesChat", chatId, currentPage, pageSize).then((messages) => {});
-  //   } catch (error) {
-  //     console.error("Error al cargar los mensajes del chat", error);
-  //   }
-  // };
 
   const openChatWindow = (selectedChat) => {
     setSelectedChat(selectedChat);
