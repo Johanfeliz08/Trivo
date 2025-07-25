@@ -14,13 +14,9 @@ export default function Chat() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
   const [chats, setChats] = useState([]);
-  // const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [connection, setConnection] = useState(null);
-  const [totalPages, setTotalPages] = useState(0);
-  const pageSize = 10;
 
   const toggleChatModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -39,24 +35,27 @@ export default function Chat() {
     return time;
   };
 
-  // if (connection) {
-  //   connection.on("RecibirNuevoChat", (chat) => {
-  //     console.log("Nuevo chat recibido:", chat);
-  //     setChats((prevChats) => [...prevChats, chat]);
-  //     setTotalItems(chats.length);
-  //   });
-  // }
-
   useEffect(() => {
     if (!connection) {
       return;
     }
 
+    connection.on("RecibirChats", (chats) => {
+      console.log("📦 Lista de chats recibida:", chats);
+      setTotalItems(chats.length);
+      setChats(chats);
+      setIsLoading(false);
+    });
+
     connection.on("RecibirNuevoChat", (chat) => {
       console.log("Nuevo chat recibido:", chat);
-      setChats(chats.push(chat));
-      console.log("Chats actualizados:", chats);
-      setTotalItems(chats.length);
+      setChats((prevChats) => {
+        console.log("Chats antiguos:", prevChats);
+        const existe = prevChats.some((c) => c.id === chat.id);
+        if (existe) return prevChats;
+        return [...prevChats, chat];
+      });
+      setTotalItems((prevTotal) => prevTotal + 1);
     });
   }, [connection]);
 
@@ -71,15 +70,6 @@ export default function Chat() {
 
     const connection = createSignalRConnection(userId, hub);
     setConnection(connection);
-
-    connection.on("RecibirChats", (chats) => {
-      console.log("📦 Lista de chats recibida:", chats);
-      setTotalItems(chats.length);
-      // setTotalPages(chats.totalPaginas);
-      // setCurrentPage(chats.paginaActual);
-      setChats(chats);
-      setIsLoading(false);
-    });
 
     connection
       .start()

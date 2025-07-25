@@ -30,65 +30,6 @@ export default function ChatWindow({ chat }) {
       message: "Debes escribir un mensaje o subir un archivo.",
     });
 
-  // const mockData = [
-  //   {
-  //     mensajeId: 1,
-  //     chatId: 1,
-  //     emisorId: 1,
-  //     contenido: "Mensaje 1",
-  //     fechaEnvio: "2025-07-19 21:50:36.983 -0400",
-  //     estado: "Enviado",
-  //   },
-  //   {
-  //     mensajeId: 2,
-  //     chatId: 1,
-  //     emisorId: 2,
-  //     contenido: "Mensaje 2",
-  //     fechaEnvio: "2025-07-19 21:45:36.983 -0400",
-  //     estado: "Enviado",
-  //   },
-  //   {
-  //     mensajeId: 3,
-  //     chatId: 1,
-  //     emisorId: 1,
-  //     contenido: "Mensaje 3",
-  //     fechaEnvio: "2025-07-19 21:43:36.983 -0400",
-  //     estado: "Enviado",
-  //   },
-  //   {
-  //     mensajeId: 4,
-  //     chatId: 1,
-  //     emisorId: 1,
-  //     contenido: "Mensaje 3",
-  //     fechaEnvio: "2025-07-19 21:42:36.983 -0400",
-  //     estado: "Enviado",
-  //   },
-  //   {
-  //     mensajeId: 5,
-  //     chatId: 1,
-  //     emisorId: 1,
-  //     contenido: "Mensaje 3",
-  //     fechaEnvio: "2025-07-19 21:40:36.983 -0400",
-  //     estado: "Enviado",
-  //   },
-  //   {
-  //     mensajeId: 6,
-  //     chatId: 1,
-  //     emisorId: 1,
-  //     contenido: "Mensaje 3",
-  //     fechaEnvio: "2025-07-19 21:20:36.983 -0400",
-  //     estado: "Enviado",
-  //   },
-  //   {
-  //     mensajeId: 7,
-  //     chatId: 1,
-  //     emisorId: 1,
-  //     contenido: "Mensaje 3",
-  //     fechaEnvio: "2025-07-19 21:15:36.983 -0400",
-  //     estado: "Enviado",
-  //   },
-  // ];
-
   const orderChatsByDate = (chats) => {
     return chats.sort((a, b) => new Date(b.fechaEnvio) - new Date(a.fechaEnvio)).reverse();
   };
