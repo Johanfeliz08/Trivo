@@ -1,55 +1,18 @@
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
-import * as z from "zod/v4";
+import { useState, useEffect, useRef } from "react";
 import Cookie from "js-cookie";
 import { createSignalRConnection } from "@/lib/signalr";
 import SimpleLoader from "@/components/ui/SimpleLoader";
+import ChatMessageBar from "@/components/ui/Home/Chat/ChatMessageBar";
 
-export default function ChatWindow({ chat }) {
+export default function ChatWindow({ chat, setChats }) {
   const userId = Cookie.get("userId");
   const hub = "http://localhost:5026/hubs/chat";
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [connection, setConnection] = useState(null);
 
-  const [message, setMessage] = useState({
-    message: "",
-    file: null,
-  });
   const messagesContainerRef = useRef(null);
-
-  const messageSchema = z
-    .object({
-      message: z.string().optional(),
-      file: z.instanceof(File).optional().or(z.literal(null)),
-    })
-    .refine((data) => (data.message && data.message.trim().length > 0) || data.file instanceof File, {
-      message: "Debes escribir un mensaje o subir un archivo.",
-    });
-
-  const orderChatsByDate = (chats) => {
-    return chats.sort((a, b) => new Date(b.fechaEnvio) - new Date(a.fechaEnvio)).reverse();
-  };
-  // const [chatMessages, setChatMessages] = useState(orderChatsByDate(mockData));
-
-  const handleFileChange = (e) => {
-    setMessage((prev) => ({
-      ...prev,
-      file: e.target.files[0],
-    }));
-  };
-
-  const handleMessage = (message) => {
-    setMessage((prev) => ({
-      ...prev,
-      message: message,
-    }));
-  };
-
-  const isMessageValid = () => {
-    const result = messageSchema.safeParse(message);
-    return result.success;
-  };
 
   const getTimeFromDate = (dateRaw) => {
     const date = new Date(dateRaw);
@@ -66,27 +29,63 @@ export default function ChatWindow({ chat }) {
     return messages.sort((a, b) => new Date(a.fechaEnvio) - new Date(b.fechaEnvio));
   };
 
+  const orderChatsByDate = (chats) => {
+    return chats.sort((a, b) => new Date(b.fechaEnvio) - new Date(a.fechaEnvio)).reverse();
+  };
+
   useEffect(() => {
     if (!connection) {
       return;
     }
 
     connection.on("RecibirMensajesDelChat", (chatId, messages) => {
-      console.log(`📨 Mensajes del chat ${chatId}:`, messages);
+      // console.log(`📨 Mensajes del chat ${chatId}:`, messages);
       setMessages(sortMessagesByTime(messages));
       setIsLoading(false);
     });
 
-    // Intentar poner esto en otro useEffect y que dependa del chatId
     connection.on("RecibirMensajePrivado", (mensaje) => {
-      console.log("📬 Mensaje privado recibido:", mensaje);
+      // console.log("📬 Mensaje privado recibido:", mensaje);
       setMessages((prevMessages) => {
         const existe = prevMessages.some((m) => m.mensajeId === mensaje.mensajeId);
         if (existe) return prevMessages;
         return [...prevMessages, mensaje];
       });
     });
+
+    // connection.on("RecibirChats", (chats) => {
+    //   setChats(chats);
+    // });
   }, [connection]);
+
+  useEffect(() => {
+    let connection = null;
+    let isMounted = true;
+
+    const initConnection = async () => {
+      try {
+        connection = createSignalRConnection(userId, hub);
+        await connection.start();
+        if (isMounted) {
+          setConnection(connection);
+          setIsLoading(false);
+        } else {
+          await connection.stop();
+        }
+      } catch (error) {
+        console.error("❌ Error al conectar al hub de chats:", error);
+      }
+    };
+
+    initConnection();
+
+    return () => {
+      isMounted = false;
+      if (connection && connection.state === "Connected") {
+        connection.stop();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!userId) {
@@ -94,43 +93,35 @@ export default function ChatWindow({ chat }) {
       return;
     }
 
-    if (!chat.id) {
-      console.error("El ID de chat no está disponible");
-      return;
-    }
-
     setIsLoading(true);
-    console.log("🔗 Conectando al hub de chats...");
+    let connection = null;
+    setMessages([]);
+    console.log("🔗 Conectando al hub de mensajes...");
 
-    const connection = createSignalRConnection(userId, hub);
-    setConnection(connection);
-
-    connection
-      .start()
-      .then(async () => {
-        console.log("✅ Conectado al hub de chats");
-        try {
-          console.log(`🔍 Obteniendo mensajes del chat ${chat.id}...`);
-          // await connection.invoke("ObtenerMensajesChat", chat.id, currentPage, pageSize).then((messages) => {});
-        } catch (error) {
-          console.error("Error al obtener los mensajes de este chat:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.error("❌ Error al conectar al hub de chats:", err);
+    const initConnection = async () => {
+      try {
+        connection = createSignalRConnection(userId, hub);
+        connection.start().then(async () => {
+          console.log("✅ Conectado al hub de mensajes");
+          setConnection(connection);
+          await connection.invoke("ObtenerMensajesChat", chat.id, 1, 100);
+        });
+      } catch (error) {
+        console.error("❌ Error al conectar al hub de mensajes:", error);
         setIsLoading(false);
-      });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initConnection();
 
     return () => {
       if (connection && connection.state === "Connected") {
         connection.stop();
-      } else {
-        console.warn("↪️ La conexión no estaba iniciada aún al desmontar.");
       }
     };
-  }, []);
+  }, [chat]);
 
   useEffect(() => {
     const container = messagesContainerRef.current;
@@ -166,7 +157,13 @@ export default function ChatWindow({ chat }) {
                   <div className={`message currentUser flex flex-row-reverse justify-start items-start gap-4 relative 2xl:translate-x-40`} key={message.mensajeId}>
                     <div className="user-profile">
                       <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
-                        <Image className="object-cover w-full h-full" src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
+                        <Image
+                          className="object-cover w-full h-full"
+                          src={chat.participantes.filter((p) => p.usuarioId === userId)[0]?.fotoPerfil || "/imagenes/userDefault.png"}
+                          width={50}
+                          height={50}
+                          alt="user-avatar"
+                        />
                       </div>
                     </div>
                     <div className="content">
@@ -219,7 +216,7 @@ export default function ChatWindow({ chat }) {
             )}
           </div>
         </div>
-        <div className="message-bar bg-bg-secondary flex items-center flex-col">
+        {/* <div className="message-bar bg-bg-secondary flex items-center flex-col">
           <div className="file-info-container bg-primary w-full">
             {message.file && (
               <div className="px-4 py-2 flex flex-row gap-3 justify-between items-center">
@@ -306,7 +303,8 @@ export default function ChatWindow({ chat }) {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
+        <ChatMessageBar chat={chat} />
       </div>
     </>
   );

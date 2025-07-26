@@ -41,16 +41,15 @@ export default function Chat() {
     }
 
     connection.on("RecibirChats", (chats) => {
-      console.log("📦 Lista de chats recibida:", chats);
+      // console.log("📦 Lista de chats recibida:", chats);
       setTotalItems(chats.length);
       setChats(chats);
       setIsLoading(false);
     });
 
     connection.on("RecibirNuevoChat", (chat) => {
-      console.log("Nuevo chat recibido:", chat);
+      // console.log("Nuevo chat recibido:", chat);
       setChats((prevChats) => {
-        console.log("Chats antiguos:", prevChats);
         const existe = prevChats.some((c) => c.id === chat.id);
         if (existe) return prevChats;
         return [...prevChats, chat];
@@ -177,7 +176,7 @@ export default function Chat() {
               </div>
             </div>
             {isChatOpen && isModalOpen ? (
-              <ChatWindow chat={selectedChat} isChatOpen={isChatOpen} />
+              <ChatWindow chat={selectedChat} isChatOpen={isChatOpen} setChats={setChats} />
             ) : (
               <div className={`empty-chat justify-center items-center w-full h-full ${isModalOpen ? "flex flex-col" : "hidden"}`}>
                 <span className="text-gray-500 text-sm">Selecciona un chat para comenzar a chatear.</span>
