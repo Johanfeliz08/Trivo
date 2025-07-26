@@ -3,17 +3,14 @@ import { useState, useRef, useEffect } from "react";
 import * as z from "zod/v4";
 import Cookie from "js-cookie";
 import { createSignalRConnection } from "@/lib/signalr";
+import SimpleLoader from "@/components/ui/SimpleLoader";
 
 export default function ChatWindow({ chat }) {
   const userId = Cookie.get("userId");
   const hub = "http://localhost:5026/hubs/chat";
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  // const [connection, setConnection] = useState(null);
-  const [totalPages, setTotalPages] = useState(0);
-  const pageSize = 10;
+  const [connection, setConnection] = useState(null);
 
   const [message, setMessage] = useState({
     message: "",
@@ -70,6 +67,28 @@ export default function ChatWindow({ chat }) {
   };
 
   useEffect(() => {
+    if (!connection) {
+      return;
+    }
+
+    connection.on("RecibirMensajesDelChat", (chatId, messages) => {
+      console.log(`📨 Mensajes del chat ${chatId}:`, messages);
+      setMessages(sortMessagesByTime(messages));
+      setIsLoading(false);
+    });
+
+    // Intentar poner esto en otro useEffect y que dependa del chatId
+    connection.on("RecibirMensajePrivado", (mensaje) => {
+      console.log("📬 Mensaje privado recibido:", mensaje);
+      setMessages((prevMessages) => {
+        const existe = prevMessages.some((m) => m.mensajeId === mensaje.mensajeId);
+        if (existe) return prevMessages;
+        return [...prevMessages, mensaje];
+      });
+    });
+  }, [connection]);
+
+  useEffect(() => {
     if (!userId) {
       console.error("El ID de usuario no está disponible");
       return;
@@ -84,15 +103,7 @@ export default function ChatWindow({ chat }) {
     console.log("🔗 Conectando al hub de chats...");
 
     const connection = createSignalRConnection(userId, hub);
-
-    connection.on("RecibirMensajesDelChat", (chatId, messages) => {
-      console.log(`📨 Mensajes del chat ${chatId}:`, messages);
-      setMessages(sortMessagesByTime(messages.elementos));
-    });
-
-    connection.on("RecibirMensajePrivado", (mensaje) => {
-      console.log("📬 Mensaje privado recibido:", mensaje);
-    });
+    setConnection(connection);
 
     connection
       .start()
@@ -100,7 +111,7 @@ export default function ChatWindow({ chat }) {
         console.log("✅ Conectado al hub de chats");
         try {
           console.log(`🔍 Obteniendo mensajes del chat ${chat.id}...`);
-          await connection.invoke("ObtenerMensajesChat", chat.id, currentPage, pageSize).then((messages) => {});
+          // await connection.invoke("ObtenerMensajesChat", chat.id, currentPage, pageSize).then((messages) => {});
         } catch (error) {
           console.error("Error al obtener los mensajes de este chat:", error);
         } finally {
@@ -113,7 +124,11 @@ export default function ChatWindow({ chat }) {
       });
 
     return () => {
-      connection.stop();
+      if (connection && connection.state === "Connected") {
+        connection.stop();
+      } else {
+        console.warn("↪️ La conexión no estaba iniciada aún al desmontar.");
+      }
     };
   }, []);
 
@@ -143,10 +158,12 @@ export default function ChatWindow({ chat }) {
         </div>
         <div className="messages-container w-full h-full py-10 bg-bg-secondary overflow-scroll hide-scrollbar scroll-smooth" ref={messagesContainerRef}>
           <div className="messages w-full  flex flex-col justify-start items-center gap-15 relative">
-            {messages.length > 0 ? (
+            {isLoading ? (
+              <SimpleLoader />
+            ) : messages.length > 0 ? (
               messages.map((message) => {
                 return message.emisorId === userId ? (
-                  <div className={`message currentUser flex flex-row-reverse justify-start items-start gap-4 relative 2xl:translate-x-40`} key={message.id}>
+                  <div className={`message currentUser flex flex-row-reverse justify-start items-start gap-4 relative 2xl:translate-x-40`} key={message.mensajeId}>
                     <div className="user-profile">
                       <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
                         <Image className="object-cover w-full h-full" src={"/imagenes/user.jpg"} width={50} height={50} alt="user-avatar" />
@@ -167,7 +184,7 @@ export default function ChatWindow({ chat }) {
                     </div>
                   </div>
                 ) : (
-                  <div className={`message externalUser flex flex-row justify-start items-start gap-4 relative 2xl:-translate-x-40`} key={message.id}>
+                  <div className={`message externalUser flex flex-row justify-start items-start gap-4 relative 2xl:-translate-x-40`} key={message.mensajeId}>
                     <div className="user-profile">
                       <div className="user-picture rounded-full overflow-hidden flex items-center justify-center w-10 h-10 bg-gray-200">
                         <Image
