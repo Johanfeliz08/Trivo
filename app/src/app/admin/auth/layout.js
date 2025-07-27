@@ -17,11 +17,11 @@ export default function AdminAuthLayout({ children }) {
           <Image src="/logos/isotipo_pc.png" alt="Trivo Isotipo" width={800} height={800} className="absolute top-0 right-0 w-60 h-60 opacity-20" />
         </div>
         {children}
-      </body>
 
-      <div className="bg-logo">
-        <Image src="/logos/isotipo_pc.png" alt="Trivo Isotipo" width={800} height={800} className="absolute bottom-0 -left-10 w-60 h-60 opacity-20" />
-      </div>
+        <div className="bg-logo">
+          <Image src="/logos/isotipo_pc.png" alt="Trivo Isotipo" width={800} height={800} className="absolute bottom-0 -left-10 w-60 h-60 opacity-20" />
+        </div>
+      </body>
     </html>
   );
 }
