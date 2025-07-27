@@ -1,11 +1,14 @@
 import ModalMiPerfil from "../Usuario/MiPerfil/ModalMiPerfil";
+import Filters from "@/components/ui/Feed/Filters";
 import { useState } from "react";
 
 export default function ActionBar({ userId }) {
   const [isPerfilModalOpen, setIsPerfilModalOpen] = useState(false);
+  const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   return (
     <>
       {isPerfilModalOpen && userId !== "" && <ModalMiPerfil userId={userId} isPerfilModalOpen={isPerfilModalOpen} setIsPerfilModalOpen={setIsPerfilModalOpen} />}
+      {isFiltersModalOpen && <Filters isFiltersModalOpen={isFiltersModalOpen} setIsFiltersModalOpen={setIsFiltersModalOpen} />}
       <div className="ActionBar-container w-100 bg-white shadow-lg rounded-2xl flex justify-center items-center">
         <div className="actions">
           <ul className="flex flex-row items-center justify-center xl:gap-x-4 2xl:gap-x-6 xl:py-1 2xl:py-2 ">
@@ -34,7 +37,7 @@ export default function ActionBar({ userId }) {
               </button>
             </li>
             <li className="flex justify-center items-center">
-              <button type="button filters">
+              <button type="button" className="filters" onClick={() => setIsFiltersModalOpen(true)}>
                 <div className="icon cursor-pointer hover:bg-bg-secondary hover:rounded-full p-2">
                   <svg className="size-6 fill-primary" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
                     <path d="m18,5.92c0-2.162-1.758-3.92-3.92-3.92H3.92C1.758,2,0,3.758,0,5.92c0,.935.335,1.841.944,2.551l5.056,5.899v3.63c0,.315.148.611.4.8l4,3c.177.132.388.2.6.2.152,0,.306-.035.447-.105.339-.169.553-.516.553-.895v-6.63l5.056-5.899c.609-.71.944-1.616.944-2.551Zm-2.462,1.25l-5.297,6.18c-.155.181-.241.412-.241.651v5l-2-1.5v-3.5c0-.239-.085-.47-.241-.651L2.462,7.169c-.298-.348-.462-.792-.462-1.25,0-1.059.861-1.92,1.92-1.92h10.16c1.059,0,1.92.861,1.92,1.92,0,.458-.164.902-.462,1.25Zm8.462,12.831c0,.552-.448,1-1,1h-8c-.552,0-1-.448-1-1s.448-1,1-1h8c.552,0,1,.448,1,1Zm0-4c0,.552-.448,1-1,1h-8c-.552,0-1-.448-1-1s.448-1,1-1h8c.552,0,1,.448,1,1Zm-6-5h5c.552,0,1,.448,1,1s-.448,1-1,1h-5c-.552,0-1-.448-1-1s.448-1,1-1Z" />
