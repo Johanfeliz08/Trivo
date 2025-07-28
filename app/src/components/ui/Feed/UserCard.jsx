@@ -14,9 +14,11 @@ export default function UserCard({ user, className }) {
           <Image src={user.fotoPerfil ? user.FotoPerfil : "/imagenes/userDefault.png"} alt={user.nombre} layout="fill" className="object-cover rounded-2xl 2xl:max-w-120 2xl:h-160" />
         </div>
         <div className="user-info 2xl:p-10 xl:p-7 flex flex-col relative z-20">
-          <h3 className="user-name text-white font-bold 2xl:text-2xl xl:text-sm">{user.nombre}</h3>
-          <p className="user-occupation text-white font-semibold xl:text-xs">{user.ocupacion ? user.ocupacion : "Sin ocupación"}</p>
-          <p className="user-description text-white font-light text-justify mt-1 xl:text-xs">{user.Biografia ? user.Biografia : "Sin biografía"}</p>
+          <h3 className="user-name text-white font-bold 2xl:text-2xl xl:text-sm">
+            {user.nombre} {user.apellido}
+          </h3>
+          <p className="user-occupation text-white font-semibold xl:text-xs">{user.posicion ? user.posicion : "Sin ocupación"}</p>
+          <p className="user-description text-white font-light text-justify mt-1 xl:text-xs">{user.biografia ? user.biografia : "Sin biografía"}</p>
         </div>
       </div>
     </>
