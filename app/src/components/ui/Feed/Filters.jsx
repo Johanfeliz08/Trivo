@@ -3,8 +3,9 @@ import { Checkbox } from "@/components/ui/CheckBox";
 import { useState, useEffect } from "react";
 import api from "@/lib/api/api";
 import SimpleLoader from "@/components/ui/SimpleLoader";
+import { set } from "zod/v4";
 
-export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen }) {
+export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen, applyFilters, setApplyFilters, filters, setFilters }) {
   const itemsPerPage = 15;
 
   // Interests state management
@@ -14,7 +15,7 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
     totalPages: 1,
     totalElements: 0,
   });
-  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [selectedInterests, setSelectedInterests] = useState(filters.interesIds || []);
   const [isInterestsLoading, setIsInterestsLoading] = useState(false);
 
   // Skills state management
@@ -25,7 +26,7 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
     totalElements: 0,
   });
   const [isSkillsLoading, setIsSkillsLoading] = useState(false);
-  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState(filters.habilidadIds || []);
 
   const fetchInterests = async () => {
     setIsInterestsLoading(true);
@@ -88,27 +89,78 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
     }));
   };
 
+  // const handleSelectSkill = (skillId) => {
+  //   if (!skillId) return;
+
+  //   const isAlreadySelected = filters.habilidadIds.includes(skillId);
+  //   if (isAlreadySelected) {
+  //     setFilters((prevFilters) => ({
+  //       ...prevFilters,
+  //       habilidadIds: prevFilters.habilidadIds.filter((id) => id !== skillId),
+  //     }));
+  //   } else {
+  //     setFilters((prevFilters) => ({
+  //       ...prevFilters,
+  //       habilidadIds: [...prevFilters.habilidadIds, skillId],
+  //     }));
+  //   }
+  // };
+
   const handleSelectSkill = (skillId) => {
     if (!skillId) return;
 
     const isAlreadySelected = selectedSkills.includes(skillId);
     if (isAlreadySelected) {
-      setSelectedSkills(selectedSkills.filter((id) => id !== skillId));
+      setSelectedSkills((prevSelected) => prevSelected.filter((id) => id !== skillId));
     } else {
-      setSelectedSkills([...selectedSkills, skillId]);
+      setSelectedSkills((prevSelected) => [...prevSelected, skillId]);
     }
   };
+
+  // const handleSelectInterest = (interestId) => {
+  //   if (!interestId) return;
+
+  //   const isAlreadySelected = filters.interesIds.includes(interestId);
+  //   if (isAlreadySelected) {
+  //     setFilters((prevFilters) => ({
+  //       ...prevFilters,
+  //       interesIds: prevFilters.interesIds.filter((id) => id !== interestId),
+  //     }));
+  //   } else {
+  //     setFilters((prevFilters) => ({
+  //       ...prevFilters,
+  //       interesIds: [...prevFilters.interesIds, interestId],
+  //     }));
+  //   }
+  // };
 
   const handleSelectInterest = (interestId) => {
     if (!interestId) return;
 
     const isAlreadySelected = selectedInterests.includes(interestId);
     if (isAlreadySelected) {
-      setSelectedInterests(selectedInterests.filter((id) => id !== interestId));
+      setSelectedInterests((prevSelected) => prevSelected.filter((id) => id !== interestId));
     } else {
-      setSelectedInterests([...selectedInterests, interestId]);
+      setSelectedInterests((prevSelected) => [...prevSelected, interestId]);
     }
   };
+
+  const handleApplyFilters = () => {
+    if (selectedInterests.length === 0 && selectedSkills.length === 0) {
+      return;
+    }
+
+    let filterToApply = {
+      interesIds: selectedInterests,
+      habilidadIds: selectedSkills,
+    };
+
+    setFilters(filterToApply);
+    setApplyFilters(true);
+    setIsFiltersModalOpen(false);
+  };
+
+  const isApplyFiltersValid = selectedInterests.length > 0 && selectedSkills.length > 0; // Change later to OR because now the backend requires both filters to be applied
 
   useEffect(() => {
     fetchSkills();
@@ -146,20 +198,21 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
               <div className="section-header">
                 <h3 className="text-primary text-3xl">Habilidades</h3>
               </div>
-              <div className="filters grid grid-cols-4 row-auto gap-6">
+              <div className="filters grid grid-cols-5 row-auto gap-6">
                 {isSkillsLoading ? (
                   <SimpleLoader />
                 ) : skills.data.length > 0 ? (
                   skills.data.map((skill) => (
                     <div key={skill.habilidadId} className="filter flex flex-row justify-start items-center">
                       <Checkbox
-                        className={"checked:bg-primary size-6"}
+                        className={"checked:bg-primary size-4"}
                         id={skill.habilidadId}
                         onCheckedChange={() => {
                           handleSelectSkill(skill.habilidadId);
                         }}
+                        checked={selectedSkills.includes(skill.habilidadId)}
                       />
-                      <label htmlFor={skill.habilidadId} className="text-2xl ml-2 opacity-70 font-regular hover:underline hover:cursor-pointer">
+                      <label htmlFor={skill.habilidadId} className="text-lg ml-2 opacity-70 font-regular hover:underline hover:cursor-pointer">
                         {skill.nombre}
                       </label>
                     </div>
@@ -204,14 +257,19 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
               <div className="section-header">
                 <h3 className="text-primary text-3xl">Intereses</h3>
               </div>
-              <div className="filters grid grid-cols-4 row-auto gap-6">
+              <div className="filters grid grid-cols-5 row-auto gap-6">
                 {isInterestsLoading ? (
                   <SimpleLoader />
                 ) : interests.data.length > 0 ? (
                   interests.data.map((interest) => (
                     <div key={interest.interesId} className="filter flex flex-row justify-start items-center">
-                      <Checkbox className={"checked:bg-primary size-6"} id={interest.interesId} onCheckedChange={() => handleSelectInterest(interest.interesId)} />
-                      <label htmlFor={interest.interesId} className="text-2xl ml-2 opacity-70 font-regular hover:underline hover:cursor-pointer">
+                      <Checkbox
+                        className={"checked:bg-primary size-4"}
+                        id={interest.interesId}
+                        onCheckedChange={() => handleSelectInterest(interest.interesId)}
+                        checked={selectedInterests.includes(interest.interesId)}
+                      />
+                      <label htmlFor={interest.interesId} className="text-lg ml-2 opacity-70 font-regular hover:underline hover:cursor-pointer">
                         {interest.nombre}
                       </label>
                     </div>
@@ -252,6 +310,23 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
                 </div>
               </div>
             </div>
+          </div>
+          <div className="modalFooter w-full flex flex-row justify-center items-center gap-4  px-20 py-10">
+            <button
+              type="button"
+              className="cancelButton text-primary border border-primary rounded-xl bg-bg-secondary px-5 py-2 hover:bg-primary hover:text-white shadow-lg transition-all duration-300 cursor-pointer"
+              onClick={() => setIsFiltersModalOpen(false)}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              className="applyFiltersButton text-white border border-transparent rounded-xl bg-primary px-5 py-2 hover:bg-bg-secondary hover:text-primary hover:border-primary shadow-lg transition-all duration-300 cursor-pointer disabled:bg-gray-400 disabled:text-white disabled:border-transparent disabled:cursor-not-allowed"
+              onClick={handleApplyFilters}
+              disabled={!isApplyFiltersValid}
+            >
+              Aplicar Filtros
+            </button>
           </div>
         </div>
       </div>
