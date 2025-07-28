@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import UploadImage from "./UploadImage";
@@ -23,6 +25,8 @@ export default function ProfileBanner({ userIdProp }) {
       message: "Error al cargar sus datos. Por favor, intente nuevamente.",
     },
   });
+
+  const hasEditPermission = userIdProp === Cookies.get("userId") ? true : false;
 
   const fetchUserData = async () => {
     try {
@@ -73,7 +77,7 @@ export default function ProfileBanner({ userIdProp }) {
                 className="object-cover"
               />
             </div>
-            <div className="edit-btn flex justify-center items-center relative z-50 bottom-10 -right-8">
+            <div className={`edit-btn flex justify-center items-center relative z-50 bottom-10 -right-8 ${hasEditPermission ? "visible" : "invisible"}`}>
               <button type="button" className="flex flex-row justify-center items-center" onClick={() => setOpenUploadImage(!openUploadImage)}>
                 <div className="icon flex justify-center items-center hover:bg-bg-secondary hover:rounded-full p-2 cursor-pointer transition-all ease-in-out duration-300">
                   <svg className="size-5 fill-primary " xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">

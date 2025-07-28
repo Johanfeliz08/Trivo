@@ -10,6 +10,8 @@ export default function AboutMe({ userIdProp }) {
   const [isEditable, setIsEditable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const hasEditPermission = userIdProp === Cookies.get("userId") ? true : false;
+
   const handleEditClick = () => {
     setIsEditable(!isEditable);
   };
@@ -65,7 +67,7 @@ export default function AboutMe({ userIdProp }) {
         {isLoading && <SimpleLoader />}
         <div className="header flex flex-row justify-start gap-3 items-center ">
           <h3 className="text-xl font-semibold text-primary">Acerca de mí</h3>
-          <div className="edit-btn flex justify-center items-center">
+          <div className={`edit-btn flex justify-center items-center ${hasEditPermission ? "visible" : "invisible"}`}>
             <button type="button flex flex-row justify-center items-center " onClick={handleEditClick}>
               <div className="icon flex justify-center items-center hover:bg-white hover:rounded-full p-2 cursor-pointer transition-all ease-in-out duration-300">
                 <svg className="size-5 fill-primary " xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
