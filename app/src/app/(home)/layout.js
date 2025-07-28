@@ -17,8 +17,7 @@ export default function HomeLayout({ children }) {
         <TopBar />
         <div className="horizontal-container relative flex flex-row justify-between w-full h-full">
           <Menu />
-
-          <main className="flex justify-center w-full items-center h-[calc(100vh-5rem)] relative bg-bg-secondary">{children}</main>
+          <main className="flex justify-center w-full mr-15 items-center h-[calc(100vh-5rem)] relative bg-bg-secondary">{children}</main>
           <div className="bg-logo">
             <Image src="/logos/isotipo_pc.png" alt="Trivo Isotipo" width={800} height={800} className="absolute top-0 right-0 w-60 h-60 opacity-20" />
           </div>
