@@ -2,13 +2,22 @@ import ModalMiPerfil from "../Usuario/MiPerfil/ModalMiPerfil";
 import Filters from "@/components/ui/Feed/Filters";
 import { useState } from "react";
 
-export default function ActionBar({ userId }) {
+export default function ActionBar({ userId, applyFilters, setApplyFilters, filters, setFilters }) {
   const [isPerfilModalOpen, setIsPerfilModalOpen] = useState(false);
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   return (
     <>
       {isPerfilModalOpen && userId !== "" && <ModalMiPerfil userId={userId} isPerfilModalOpen={isPerfilModalOpen} setIsPerfilModalOpen={setIsPerfilModalOpen} />}
-      {isFiltersModalOpen && <Filters isFiltersModalOpen={isFiltersModalOpen} setIsFiltersModalOpen={setIsFiltersModalOpen} />}
+      {isFiltersModalOpen && (
+        <Filters
+          isFiltersModalOpen={isFiltersModalOpen}
+          setIsFiltersModalOpen={setIsFiltersModalOpen}
+          applyFilters={applyFilters}
+          setApplyFilters={setApplyFilters}
+          filters={filters}
+          setFilters={setFilters}
+        />
+      )}
       <div className="ActionBar-container w-100 bg-white shadow-lg rounded-2xl flex justify-center items-center">
         <div className="actions">
           <ul className="flex flex-row items-center justify-center xl:gap-x-4 2xl:gap-x-6 xl:py-1 2xl:py-2 ">
