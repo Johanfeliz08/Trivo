@@ -2,19 +2,24 @@ import { useState } from "react";
 import * as z from "zod/v4";
 import api from "@/lib/api/api";
 import Cookie from "js-cookie";
+import Image from "next/image";
 
 export default function MessageBar({ chat }) {
   const [message, setMessage] = useState({
     message: "",
     file: null,
+    image: null,
   });
+
+  const [isMessageLoading, setIsMessageLoading] = useState(false);
 
   const messageSchema = z
     .object({
       message: z.string().optional(),
       file: z.instanceof(File).optional().or(z.literal(null)),
+      image: z.instanceof(File).optional().or(z.literal(null)),
     })
-    .refine((data) => (data.message && data.message.trim().length > 0) || data.file instanceof File, {
+    .refine((data) => (data.message && data.message.trim().length > 0) || data.file instanceof File || data.image instanceof File, {
       message: "Debes escribir un mensaje o subir un archivo.",
     });
 
@@ -22,6 +27,13 @@ export default function MessageBar({ chat }) {
     setMessage((prev) => ({
       ...prev,
       file: e.target.files[0],
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    setMessage((prev) => ({
+      ...prev,
+      image: e.target.files[0],
     }));
   };
 
@@ -35,6 +47,86 @@ export default function MessageBar({ chat }) {
   const isMessageValid = () => {
     const result = messageSchema.safeParse(message);
     return result.success;
+  };
+
+  const sendFile = async (chatId, emisorId, receptorId, contenido) => {
+    const formData = new FormData();
+    formData.append("chatId", chatId);
+    formData.append("emisorId", emisorId);
+    formData.append("receptorId", receptorId);
+    formData.append("contenido", contenido);
+    if (message.file) {
+      formData.append("file", message.file);
+    }
+
+    try {
+      const response = await api.post(`/messages/file`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        setMessage((prevMessage) => ({
+          ...prevMessage,
+          file: null,
+        }));
+        console.log("Archivo enviado exitosamente:", response.data);
+      }
+    } catch (error) {
+      console.error("Error al enviar el archivo:", error);
+    }
+  };
+
+  const sendImage = async (chatId, emisorId, receptorId, contenido) => {
+    const formData = new FormData();
+    formData.append("chatId", chatId);
+    formData.append("emisorId", emisorId);
+    formData.append("receptorId", receptorId);
+    formData.append("contenido", contenido);
+    if (message.image) {
+      formData.append("image", message.image);
+    }
+    try {
+      const response = await api.post(`/messages/image`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        setMessage((prevMessage) => ({
+          ...prevMessage,
+          image: null,
+        }));
+        console.log("Imagen enviada exitosamente:", response.data);
+      }
+    } catch (error) {
+      console.error("Error al enviar la imagen:", error);
+    }
+  };
+
+  const sendMessage = async (chatId, emisorId, receptorId, contenido) => {
+    try {
+      const response = await api.post(`/messages`, {
+        chatId,
+        emisorId,
+        receptorId,
+        contenido,
+      });
+
+      if (response.status === 200) {
+        setMessage((prevMessage) => ({
+          ...prevMessage,
+          message: "",
+        }));
+        console.log("Mensaje enviado exitosamente:", response.data);
+      } else {
+        console.error("Error al enviar el mensaje:", response);
+      }
+    } catch (error) {
+      console.error("Error al enviar el mensaje:", error);
+    }
   };
 
   const handleSendMessage = async () => {
@@ -52,28 +144,21 @@ export default function MessageBar({ chat }) {
       return;
     }
 
-    try {
-      const response = await api.post(`/messages`, {
-        chatId,
-        emisorId,
-        receptorId,
-        contenido: message.message,
-      });
+    setIsMessageLoading(true);
 
-      if (response.status === 200) {
-        setMessage({ message: "", file: null });
-        console.log("Mensaje enviado exitosamente:", response.data);
-      } else {
-        console.error("Error al enviar el mensaje:", response);
-      }
-    } catch (error) {
-      console.error("Error al enviar el mensaje:", error);
+    if (message.file) {
+      await sendFile(chatId, emisorId, receptorId, message.file);
+    } else if (message.image) {
+      await sendImage(chatId, emisorId, receptorId, message.image);
+    } else {
+      await sendMessage(chatId, emisorId, receptorId, message.message);
     }
+    setIsMessageLoading(false);
   };
 
   return (
-    <div className="message-bar bg-bg-secondary flex items-center flex-col">
-      <div className="file-info-container bg-primary w-full">
+    <div className="message-bar bg-bg-secondary flex items-center flex-col ">
+      <div className="file-info-container bg-primary w-full relative">
         {message.file && (
           <div className="px-4 py-2 flex flex-row gap-3 justify-between items-center">
             <div className="file-info">
@@ -86,6 +171,41 @@ export default function MessageBar({ chat }) {
                 className="text-white hover:underline flex items-center justify-center"
                 onClick={() => {
                   setMessage((prev) => ({ ...prev, file: null }));
+                }}
+              >
+                <div className="icon flex items-center justify-center">
+                  <svg
+                    className="size-5 fill-white opacity-65 hover:opacity-100 transition-all cursor-pointer"
+                    xmlns="http://www.w3.org/2000/svg"
+                    id="Outline"
+                    viewBox="0 0 24 24"
+                    width="512"
+                    height="512"
+                  >
+                    <path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z" />
+                    <path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z" />
+                    <path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z" />
+                  </svg>
+                </div>
+              </button>
+            </span>
+          </div>
+        )}
+        {message.image && (
+          <div className="px-4 py-2 flex flex-row gap-3 justify-between items-center">
+            <div className="image-preview absolute border flex justify-center items-center bg-[rgba(255,255,255,0.5)] w-full h-50 -top-25 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <Image src={URL.createObjectURL(message.image)} alt={message.image.name} width={200} height={200} />
+            </div>
+            <div className="image-info">
+              <span className="text-white font-bold">Imagen seleccionada: </span>
+              <span className="text-white">{message.image?.name}</span>
+            </div>
+            <span>
+              <button
+                type="button"
+                className="text-white hover:underline flex items-center justify-center"
+                onClick={() => {
+                  setMessage((prev) => ({ ...prev, image: null }));
                 }}
               >
                 <div className="icon flex items-center justify-center">
@@ -142,9 +262,29 @@ export default function MessageBar({ chat }) {
               type="file"
               name="file"
               id="file"
+              accept=".pdf,.doc,.docx,.txt"
               className="hidden"
               onChange={(e) => {
                 handleFileChange(e);
+              }}
+            />
+          </label>
+        </div>
+        <div className="image">
+          <label htmlFor="image" className="cursor-pointer flex items-center justify-center">
+            <div className="icon">
+              <svg className="size-6 fill-gray-500 hover:fill-primary transition-all " xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+                <path d="m12,21c0,.553-.448,1-1,1h-6c-2.757,0-5-2.243-5-5V5C0,2.243,2.243,0,5,0h12c2.757,0,5,2.243,5,5v6c0,.553-.448,1-1,1s-1-.447-1-1v-6c0-1.654-1.346-3-3-3H5c-1.654,0-3,1.346-3,3v6.959l2.808-2.808c1.532-1.533,4.025-1.533,5.558,0l5.341,5.341c.391.391.391,1.023,0,1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-5.341-5.341c-.752-.751-1.976-.752-2.73,0l-4.222,4.222v2.213c0,1.654,1.346,3,3,3h6c.552,0,1,.447,1,1ZM15,3.5c1.654,0,3,1.346,3,3s-1.346,3-3,3-3-1.346-3-3,1.346-3,3-3Zm0,2c-.551,0-1,.448-1,1s.449,1,1,1,1-.448,1-1-.449-1-1-1Zm8,12.5h-3v-3c0-.553-.448-1-1-1s-1,.447-1,1v3h-3c-.552,0-1,.447-1,1s.448,1,1,1h3v3c0,.553.448,1,1,1s1-.447,1-1v-3h3c.552,0,1-.447,1-1s-.448-1-1-1Z" />
+              </svg>
+            </div>
+            <input
+              type="file"
+              name="image"
+              id="image"
+              accept=".jpg,.jpeg,.png,.gif"
+              className="hidden"
+              onChange={(e) => {
+                handleImageChange(e);
               }}
             />
           </label>
