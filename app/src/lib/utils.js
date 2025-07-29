@@ -46,3 +46,12 @@ export function removeCookies() {
   Cookies.remove("interes");
   Cookies.remove("biografia");
 }
+
+export function isValidURL(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
