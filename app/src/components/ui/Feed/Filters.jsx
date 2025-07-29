@@ -162,6 +162,14 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
 
   const isApplyFiltersValid = selectedInterests.length > 0 && selectedSkills.length > 0; // Change later to OR because now the backend requires both filters to be applied
 
+  const handleRemoveFilters = () => {
+    setSelectedSkills([]);
+    setSelectedInterests([]);
+    setFilters({ habilidadIds: [], interesIds: [] });
+    setApplyFilters(false);
+    setIsFiltersModalOpen(false);
+  };
+
   useEffect(() => {
     fetchSkills();
   }, [skills.currentPage]);
@@ -183,6 +191,7 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
               </div>
               <h2 className="text-3xl font-semibold text-primary">Filtros de busqueda</h2>
             </div>
+
             <div className="close-btn">
               <button type="button" className="cursor-pointer" onClick={() => setIsFiltersModalOpen(false)}>
                 <div className="icon cursor-pointer">
@@ -194,6 +203,18 @@ export default function FiltersModal({ isFiltersModalOpen, setIsFiltersModalOpen
             </div>
           </div>
           <div className="content w-full h-full flex flex-col items-start justify-start px-20 py-10 overflow-scroll hide-scrollbar">
+            <div className="remove-filter">
+              {selectedSkills.length > 0 || selectedInterests.length > 0 ? (
+                <button type="button" className="flex flex-row justify-center items-center gap-2 text-primary text-lg font-regultar hover:underline cursor-pointer" onClick={handleRemoveFilters}>
+                  <div className="icon">
+                    <svg className="size-5 fill-primary" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+                      <path d="m17,0c-3.86,0-7,3.14-7,7s3.14,7,7,7,7-3.14,7-7S20.86,0,17,0Zm0,12c-2.757,0-5-2.243-5-5s2.243-5,5-5,5,2.243,5,5-2.243,5-5,5Zm2.707-6.293l-1.293,1.293,1.293,1.293c.391.391.391,1.023,0,1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-1.293-1.293-1.293,1.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023,0-1.414l1.293-1.293-1.293-1.293c-.391-.391-.391-1.023,0-1.414s1.023-.391,1.414,0l1.293,1.293,1.293-1.293c.391-.391,1.023-.391,1.414,0s.391,1.023,0,1.414Zm-5.707,10.293v7c0,.379-.214.725-.553.895-.142.071-.295.105-.447.105-.212,0-.423-.068-.6-.2l-4-3c-.252-.188-.4-.485-.4-.8v-5.62L.984,6.488c-.635-.715-.984-1.634-.984-2.59C0,1.749,1.749,0,3.898,0h5.102c.552,0,1,.448,1,1s-.448,1-1,1H3.898c-1.046,0-1.898.852-1.898,1.898,0,.466.17.914.479,1.262l7.268,8.176c.163.183.252.419.252.665v5.5l2,1.5v-5c0-.552.448-1,1-1s1,.448,1,1Z" />
+                    </svg>
+                  </div>
+                  <span>Limpiar filtros seleccionados</span>
+                </button>
+              ) : null}
+            </div>
             <div className="filter-section flex flex-col gap-6 border-b border-gray-200 w-full py-10 relative ">
               <div className="section-header">
                 <h3 className="text-primary text-3xl">Habilidades</h3>
