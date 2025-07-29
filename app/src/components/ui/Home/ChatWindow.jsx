@@ -4,6 +4,7 @@ import Cookie from "js-cookie";
 import { createSignalRConnection } from "@/lib/signalr";
 import SimpleLoader from "@/components/ui/SimpleLoader";
 import ChatMessageBar from "@/components/ui/Home/Chat/ChatMessageBar";
+import { isValidURL } from "@/lib/utils";
 
 export default function ChatWindow({ chat, setChats }) {
   const userId = Cookie.get("userId");
@@ -176,7 +177,13 @@ export default function ChatWindow({ chat, setChats }) {
                         </div>
                       </div>
                       <div className="text-white bg-primary py-4 px-6 rounded-b-lg rounded-tl-lg shadow-md mt-2">
-                        <p className="">{message.contenido}</p>
+                        {isValidURL(message.contenido) ? (
+                          <div className="image-container mt-2">
+                            <Image src={message.contenido} alt="image" width={200} height={200} />
+                          </div>
+                        ) : (
+                          <p className="">{message.contenido}</p>
+                        )}
                       </div>
                     </div>
                   </div>
