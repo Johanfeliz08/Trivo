@@ -27,6 +27,7 @@ export default function MessageBar({ chat }) {
     setMessage((prev) => ({
       ...prev,
       file: e.target.files[0],
+      image: null, // Reset image if file is selected
     }));
   };
 
@@ -34,6 +35,7 @@ export default function MessageBar({ chat }) {
     setMessage((prev) => ({
       ...prev,
       image: e.target.files[0],
+      file: null, // Reset file if image is selected
     }));
   };
 
@@ -49,15 +51,12 @@ export default function MessageBar({ chat }) {
     return result.success;
   };
 
-  const sendFile = async (chatId, emisorId, receptorId, contenido) => {
+  const sendFile = async (chatId, emisorId, receptorId, file) => {
     const formData = new FormData();
     formData.append("chatId", chatId);
     formData.append("emisorId", emisorId);
     formData.append("receptorId", receptorId);
-    formData.append("contenido", contenido);
-    if (message.file) {
-      formData.append("file", message.file);
-    }
+    formData.append("archivo", file);
 
     try {
       const response = await api.post(`/messages/file`, formData, {
@@ -72,21 +71,21 @@ export default function MessageBar({ chat }) {
           file: null,
         }));
         console.log("Archivo enviado exitosamente:", response.data);
+      } else {
+        console.error("Error al enviar el archivo:", response);
       }
     } catch (error) {
       console.error("Error al enviar el archivo:", error);
     }
   };
 
-  const sendImage = async (chatId, emisorId, receptorId, contenido) => {
+  const sendImage = async (chatId, emisorId, receptorId, image) => {
     const formData = new FormData();
     formData.append("chatId", chatId);
     formData.append("emisorId", emisorId);
     formData.append("receptorId", receptorId);
-    formData.append("contenido", contenido);
-    if (message.image) {
-      formData.append("image", message.image);
-    }
+    formData.append("imagen", image);
+
     try {
       const response = await api.post(`/messages/image`, formData, {
         headers: {
@@ -100,6 +99,8 @@ export default function MessageBar({ chat }) {
           image: null,
         }));
         console.log("Imagen enviada exitosamente:", response.data);
+      } else {
+        console.error("Error al enviar la imagen:", response);
       }
     } catch (error) {
       console.error("Error al enviar la imagen:", error);
@@ -148,11 +149,16 @@ export default function MessageBar({ chat }) {
 
     if (message.file) {
       await sendFile(chatId, emisorId, receptorId, message.file);
-    } else if (message.image) {
+    }
+
+    if (message.image) {
       await sendImage(chatId, emisorId, receptorId, message.image);
-    } else {
+    }
+
+    if (message.message) {
       await sendMessage(chatId, emisorId, receptorId, message.message);
     }
+
     setIsMessageLoading(false);
   };
 
@@ -193,7 +199,7 @@ export default function MessageBar({ chat }) {
         )}
         {message.image && (
           <div className="px-4 py-2 flex flex-row gap-3 justify-between items-center">
-            <div className="image-preview absolute border flex justify-center items-center bg-[rgba(255,255,255,0.5)] w-full h-50 -top-25 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="image-preview absolute border flex justify-center overflow-hidden items-center bg-[rgba(255,255,255,0.5)] w-full h-50 -top-25 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <Image src={URL.createObjectURL(message.image)} alt={message.image.name} width={200} height={200} />
             </div>
             <div className="image-info">
