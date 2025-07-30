@@ -312,6 +312,23 @@
       opacity: 1;
     }
   }
+
+  /* Notifications List Open/close Animation */
+
+  @keyframes notificationsListOpen {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .notifications .dropdown-list {
+    animation: notificationsListOpen 0.3s ease-in-out;
+  }
 }
 
 body {
