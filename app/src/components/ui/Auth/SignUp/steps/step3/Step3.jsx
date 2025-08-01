@@ -28,6 +28,7 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
       formData.append("Contrasena", userData.contraseña);
       formData.append("NombreUsuario", userData.nombre + userData.apellido + Math.floor(Math.random() * 1000));
       formData.append("Ubicacion", userData.ubicacion);
+      formData.append("Posicion", userData.posicion);
 
       if (userData.intereses.length > 0) {
         userData.intereses.forEach((interes) => {
@@ -35,7 +36,7 @@ export default function Step3({ currentStep, setCurrentStep, userData, setUserDa
         });
       }
 
-      formData.append("Foto", "");
+      formData.append("Foto", userData.foto);
 
       // Create first the user
       const resUsuario = await api.post("/users", formData, {

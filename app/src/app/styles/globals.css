@@ -164,11 +164,21 @@
     justify-content: center;
     align-items: center;
     grid-template-areas:
+      "fotoPerfil fotoPerfil"
       "nombreEmpresa nombreEmpresa"
       "nombre apellido"
       "email ubicacion"
+      "posicion posicion"
       "biografia biografia"
       "contraseña confirmarContraseña";
+  }
+
+  #reclutadorForm > .fotoPerfil {
+    grid-area: fotoPerfil;
+  }
+
+  #reclutadorForm > .posicion {
+    grid-area: posicion;
   }
 
   #reclutadorForm > .nombreEmpresa {
@@ -205,10 +215,20 @@
     justify-content: center;
     align-items: center;
     grid-template-areas:
+      "fotoPerfil fotoPerfil"
       "nombre apellido"
       "email ubicacion"
+      "posicion posicion"
       "biografia biografia"
       "contraseña confirmarContraseña";
+  }
+
+  #expertoForm > .fotoPerfil {
+    grid-area: fotoPerfil;
+  }
+
+  #expertoForm > .posicion {
+    grid-area: posicion;
   }
 
   #expertoForm > .nombreEmpresa {
