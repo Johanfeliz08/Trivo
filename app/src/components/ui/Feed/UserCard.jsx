@@ -11,7 +11,7 @@ export default function UserCard({ user, className }) {
           }}
         ></div>
         <div className="image w-full h-full 2xl:max-w-120 2xl:h-160 absolute">
-          <Image src={user.fotoPerfil ? user.FotoPerfil : "/imagenes/userDefault.png"} alt={user.nombre} layout="fill" className="object-cover rounded-2xl 2xl:max-w-120 2xl:h-160" />
+          <Image src={user.fotoPerfil ? `${user.fotoPerfil}` : "/imagenes/userDefault.png"} alt={user.nombre} layout="fill" className="object-cover rounded-2xl 2xl:max-w-120 2xl:h-160" />
         </div>
         <div className="user-info 2xl:p-10 xl:p-7 flex flex-col relative z-20">
           <h3 className="user-name text-white font-bold 2xl:text-2xl xl:text-sm">
