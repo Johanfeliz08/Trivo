@@ -12,7 +12,7 @@ export default function ProfileBanner({ userIdProp }) {
   const [userData, setUserData] = useState({
     nombre: "",
     apellido: "",
-    profesion: "",
+    posicion: "",
     estado: "",
     ubicacion: "",
     fotoPerfil: "",
@@ -77,7 +77,7 @@ export default function ProfileBanner({ userIdProp }) {
                 className="object-cover"
               />
             </div>
-            <div className={`edit-btn flex justify-center items-center relative z-50 bottom-10 -right-8 ${hasEditPermission ? "visible" : "invisible"}`}>
+            <div className={`edit-btn flex justify-center items-center relative z-50 bottom-10 -right-8`}>
               <button type="button" className="flex flex-row justify-center items-center" onClick={() => setOpenUploadImage(!openUploadImage)}>
                 <div className="icon flex justify-center items-center hover:bg-bg-secondary hover:rounded-full p-2 cursor-pointer transition-all ease-in-out duration-300">
                   <svg className="size-5 fill-primary " xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
@@ -91,9 +91,12 @@ export default function ProfileBanner({ userIdProp }) {
             <h2 className="text-xl font-semibold">
               {userData.nombre} {userData.apellido}
             </h2>
-            <h3 className="text-md font-regular">{userData.profesion ? userData.profesion : "Sin profesión"}</h3>
+            <h3 className="text-md font-regular">
+              {userData.posicion ? userData.posicion : "Sin profesión"} {userData.nombreEmpresa ? ` en ${userData.nombreEmpresa}` : ""}
+            </h3>
             <p className="flex flex-row gap-2 text-gray-500">
-              <span className="status">{userData.estado ? userData.estado : "Sin estado"}</span>
+              {/* Recordar volver a poner "Sin estado como condicion else, en este momento esta propiedad no llega el frontend" */}
+              <span className="status">{userData.estado ? userData.estado : "Disponible"}</span>
               <span>-</span>
               <span className="location">{userData.ubicacion ? userData.ubicacion : "Sin ubicación"}</span>
             </p>
