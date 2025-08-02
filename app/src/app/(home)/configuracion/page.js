@@ -16,7 +16,7 @@ export default function SettingsPage() {
             <div className="title">
               <h1 className="text-3xl font-semibold text-primary">Configuración</h1>
             </div>
-            <button type="button" className="close-btn">
+            <button type="button" className="close-btn" onClick={() => window.history.back()}>
               <div className="icon cursor-pointer">
                 <svg className="size-10 fill-primary hover:fill-black ease-in-out duration-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path d="M18,6a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,7.414,18L12,13.414,16.586,18A1,1,0,0,0,18,16.586L13.414,12,18,7.414A1,1,0,0,0,18,6Z" />
