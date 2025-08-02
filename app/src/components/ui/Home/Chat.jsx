@@ -38,6 +38,7 @@ export default function Chat() {
 
   useEffect(() => {
     if (!connection) {
+      // console.error("La conexión SignalR no está disponible", connection);
       return;
     }
 
@@ -60,36 +61,83 @@ export default function Chat() {
   }, [connection]);
 
   useEffect(() => {
+    let connection = null;
+    let isMounted = true;
+
+    const initConnection = async () => {
+      try {
+        connection = createSignalRConnection(userId, hub);
+        await connection.start();
+        if (isMounted) {
+          setConnection(connection);
+          setIsLoading(false);
+        } else {
+          await connection.stop();
+        }
+      } catch (error) {
+        console.error("❌ Error al conectar al hub de chats:", error);
+      }
+    };
+
+    initConnection();
+
+    return () => {
+      isMounted = false;
+      if (connection && connection.state === "Connected") {
+        connection.stop();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (!userId) {
       console.error("El ID de usuario no está disponible");
       return;
     }
 
     setIsLoading(true);
+    let connection = null;
     console.log("🔗 Conectando al hub de chats...");
 
-    const connection = createSignalRConnection(userId, hub);
-    setConnection(connection);
-
-    connection
-      .start()
-      .then(async () => {
-        console.log("✅ Conectado al hub de chats");
-        try {
-          // await connection.invoke("ObtenerChats");
-        } catch (error) {
-          console.error("Error al obtener chats:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.error("❌ Error al conectar al hub:", err);
+    const initConnection = async () => {
+      try {
+        connection = createSignalRConnection(userId, hub);
+        connection.start().then(async () => {
+          console.log("✅ Conectado al hub de chats");
+          setConnection(connection);
+        });
+      } catch (error) {
+        console.error("❌ Error al conectar al hub de chats:", error);
         setIsLoading(false);
-      });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initConnection();
+
+    // connection
+    //   .start()
+    //   .then(async () => {
+    //     console.log("✅ Conectado al hub de chats");
+    //     try {
+    //       setConnection(connection);
+    //       // await connection.invoke("ObtenerChats");
+    //     } catch (error) {
+    //       console.error("Error al conectarse al hub:", error);
+    //     } finally {
+    //       setIsLoading(false);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error("❌ Error al conectar al hub:", err);
+    //     setIsLoading(false);
+    //   });
 
     return () => {
-      connection.stop();
+      if (connection && connection.state === "Connected") {
+        connection.stop();
+      }
     };
   }, []);
 
@@ -167,7 +215,7 @@ export default function Chat() {
                             <span className="last-message-time text-gray-500 text-sm">{chat.ultimoMensaje ? getTimeFromDate(chat.ultimoMensaje.fechaEnvio) : ""}</span>
                           </div>
                           <div className="last-message">
-                            {chat.ultimoMensaje && isValidURL(chat.ultimoMensaje.contenido) ? (
+                            {chat.ultimoMensaje && chat.ultimoMensaje.tipoMensaje === "Imagen" && (
                               <div className="image  flex flex-row justify-start items-center gap-1">
                                 <div className="icon">
                                   <svg
@@ -184,9 +232,30 @@ export default function Chat() {
                                 </div>
                                 <span className="text-gray-500 text-sm">Imagen</span>
                               </div>
-                            ) : (
-                              <span className="text-gray-500 text-sm">{chat.ultimoMensaje?.contenido ? chat.ultimoMensaje.contenido : "No hay mensajes."}</span>
                             )}
+                            {chat.ultimoMensaje && chat.ultimoMensaje.tipoMensaje === "Archivo" && (
+                              <div className="file flex flex-row justify-start items-center gap-1">
+                                <div className="icon">
+                                  <svg
+                                    className="size-3.5 fill-gray-500 hover:fill-primary transition-all"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    version="1.1"
+                                    id="Capa_1"
+                                    x="0px"
+                                    y="0px"
+                                    viewBox="0 0 511.201 511.201"
+                                    width="100"
+                                    height="100"
+                                  >
+                                    <g>
+                                      <path d="M496.108,203.908c-8.331-8.328-21.835-8.328-30.165,0L233.58,437.274c-41.656,41.661-109.197,41.666-150.859,0.011   s-41.666-109.197-0.011-150.859L307.756,60.463c25.193-24.792,65.715-24.467,90.507,0.726c24.507,24.904,24.512,64.86,0.011,89.77   L173.228,376.922c-8.433,8.078-21.733,8.078-30.165,0c-8.328-8.331-8.328-21.835,0-30.165l200.363-201.28   c8.185-8.475,7.951-21.98-0.524-30.165c-8.267-7.985-21.374-7.985-29.641,0l-200.363,201.28   c-24.996,24.991-24.999,65.514-0.008,90.51c0.003,0.003,0.005,0.005,0.008,0.008c25.331,24.172,65.186,24.172,90.517,0   l225.024-225.984c41.122-42.183,40.261-109.715-1.922-150.837C385.087-10.1,319.014-10.095,277.591,30.298L52.545,256.26   c-58.321,58.321-58.321,152.879,0,211.2s152.879,58.321,211.2,0l232.363-233.301c8.353-8.309,8.39-21.816,0.081-30.17   C496.162,203.962,496.135,203.935,496.108,203.908z" />
+                                    </g>
+                                  </svg>
+                                </div>
+                                <span className="text-gray-500 text-sm">Archivo</span>
+                              </div>
+                            )}
+                            {chat.ultimoMensaje && chat.ultimoMensaje.tipoMensaje === "Texto" && <span className="text-gray-500 text-sm">{chat.ultimoMensaje.contenido}</span>}
                           </div>
                         </div>
                       </div>
