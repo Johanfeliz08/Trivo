@@ -246,7 +246,39 @@ export default function ChatWindow({ chat, setChats }) {
                         </div>
                       </div>
                       <div className="text bg-white py-4 px-6 rounded-b-lg rounded-tr-lg shadow-md mt-2">
-                        <p className="">{message.contenido}</p>
+                        {message.tipoMensaje === "Imagen" && (
+                          <div className="image-container mt-2">
+                            <Image src={message.contenido} alt="image" width={200} height={200} />
+                          </div>
+                        )}
+                        {message.tipoMensaje === "Archivo" && (
+                          <div className="file flex flex-row justify-start items-center gap-3">
+                            <div className="icon">
+                              <svg className="size-4 fill-black" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 511.201 511.201" width="100" height="100">
+                                <g>
+                                  <path d="M496.108,203.908c-8.331-8.328-21.835-8.328-30.165,0L233.58,437.274c-41.656,41.661-109.197,41.666-150.859,0.011   s-41.666-109.197-0.011-150.859L307.756,60.463c25.193-24.792,65.715-24.467,90.507,0.726c24.507,24.904,24.512,64.86,0.011,89.77   L173.228,376.922c-8.433,8.078-21.733,8.078-30.165,0c-8.328-8.331-8.328-21.835,0-30.165l200.363-201.28   c8.185-8.475,7.951-21.98-0.524-30.165c-8.267-7.985-21.374-7.985-29.641,0l-200.363,201.28   c-24.996,24.991-24.999,65.514-0.008,90.51c0.003,0.003,0.005,0.005,0.008,0.008c25.331,24.172,65.186,24.172,90.517,0   l225.024-225.984c41.122-42.183,40.261-109.715-1.922-150.837C385.087-10.1,319.014-10.095,277.591,30.298L52.545,256.26   c-58.321,58.321-58.321,152.879,0,211.2s152.879,58.321,211.2,0l232.363-233.301c8.353-8.309,8.39-21.816,0.081-30.17   C496.162,203.962,496.135,203.935,496.108,203.908z" />
+                                </g>
+                              </svg>
+                            </div>
+                            <a href={`${message.contenido}`} target="_blank" className="text-black hover:underline">
+                              <span className="text-sm">{getFileName(message.contenido)}</span>
+                            </a>
+                            <a href={`${makeFileDownload(message.contenido)}`} className="">
+                              <svg
+                                className="size-4 fill-black cursor-pointer hover:fill-gray-400 transition-all"
+                                xmlns="http://www.w3.org/2000/svg"
+                                id="Outline"
+                                viewBox="0 0 24 24"
+                                width="512"
+                                height="512"
+                              >
+                                <path d="M9.878,18.122a3,3,0,0,0,4.244,0l3.211-3.211A1,1,0,0,0,15.919,13.5l-2.926,2.927L13,1a1,1,0,0,0-1-1h0a1,1,0,0,0-1,1l-.009,15.408L8.081,13.5a1,1,0,0,0-1.414,1.415Z" />
+                                <path d="M23,16h0a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V17a1,1,0,0,0-1-1H1a1,1,0,0,0-1,1v4a3,3,0,0,0,3,3H21a3,3,0,0,0,3-3V17A1,1,0,0,0,23,16Z" />
+                              </svg>
+                            </a>
+                          </div>
+                        )}
+                        {message.tipoMensaje === "Texto" && <p className="">{message.contenido}</p>}
                       </div>
                     </div>
                   </div>
